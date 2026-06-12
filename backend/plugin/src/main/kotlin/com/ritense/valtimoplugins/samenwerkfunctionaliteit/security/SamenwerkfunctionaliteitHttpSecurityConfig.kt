@@ -10,16 +10,16 @@ import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.stereotype.Component
 
-// @ConditionalOnProperty(prefix = "valtimo.samenwerkfunctionaliteit.gateway", name = ["enabled"], havingValue = "true")
 @Order(1)
 @Component
+@ConditionalOnProperty(prefix = "valtimo.samenwerkfunctionaliteit.gateway", name = ["enabled"], havingValue = "true")
 class SamenwerkfunctionaliteitHttpSecurityConfig : HttpSecurityConfigurer {
     override fun configure(http: HttpSecurity) {
         try {
             http.authorizeHttpRequests { requests ->
                 requests
                     .requestMatchers(HttpMethod.GET, "/samenwerkfunctionaliteit/v5/**")
-                    .permitAll()
+                    .hasAnyAuthority(USER, ADMIN)
             }
         } catch (e: Exception) {
             throw HttpConfigurerConfigurationException(e)
