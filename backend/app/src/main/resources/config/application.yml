@@ -68,7 +68,9 @@ server:
 
 valtimo:
     samenwerkfunctionaliteit:
-        enableGateway: true
+        gateway:
+          enabled: true
+          endpoint: "/samenwerkfunctionaliteit/v5/**"
     database: postgres
     app:
         scheme: http
