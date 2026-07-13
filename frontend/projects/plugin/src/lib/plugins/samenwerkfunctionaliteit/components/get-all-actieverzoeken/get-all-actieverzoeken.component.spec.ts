@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateModule } from '@ngx-translate/core';
+import { PLUGINS_TOKEN } from '@valtimo/plugin';
 
 import { GetAllActieverzoekenComponent } from './get-all-actieverzoeken.component';
 
@@ -8,7 +10,8 @@ describe('GetAllActieverzoekenComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GetAllActieverzoekenComponent]
+      imports: [GetAllActieverzoekenComponent, TranslateModule.forRoot()],
+      providers: [{ provide: PLUGINS_TOKEN, useValue: [] }]
     })
     .compileComponents();
 
