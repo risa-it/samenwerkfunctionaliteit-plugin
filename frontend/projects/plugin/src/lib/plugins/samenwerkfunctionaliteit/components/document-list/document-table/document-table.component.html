@@ -14,9 +14,15 @@
       <cds-table-toolbar-search
         [expandable]="true"
         (valueChange)="filterFileNames($event)"
-        (clear)="searchValue.set('')">
+        (clear)="searchValue.set('')"
+      >
       </cds-table-toolbar-search>
-      <button cdsButton="primary" size="sm" (click)="uploadDocument()" [disabled]="isUploading()">
+      <button
+        cdsButton="primary"
+        size="sm"
+        (click)="uploadDocument()"
+        [disabled]="isUploading()"
+      >
         Upload
         <svg cdsIcon="add" size="20" class="cds--btn__icon"></svg>
       </button>
@@ -32,7 +38,10 @@
     (selectRow)="onRowSelected($event)"
   >
   </cds-table>
-  <cds-pagination [model]="model()" (selectPage)="selectPage($event)"></cds-pagination>
+  <cds-pagination
+    [model]="model()"
+    (selectPage)="selectPage($event)"
+  ></cds-pagination>
 </cds-table-container>
 
 <document-table-modal
