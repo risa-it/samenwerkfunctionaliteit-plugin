@@ -140,17 +140,17 @@ export class DocumentTableComponent implements OnInit {
     return [
       new TableHeaderItem({
         data: this.translateService.instant(
-          'samenwerkfunctionaliteit.documenttable.fileName',
+          'samenwerkfunctionaliteit.documentTable.fileName',
         ),
       }),
       new TableHeaderItem({
         data: this.translateService.instant(
-          'samenwerkfunctionaliteit.documenttable.confidentialityType',
+          'samenwerkfunctionaliteit.documentTable.confidentialityType',
         ),
       }),
       new TableHeaderItem({
         data: this.translateService.instant(
-          'samenwerkfunctionaliteit.documenttable.dateCreated',
+          'samenwerkfunctionaliteit.documentTable.dateCreated',
         ),
       }),
     ];

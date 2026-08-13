@@ -8,7 +8,7 @@ export const pluginNlTranslations = {
         message: 'Bericht',
       },
     },
-    documenttable: {
+    documentTable: {
       delete: 'Verwijderen',
       fileName: 'Bestandsnaam',
       confidentialityType: 'Vertrouwelijkheidsaanduiding',
