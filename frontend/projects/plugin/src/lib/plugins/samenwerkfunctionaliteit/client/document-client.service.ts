@@ -61,6 +61,10 @@ export class DocumentClient {
     );
   }
 
+  deleteDocument(documentId: UUID): Observable<void> {
+    return this.http.delete<void>(`${DOCUMENTEN_URL}/${documentId}`);
+  }
+
   private convertUploadDocumentMetadataToHttpParams(
     metadata: UploadDocumentMetadata,
   ): HttpParams {
