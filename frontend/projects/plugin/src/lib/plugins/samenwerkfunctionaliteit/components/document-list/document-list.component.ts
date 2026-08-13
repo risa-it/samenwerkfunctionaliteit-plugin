@@ -11,16 +11,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NotificationModule } from 'carbon-components-angular';
-import {
-  catchError,
-  finalize,
-  map,
-  Observable,
-  of,
-  switchMap,
-  take,
-  tap,
-} from 'rxjs';
+import { finalize, map, Observable, of, switchMap, take, tap } from 'rxjs';
 import { DocumentInterface } from '../../interface/document.interface';
 import { Document } from '../../models/document.model';
 import { SamenwerkingProperties } from '../../models/samenwerking-properties.model';
@@ -31,7 +22,6 @@ import { UserNotificationService } from '../../service/user-notification.service
 import { DocumentService as ValtimoDocumentService } from '@valtimo/document';
 import { UploadWorkFlowService } from '../../service/upload-workflow.service';
 import { BusinessKey, toBusinessKey } from '../../types/business-key.type';
-import { toUUID } from '../../types/uuid.type';
 import { DocumentTableComponent } from './document-table/document-table.component';
 import { DocumentTableLightComponent } from './document-table/light/document-table-light.component';
 
@@ -109,22 +99,6 @@ export class DocumentListComponent implements OnInit {
           }),
         ),
         take(1),
-      )
-      .subscribe();
-  }
-
-  protected downloadDocument(documentId: string): void {
-    this.documentService
-      .downloadDocument(toUUID(documentId))
-      .pipe(
-        take(1),
-        catchError(() => {
-          this.notificationService.showError({
-            titleKey:
-              'samenwerkfunctionaliteit.feedback.userNotification.downloadDocument.failure.title',
-          });
-          return of(undefined);
-        }),
       )
       .subscribe();
   }

@@ -23,7 +23,10 @@ import {
   TableModel,
   TableModule,
 } from 'carbon-components-angular';
+import { catchError, of } from 'rxjs';
 import { Document } from '../../../models/document.model';
+import { DocumentService } from '../../../service/document.service';
+import { UserNotificationService } from '../../../service/user-notification.service';
 import { getPaginationTranslations } from '../../../shared/carbon/pagination-translations';
 import { documentTableDeleteModalConfig } from '../config/document-table-modal-config';
 import { DocumentTableModal } from '../modal/document-table-modal';
@@ -48,6 +51,10 @@ import { DocumentTableModal } from '../modal/document-table-modal';
 export class DocumentTableComponent implements OnInit {
   private readonly translateService: TranslateService =
     inject(TranslateService);
+  private readonly documentService: DocumentService = inject(DocumentService);
+  private readonly notificationService: UserNotificationService = inject(
+    UserNotificationService,
+  );
 
   documents: InputSignal<Document[]> = input<Document[]>([]);
   displayedDocuments: WritableSignal<Document[]> = signal([]);
@@ -93,11 +100,25 @@ export class DocumentTableComponent implements OnInit {
     console.log(this.selectedDocument()?.documentId);
   }
 
-  protected deleteDocument() {
-    this.documentTableModal().openModal();
-  }
+  protected downloadDocument(): void {
+    const documentId = this.selectedDocument()?.documentId;
+    if (!documentId) {
+      return;
+    }
 
-  protected downloadDocument() {}
+    this.documentService
+      .downloadDocument(documentId)
+      .pipe(
+        catchError(() => {
+          this.notificationService.showError({
+            titleKey:
+              'samenwerkfunctionaliteit.feedback.userNotification.downloadDocument.failure.title',
+          });
+          return of(undefined);
+        }),
+      )
+      .subscribe();
+  }
 
   protected uploadDocument() {
     this.isUploading.set(true);
