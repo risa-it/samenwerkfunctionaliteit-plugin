@@ -85,5 +85,7 @@ export function mapConfidentialityTypeToVertrouwelijkheidsaanduiding(
 export function mapDocumentenResponseToModels(
   documenten: DocumentenOverzichtResponse,
 ): DocumentInterface[] {
-  return documenten._embedded.documenten.map(mapDocumentenResponseToModel);
+  return documenten._embedded
+    ? documenten._embedded.documenten.map(mapDocumentenResponseToModel)
+    : [];
 }
