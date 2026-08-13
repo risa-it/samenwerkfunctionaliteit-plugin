@@ -8,16 +8,16 @@ import { Links } from './links.dto';
 import { Page } from './page.dto';
 
 export interface DocumentenOverzichtResponse {
-  _embedded: Documenten | null;
+  _embedded: DocumentenResponse | null;
   _links: Links | null;
   page: Page;
 }
 
-interface Documenten {
-  documenten: DocumentenResponse[];
+interface DocumentenResponse {
+  documenten: DocumentResponse[];
 }
 
-export interface DocumentenResponse {
+export interface DocumentResponse {
   documentId: string;
   bestandsNaam: string;
   kenmerkSysteem: string | null;
@@ -38,7 +38,7 @@ export interface DocumentenResponse {
 }
 
 export function mapDocumentenResponseToModel(
-  documentenResponse: DocumentenResponse,
+  documentenResponse: DocumentResponse,
 ): DocumentInterface {
   return new Document(
     documentenResponse.samenwerkingId,
