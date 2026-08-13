@@ -59,7 +59,7 @@ export class DocumentTableLightComponent {
     const pageDocuments: Document[] = documents.slice(startIndex, endIndex);
 
     return pageDocuments.map((document: Document): TableItem[] => [
-      new TableItem({ data: document.fileName }),
+      new TableItem({ data: document.filename }),
       new TableItem({
         data: new Date(document.creationDate).toLocaleDateString(),
       }),

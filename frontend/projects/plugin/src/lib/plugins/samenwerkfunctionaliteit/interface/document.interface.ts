@@ -4,7 +4,7 @@ import { UUID } from '../types/uuid.type';
 export interface DocumentInterface {
   samenwerkingId: string;
   documentId: UUID;
-  fileName: string;
+  filename: string;
   confidentialityLevel: ConfidentialityType;
   creationDate: string;
 }
