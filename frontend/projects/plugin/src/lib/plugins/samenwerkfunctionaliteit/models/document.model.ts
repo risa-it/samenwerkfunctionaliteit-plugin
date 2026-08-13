@@ -1,5 +1,6 @@
 import { DocumentInterface } from '../interface/document.interface';
 import { ConfidentialityType } from '../types/confidentiality.type';
+import { UUID } from '../types/uuid.type';
 
 export class Document implements DocumentInterface {
   constructor(
