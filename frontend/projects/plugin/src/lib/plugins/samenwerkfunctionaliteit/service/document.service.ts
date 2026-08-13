@@ -106,6 +106,10 @@ export class DocumentService {
       );
   }
 
+  deleteDocument(documentId: UUID): Observable<void> {
+    return this.documentClient.deleteDocument(documentId);
+  }
+
   downloadDocument(documentId: UUID): Observable<FileDownload> {
     return this.documentClient
       .downloadDocument(documentId)
