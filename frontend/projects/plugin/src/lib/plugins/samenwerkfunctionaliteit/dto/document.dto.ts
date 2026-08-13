@@ -42,7 +42,7 @@ export function mapDocumentenResponseToModel(
 ): DocumentInterface {
   return new Document(
     documentenResponse.samenwerkingId,
-    documentenResponse.documentId,
+    toUUID(documentenResponse.documentId),
     documentenResponse.bestandsNaam,
     mapVertrouwelijkheidsAanduidingToConfidentialityType(
       documentenResponse.vertrouwelijkheidsAanduiding,
