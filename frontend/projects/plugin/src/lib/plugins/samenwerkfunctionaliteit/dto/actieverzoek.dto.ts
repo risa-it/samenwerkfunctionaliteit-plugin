@@ -1,8 +1,5 @@
 import { Links } from './links.dto';
-import {
-  DocumentenResponse,
-  mapDocumentenResponseToModel,
-} from './document.dto';
+import { DocumentResponse, mapDocumentenResponseToModel } from './document.dto';
 import { Actieverzoek } from '../models/actieverzoek.model';
 import {
   ActieverzoekStatusType,
@@ -14,7 +11,7 @@ export interface ActieverzoekResponse {
   aantalBerichten: number;
   actieverzoekId: string;
   creatieDatumTijd: string;
-  documenten: DocumentenResponse[];
+  documenten: DocumentResponse[];
   laatstAangepastDatumTijd: string;
   laatstAangepastDoor: string;
   laatstAangepastDoorNaam: string;
