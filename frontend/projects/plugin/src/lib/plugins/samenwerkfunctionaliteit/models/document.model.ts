@@ -4,7 +4,7 @@ import { ConfidentialityType } from '../types/confidentiality.type';
 export class Document implements DocumentInterface {
   constructor(
     readonly samenwerkingId: string,
-    readonly documentId: string,
+    readonly documentId: UUID,
     readonly fileName: string,
     readonly confidentialityLevel: ConfidentialityType,
     readonly creationDate: string,
