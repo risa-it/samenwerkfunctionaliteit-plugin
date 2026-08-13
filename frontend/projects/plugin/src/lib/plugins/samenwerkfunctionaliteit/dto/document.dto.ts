@@ -52,13 +52,15 @@ export function mapDocumentenResponseToModel(
 }
 
 function mapVertrouwelijkheidsAanduidingToConfidentialityType(
-  vertrouwelijkheidsAanduiding: string,
+  vertrouwelijkheidsAanduiding: string | null,
 ): ConfidentialityType {
   switch (vertrouwelijkheidsAanduiding) {
     case 'RV':
       return ConfidentialityTypes.Confidential;
     case 'SV':
       return ConfidentialityTypes.StrictlyConfidential;
+    case null:
+      return ConfidentialityTypes.Confidential;
     default:
       throw new Error(
         `Unknown vertrouwelijkheidsAanduiding: ${vertrouwelijkheidsAanduiding}`,
