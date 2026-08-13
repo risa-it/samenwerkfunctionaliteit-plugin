@@ -24,6 +24,7 @@ import {
   TableModule,
 } from 'carbon-components-angular';
 import { Document } from '../../../models/document.model';
+import { getPaginationTranslations } from '../../../shared/carbon/pagination-translations';
 import { documentTableDeleteModalConfig } from '../config/document-table-modal-config';
 import { DocumentTableModal } from '../modal/document-table-modal';
 
@@ -122,6 +123,12 @@ export class DocumentTableComponent implements OnInit {
       MULTIPLE: '',
     };
   }
+
+  protected readonly paginationTranslations = getPaginationTranslations(
+    this.translateService,
+    'document',
+    'documenten',
+  );
 
   private getDocumentsForPage(page: number): Document[] {
     const documents = this.documents();

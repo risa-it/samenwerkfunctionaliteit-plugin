@@ -64,4 +64,17 @@ export const pluginNlTranslations = {
       },
     },
   },
+  carbon: {
+    pagination: {
+      itemsPerPage: 'Aantal {{ itemNamePlural}} per pagina:',
+      openListOfOptions: 'Lijst met opties openen',
+      previousPage: 'Vorige pagina',
+      nextPage: 'Volgende pagina',
+      totalItemsUnknown: '{{start}}-{{end}} {{ itemNamePlural }}',
+      totalItems: '{{start}}-{{end}} van {{total}} {{ itemNamePlural }}',
+      totalItem: '{{start}}-{{end}} van {{total}} {{ itemNameSingular }}',
+      ofLastPages: "van {{last}} pagina's",
+      ofLastPage: 'van {{last}} pagina',
+    },
+  },
 };
