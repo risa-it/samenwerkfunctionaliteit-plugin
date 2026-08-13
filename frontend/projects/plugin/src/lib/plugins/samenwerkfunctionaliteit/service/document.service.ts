@@ -42,9 +42,7 @@ export class DocumentService {
         return mapDocumentenResponseToModels(documentenOverzichtResponse);
       }),
       map((documenten: DocumentInterface[]) => {
-        return documenten.filter((document) => {
-          return document.samenwerkingId === samenwerkingId;
-        });
+        return documenten;
       }),
       catchError((error: Error) => {
         return throwError(() => error);
