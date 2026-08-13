@@ -24,6 +24,7 @@ import {
   TableModule,
 } from 'carbon-components-angular';
 import { Document } from '../../../models/document.model';
+import { UUID } from '../../../types/uuid.type';
 import { documentTableDeleteModalConfig } from '../config/document-table-modal-config';
 import { DocumentTableModal } from '../modal/document-table-modal';
 
@@ -49,6 +50,8 @@ export class DocumentTableComponent implements OnInit {
     inject(TranslateService);
 
   documents: InputSignal<Document[]> = input<Document[]>([]);
+  displayedDocuments: WritableSignal<Document[]> = signal([]);
+  selectedDocumentid: WritableSignal<UUID | undefined> = signal(undefined);
   isSkeleton: InputSignal<boolean> = input<boolean>(true);
   model: WritableSignal<TableModel> = signal(new TableModel());
   isUploading: WritableSignal<boolean> = signal(false);
@@ -59,9 +62,9 @@ export class DocumentTableComponent implements OnInit {
   protected readonly deleteConfig: AlertModalData =
     documentTableDeleteModalConfig;
 
-  showSelectionColumn: boolean = true;
   striped: boolean = false;
   enableSingleSelect: boolean = true;
+  showSelectionColumn: boolean = false;
 
   ngOnInit(): void {
     this.setTableModelFilterAndHeader(this.documents());
@@ -69,8 +72,12 @@ export class DocumentTableComponent implements OnInit {
   }
 
   protected selectPage(page: number): void {
+    const documentsPage = this.getDocumentsForPage(page);
+
+    this.displayedDocuments.set(documentsPage);
+
     this.model.update((model: TableModel): TableModel => {
-      model.data = this.getTableItemsForPage(page);
+      model.data = this.getTableItems(documentsPage);
       model.currentPage = page;
       return model;
     });
@@ -80,7 +87,10 @@ export class DocumentTableComponent implements OnInit {
     model: TableModel;
     selectedRowIndex: number;
   }): void {
-    const selectedRow = event.model.data[event.selectedRowIndex];
+    this.selectedDocumentid.set(
+      this.displayedDocuments()[event.selectedRowIndex]?.documentId,
+    );
+    console.log(this.selectedDocumentid());
   }
 
   protected deleteDocument() {
@@ -102,17 +112,19 @@ export class DocumentTableComponent implements OnInit {
     });
   }
 
-  private getTableItemsForPage(page: number): TableItem[][] {
-    const documents: Document[] = this.documents();
+  private getDocumentsForPage(page: number): Document[] {
+    const documents = this.documents();
     const startIndex: number = (page - 1) * this.model().pageLength;
     const endIndex: number = Math.min(
       page * this.model().pageLength,
       this.model().totalDataLength,
     );
 
-    const pageDocuments: Document[] = documents.slice(startIndex, endIndex);
+    return documents.slice(startIndex, endIndex);
+  }
 
-    return pageDocuments.map((document: Document) => [
+  private getTableItems(documents: Document[]): TableItem[][] {
+    return documents.map((document) => [
       new TableItem({ data: document.fileName }),
       new TableItem({ data: document.confidentialityLevel }),
       new TableItem({
