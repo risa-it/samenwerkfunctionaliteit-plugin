@@ -6,6 +6,7 @@ import {
   signal,
   WritableSignal,
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
   ButtonModule,
   IconModule,
@@ -15,7 +16,6 @@ import {
   TableModel,
   TableModule,
 } from 'carbon-components-angular';
-import { TranslateService } from '@ngx-translate/core';
 import { Document } from '../../../../models/document.model';
 
 @Component({
