@@ -4,6 +4,7 @@ import {
   ConfidentialityType,
   ConfidentialityTypes,
 } from '../types/confidentiality.type';
+import { toUUID } from '../types/uuid.type';
 import { Links } from './links.dto';
 import { Page } from './page.dto';
 
