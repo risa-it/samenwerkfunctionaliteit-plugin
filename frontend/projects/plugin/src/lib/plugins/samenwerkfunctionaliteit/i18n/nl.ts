@@ -13,6 +13,7 @@ export const pluginNlTranslations = {
       fileName: 'Bestandsnaam',
       confidentialityType: 'Vertrouwelijkheidsaanduiding',
       dateCreated: 'Datum aangemaakt',
+      selectedFile: '{{ filename }} geselecteerd',
     },
     feedback: {
       userNotification: {

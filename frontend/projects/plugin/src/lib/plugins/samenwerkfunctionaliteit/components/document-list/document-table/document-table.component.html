@@ -1,5 +1,5 @@
 <cds-table-container>
-  <cds-table-toolbar [model]="model()" #toolbar>
+  <cds-table-toolbar [model]="model()" [batchText]="batchText" #toolbar>
     <cds-table-toolbar-actions>
       <button cdsButton="primary" (click)="deleteDocument()">
         {{ 'samenwerkfunctionaliteit.documentTable.delete' | translate }}

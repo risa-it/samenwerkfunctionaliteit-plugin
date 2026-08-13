@@ -24,7 +24,6 @@ import {
   TableModule,
 } from 'carbon-components-angular';
 import { Document } from '../../../models/document.model';
-import { UUID } from '../../../types/uuid.type';
 import { documentTableDeleteModalConfig } from '../config/document-table-modal-config';
 import { DocumentTableModal } from '../modal/document-table-modal';
 
@@ -51,7 +50,7 @@ export class DocumentTableComponent implements OnInit {
 
   documents: InputSignal<Document[]> = input<Document[]>([]);
   displayedDocuments: WritableSignal<Document[]> = signal([]);
-  selectedDocumentid: WritableSignal<UUID | undefined> = signal(undefined);
+  selectedDocument: WritableSignal<Document | undefined> = signal(undefined);
   isSkeleton: InputSignal<boolean> = input<boolean>(true);
   model: WritableSignal<TableModel> = signal(new TableModel());
   isUploading: WritableSignal<boolean> = signal(false);
@@ -87,10 +86,10 @@ export class DocumentTableComponent implements OnInit {
     model: TableModel;
     selectedRowIndex: number;
   }): void {
-    this.selectedDocumentid.set(
-      this.displayedDocuments()[event.selectedRowIndex]?.documentId,
+    this.selectedDocument.set(
+      this.displayedDocuments()[event.selectedRowIndex],
     );
-    console.log(this.selectedDocumentid());
+    console.log(this.selectedDocument()?.documentId);
   }
 
   protected deleteDocument() {
@@ -110,6 +109,18 @@ export class DocumentTableComponent implements OnInit {
     this.searchValue.update(() => {
       return fileName;
     });
+  }
+
+  protected get batchText(): { SINGLE: string; MULTIPLE: string } {
+    return {
+      SINGLE: this.translateService.instant(
+        'samenwerkfunctionaliteit.documentTable.selectedFile',
+        this.selectedDocument()?.filename
+          ? { filename: this.selectedDocument()?.filename }
+          : undefined,
+      ),
+      MULTIPLE: '',
+    };
   }
 
   private getDocumentsForPage(page: number): Document[] {
