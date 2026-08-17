@@ -1,7 +1,13 @@
-import { Links } from "./links.dto";
-import { Page } from "./page.dto";
-import { Notificatie as NotificatieModel } from "../models/notificatie.model";
-import { NotificatieType, NotificatieTypes } from "../components/notificatie-card-list/type/notificatie.type";
+import { Links } from './links.dto';
+import { Page } from './page.dto';
+import {
+  Notificatie as NotificatieModel,
+  NotificatiePage,
+} from '../models/notificatie.model';
+import {
+  NotificatieType,
+  NotificatieTypes,
+} from '../components/notificatie-card-list/type/notificatie.type';
 
 export interface NotificatieResponse {
   page: Page;
@@ -27,11 +33,29 @@ export interface NotificatieDto {
   _links: Links;
 }
 
-export function mapNotificatieDtosToModels(response: NotificatieResponse): NotificatieModel[] {
+export function mapNotificatieResponseToNotificatiePage(
+  notificatieResponse: NotificatieResponse,
+): NotificatiePage {
+  return {
+    page: {
+      item: mapNotificatieDtosToModels(notificatieResponse),
+      number: notificatieResponse.page.number,
+      size: notificatieResponse.page.size,
+      totalElements: notificatieResponse.page.totalElements,
+      totalPages: notificatieResponse.page.totalPages,
+    },
+  };
+}
+
+export function mapNotificatieDtosToModels(
+  response: NotificatieResponse,
+): NotificatieModel[] {
   return response._embedded.notificaties.map(mapNotificatieDtoToModel);
 }
 
-function mapNotificatieDtoToModel(notificatie: NotificatieDto): NotificatieModel {
+function mapNotificatieDtoToModel(
+  notificatie: NotificatieDto,
+): NotificatieModel {
   return {
     notificatieId: notificatie.notificatieId,
     notificatieType: mapStringToNotificatieType(notificatie.notificatieType),
@@ -49,21 +73,23 @@ function mapNotificatieDtoToModel(notificatie: NotificatieDto): NotificatieModel
   };
 }
 
-function mapStringToNotificatieType(notificatieTypeString: string): NotificatieType {
+function mapStringToNotificatieType(
+  notificatieTypeString: string,
+): NotificatieType {
   switch (notificatieTypeString) {
-    case "DOCUMENT_TOEGEVOEGD":
+    case 'DOCUMENT_TOEGEVOEGD':
       return NotificatieTypes.DocumentCreated;
-    case "DOCUMENT_GEWIJZIGD":
+    case 'DOCUMENT_GEWIJZIGD':
       return NotificatieTypes.DocumentEdited;
-    case "DOCUMENT_VERWIJDERD":
+    case 'DOCUMENT_VERWIJDERD':
       return NotificatieTypes.DocumentDeleted;
-    case "STATUS_ACTIEVERZOEK_GEWIJZIGD":
+    case 'STATUS_ACTIEVERZOEK_GEWIJZIGD':
       return NotificatieTypes.ActieverzoekStatusChanged;
-    case "UITNODIGING_KETENPARTNER":
+    case 'UITNODIGING_KETENPARTNER':
       return NotificatieTypes.InvitationPartnerOrganization;
-    case "VERZOEK_OPHALEN_GESLAAGD":
+    case 'VERZOEK_OPHALEN_GESLAAGD':
       return NotificatieTypes.RequestRetrievalSucceeded;
-    case "NIEUW_BERICHT":
+    case 'NIEUW_BERICHT':
       return NotificatieTypes.MessageSent;
 
     default:
