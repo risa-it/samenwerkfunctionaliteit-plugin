@@ -4,26 +4,36 @@ import {
   computed,
   input,
   output,
+  signal,
 } from '@angular/core';
+import { ButtonModule, IconModule } from 'carbon-components-angular';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'swf-notification-pagination',
-  standalone: true,
   templateUrl: './swf-notification-pagination.component.html',
   styleUrl: './swf-notification-pagination.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [IconModule, ButtonModule, FormsModule],
 })
 export class PaginationComponent {
   readonly page = input(1);
   readonly pageSize = input(10);
   readonly totalItems = input(0);
+  readonly itemsPerPageOptions = signal<number[]>([10, 25, 50]);
 
   readonly pageChange = output<number>();
   readonly pageSizeChange = output<number>();
 
-  readonly totalPages = computed(() =>
-    Math.ceil(this.totalItems() / this.pageSize()),
-  );
+  readonly totalPages = computed(() => {
+    return Math.ceil(this.totalItems() / this.pageSize());
+  });
+
+  readonly totalPagesOptions = computed(() => {
+    const totalPages = this.totalPages();
+
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  });
 
   readonly canGoPrevious = computed(() => this.page() > 1);
 

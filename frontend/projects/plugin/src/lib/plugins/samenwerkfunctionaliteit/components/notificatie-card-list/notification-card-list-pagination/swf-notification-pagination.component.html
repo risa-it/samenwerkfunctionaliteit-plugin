@@ -1,41 +1,80 @@
-<div class="pagination">
-  <div class="pagination__info">
-    Showing {{ pageStart() }}–{{ pageEnd() }}
-    of {{ totalItems() }}
-  </div>
-
-  <div class="pagination__controls">
-    <label>
-      Items per page
-
+<div
+  class="cds--pagination">
+  <div class="cds--pagination__left">
+    <label class="cds--pagination__text" for="itemsPerPage">
+      Showing {{ pageStart() }}–{{ pageEnd() }} of {{ totalItems() }}
+    </label>
+    <div
+      class="cds--select cds--select--inline cds--select__item-count">
       <select
+        id="itemsPerPage"
         [value]="pageSize()"
         (change)="selectPageSize(+$any($event.target).value)"
-      >
-        <option value="10">10</option>
-        <option value="25">25</option>
-        <option value="50">50</option>
+        class="cds--select-input">
+        @for (option of itemsPerPageOptions(); track $index) {
+          <option
+            class="cds--select-option"
+            [value]="option">
+            {{ option }}
+          </option>
+        }
       </select>
-    </label>
+      <svg
+        cdsIcon="chevron--down"
+        size="16"
+        style="display: inherit"
+        class="cds--select__arrow"
+        aria-hidden="true">
+      </svg>
+    </div>
+  </div>
 
-    <button
-      type="button"
-      [disabled]="!canGoPrevious()"
-      (click)="previousPage()"
-    >
-      Previous
-    </button>
+  <div class="cds--pagination__right">
+    <div class="cds--select cds--select--inline cds--select__page-number">
+      <select
+        id="currentPageSelect"
+        class="cds--select-input"
+        (change)="selectPage(+$any($event.target).value)"
+      >
+        @for (page of totalPagesOptions(); track $index) {
+          <option class="cds--select-option" [value]="page">
+            {{ page }}
+          </option>
+        }
+      </select>
 
-    <span>
-      Page {{ page() }} of {{ totalPages() }}
-    </span>
+      <svg
+        cdsIcon="chevron--down"
+        size="16"
+        class="cds--select__arrow"
+        aria-hidden="true"
+      ></svg>
+    </div>
 
-    <button
-      type="button"
-      [disabled]="!canGoNext()"
-      (click)="nextPage()"
-    >
-      Next
-    </button>
+    <div class="cds--pagination__control-buttons">
+      <button
+        cdsButton="ghost"
+        [iconOnly]="true"
+        class="cds--pagination__button cds--pagination__button--backward"
+        type="button"
+        [disabled]="!canGoPrevious()"
+        (click)="previousPage()"
+      >
+        <svg cdsIcon="caret--left" size="16" class="cds--btn__icon"></svg>
+      </button>
+
+      <button
+        cdsButton="ghost"
+        [iconOnly]="true"
+        class="
+						cds--pagination__button
+						cds--pagination__button--forward"
+        type="button"
+        [disabled]="!canGoNext()"
+        (click)="nextPage()"
+      >
+        <svg cdsIcon="caret--right" size="16" class="cds--btn__icon"></svg>
+      </button>
+    </div>
   </div>
 </div>
