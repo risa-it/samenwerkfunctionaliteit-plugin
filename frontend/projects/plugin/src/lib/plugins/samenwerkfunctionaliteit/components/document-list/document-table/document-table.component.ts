@@ -109,6 +109,9 @@ export class DocumentTableComponent implements OnInit {
     this.documentService
       .downloadDocument(documentId)
       .pipe(
+        tap(() => {
+          this.hideToolbar();
+        }),
         catchError(() => {
           this.notificationService.showError({
             titleKey:
@@ -150,6 +153,11 @@ export class DocumentTableComponent implements OnInit {
     'document',
     'documenten',
   );
+
+  private hideToolbar(): void {
+    this.selectedDocument.set(undefined);
+    this.model().selectAll(false);
+  }
 
   private getDocumentsForPage(page: number): Document[] {
     const documents = this.documents();
