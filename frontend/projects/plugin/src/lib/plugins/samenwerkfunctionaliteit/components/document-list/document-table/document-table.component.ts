@@ -66,6 +66,10 @@ export class DocumentTableComponent implements OnInit {
 
   private readonly documentTableModal =
     viewChild.required<DocumentTableModal>('documentTableModal');
+
+  private businessKey?: BusinessKey;
+  private caseDefinitionKey?: string;
+
   protected readonly deleteConfig: AlertModalData =
     documentTableDeleteModalConfig;
 
@@ -79,6 +83,14 @@ export class DocumentTableComponent implements OnInit {
     this.setTableModelFilterAndHeader(documents);
     this.selectPage(1);
   });
+
+  ngOnInit(): void {
+    this.businessKey = toBusinessKey(
+      this.swfDocumentService.getParam(this.route, 'documentId') ?? '',
+    );
+
+    this.caseDefinitionKey =
+      this.swfDocumentService.getParam(this.route, 'caseDefinitionKey') ?? '';
   }
 
   protected selectPage(page: number): void {
