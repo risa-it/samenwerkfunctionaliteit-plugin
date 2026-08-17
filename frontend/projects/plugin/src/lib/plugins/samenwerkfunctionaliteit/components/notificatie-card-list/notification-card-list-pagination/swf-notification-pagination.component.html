@@ -1,0 +1,41 @@
+<div class="pagination">
+  <div class="pagination__info">
+    Showing {{ pageStart() }}–{{ pageEnd() }}
+    of {{ totalItems() }}
+  </div>
+
+  <div class="pagination__controls">
+    <label>
+      Items per page
+
+      <select
+        [value]="pageSize()"
+        (change)="selectPageSize(+$any($event.target).value)"
+      >
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+      </select>
+    </label>
+
+    <button
+      type="button"
+      [disabled]="!canGoPrevious()"
+      (click)="previousPage()"
+    >
+      Previous
+    </button>
+
+    <span>
+      Page {{ page() }} of {{ totalPages() }}
+    </span>
+
+    <button
+      type="button"
+      [disabled]="!canGoNext()"
+      (click)="nextPage()"
+    >
+      Next
+    </button>
+  </div>
+</div>
