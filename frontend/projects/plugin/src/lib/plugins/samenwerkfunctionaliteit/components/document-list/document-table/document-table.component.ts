@@ -73,9 +73,12 @@ export class DocumentTableComponent implements OnInit {
   enableSingleSelect: boolean = true;
   showSelectionColumn: boolean = false;
 
-  ngOnInit(): void {
-    this.setTableModelFilterAndHeader(this.documents());
+  private readonly documentsEffect = effect(() => {
+    const documents = this.documents();
+
+    this.setTableModelFilterAndHeader(documents);
     this.selectPage(1);
+  });
   }
 
   protected selectPage(page: number): void {
