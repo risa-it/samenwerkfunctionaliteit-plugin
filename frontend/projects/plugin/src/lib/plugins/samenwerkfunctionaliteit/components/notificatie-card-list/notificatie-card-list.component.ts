@@ -7,8 +7,12 @@ import {
 } from '@angular/core';
 import { NotificatieService } from '../../service/notificatie.service';
 import { Observable, switchMap, take } from 'rxjs';
-import { Notificatie } from '../../models/notificatie.model';
-import { LoadingModule, SkeletonModule } from 'carbon-components-angular';
+import { Notificatie, NotificatiePage } from '../../models/notificatie.model';
+import {
+  LoadingModule,
+  PaginationModule,
+  SkeletonModule,
+} from 'carbon-components-angular';
 import { SwfDocumentService } from '../../service/swf-document.service';
 import { ActivatedRoute } from '@angular/router';
 import { NotificatieCardInput } from './model/notificatie-card-input.model';
@@ -20,11 +24,18 @@ import {
 } from './type/notificatie-card.type';
 import { NotificatieCardComponent } from './notificatie-card/notificatie-card.component';
 import { toBusinessKey } from '../../types/business-key.type';
+import { PaginationComponent } from './notification-card-list-pagination/swf-notification-pagination.component';
 
 @Component({
   templateUrl: `notificatie-card-list.component.html`,
   styleUrl: './notificatie-card-list.component.scss',
-  imports: [NotificatieCardComponent, LoadingModule, SkeletonModule],
+  imports: [
+    NotificatieCardComponent,
+    LoadingModule,
+    SkeletonModule,
+    PaginationModule,
+    PaginationComponent,
+  ],
   selector: 'swf-notificatie-card-list',
 })
 export class NotificatieCardListComponent implements OnInit {
@@ -41,17 +52,52 @@ export class NotificatieCardListComponent implements OnInit {
   itemsPerPage = 10;
   itemsPerPageArray: number[] = Array.from({ length: this.itemsPerPage });
 
+  documentId: string = '';
+  FIRST_PAGE: number = 1;
+
+  readonly page = signal(1);
+  readonly pageSize = signal(10);
+  readonly totalNotifications = signal(0);
+
+  onPageChange(page: number): void {
+    this.page.set(page);
+    this.fetchAndLoadNotifications(
+      this.documentId,
+      this.page(),
+      this.pageSize(),
+    );
+  }
+
+  onPageSizeChange(pageSize: number): void {
+    this.pageSize.set(pageSize);
+    this.page.set(1);
+
+    this.fetchAndLoadNotifications(
+      this.documentId,
+      this.page(),
+      this.pageSize(),
+    );
+  }
+
   ngOnInit() {
-    const documentId = this.swfDocumentService.getParam(
+    this.documentId = this.swfDocumentService.getParam(
       this.route,
       'documentId',
     );
-    if (documentId !== null) {
-      this.fetchAndLoadNotifications(documentId);
+    if (this.documentId !== null) {
+      this.fetchAndLoadNotifications(
+        this.documentId,
+        this.FIRST_PAGE,
+        this.pageSize(),
+      );
     }
   }
 
-  private fetchAndLoadNotifications(documentId: string): void {
+  private fetchAndLoadNotifications(
+    documentId: string,
+    page: number,
+    size: number,
+  ): void {
     const businessKey = toBusinessKey(documentId);
 
     this.swfDocumentService
@@ -59,20 +105,29 @@ export class NotificatieCardListComponent implements OnInit {
       .pipe(
         take(1),
         switchMap((samenwerkingProperties) => {
-          return this.fetchNotifications(samenwerkingProperties.samenwerkingId);
+          return this.fetchNotifications(
+            samenwerkingProperties.samenwerkingId,
+            page,
+            size,
+          );
         }),
       )
-      .subscribe((notificaties) => {
-        this.notifications.set(notificaties);
+      .subscribe((notificatie) => {
+        this.notifications.set(notificatie.page.item);
+        this.page.set(notificatie.page.number);
+        this.pageSize.set(notificatie.page.size);
+        this.totalNotifications.set(notificatie.page.totalElements);
         this.loadInputs(this.notifications());
       });
   }
 
   private fetchNotifications(
     samenwerkingId: string,
-  ): Observable<Notificatie[]> {
+    page: number,
+    size: number,
+  ): Observable<NotificatiePage> {
     return this.notificatieService
-      .getNotificaties(samenwerkingId)
+      .getNotificaties(samenwerkingId, page, size)
       .pipe(take(1));
   }
 
