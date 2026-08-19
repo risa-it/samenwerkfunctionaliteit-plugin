@@ -266,7 +266,10 @@ export class DocumentTableComponent implements OnInit {
     this.searchValue.set(fileName);
   }
 
-  protected get batchText(): { SINGLE: string; MULTIPLE: string } {
+  protected get batchText(): {
+    SINGLE: string;
+    MULTIPLE: string;
+  } {
     return {
       SINGLE: this.translateService.instant(
         'samenwerkfunctionaliteit.documentTable.selectedFile',
