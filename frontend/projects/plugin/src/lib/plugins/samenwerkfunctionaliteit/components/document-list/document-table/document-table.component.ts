@@ -151,8 +151,8 @@ export class DocumentTableComponent implements OnInit {
 
   protected onRowSelected(event: Object): void {
     const { model, selectedRowIndex } = event as {
-    model: TableModel;
-    selectedRowIndex: number;
+      model: TableModel;
+      selectedRowIndex: number;
     };
     this.selectedDocument.set(this.displayedDocuments()[selectedRowIndex]);
   }
@@ -221,7 +221,7 @@ export class DocumentTableComponent implements OnInit {
           this.uploaded.emit();
         }),
         finalize(() => {
-      this.isUploading.set(false);
+          this.isUploading.set(false);
         }),
       )
       .subscribe();
