@@ -5,6 +5,6 @@ export interface DocumentInterface {
   samenwerkingId: string;
   documentId: UUID;
   filename: string;
-  confidentialityLevel: ConfidentialityType;
+  confidentialityType: ConfidentialityType;
   creationDate: string;
 }

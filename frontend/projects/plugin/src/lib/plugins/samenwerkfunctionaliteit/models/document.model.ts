@@ -7,7 +7,7 @@ export class Document implements DocumentInterface {
     readonly samenwerkingId: string,
     readonly documentId: UUID,
     readonly filename: string,
-    readonly confidentialityLevel: ConfidentialityType,
+    readonly confidentialityType: ConfidentialityType,
     readonly creationDate: string,
   ) {}
 }

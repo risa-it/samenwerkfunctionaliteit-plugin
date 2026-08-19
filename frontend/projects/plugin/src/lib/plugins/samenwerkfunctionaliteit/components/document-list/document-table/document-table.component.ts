@@ -188,7 +188,11 @@ export class DocumentTableComponent implements OnInit {
   private getTableItems(documents: Document[]): TableItem[][] {
     return documents.map((document) => [
       new TableItem({ data: document.filename }),
-      new TableItem({ data: document.confidentialityLevel }),
+      new TableItem({
+        data: this.translateService.instant(
+          confidentialityTypeToTranslationKey(document.confidentialityType),
+        ),
+      }),
       new TableItem({
         data: new Date(document.creationDate).toLocaleDateString(),
       }),
