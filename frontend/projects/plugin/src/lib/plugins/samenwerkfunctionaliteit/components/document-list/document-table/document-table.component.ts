@@ -313,7 +313,9 @@ export class DocumentTableComponent implements OnInit {
         ),
       }),
       new TableItem({
-        data: new Date(document.creationDate).toLocaleDateString(),
+        data: new Date(document.creationDate).toLocaleDateString(
+          this.translateService.currentLang,
+        ),
       }),
     ]);
   }
