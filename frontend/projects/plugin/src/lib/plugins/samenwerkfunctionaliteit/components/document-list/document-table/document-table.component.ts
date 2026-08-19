@@ -145,14 +145,12 @@ export class DocumentTableComponent implements OnInit {
     });
   }
 
-  protected onRowSelected(event: {
+  protected onRowSelected(event: Object): void {
+    const { model, selectedRowIndex } = event as {
     model: TableModel;
     selectedRowIndex: number;
-  }): void {
-    this.selectedDocument.set(
-      this.displayedDocuments()[event.selectedRowIndex],
-    );
-    console.log(this.selectedDocument()?.documentId);
+    };
+    this.selectedDocument.set(this.displayedDocuments()[selectedRowIndex]);
   }
 
   protected downloadDocument(): void {
