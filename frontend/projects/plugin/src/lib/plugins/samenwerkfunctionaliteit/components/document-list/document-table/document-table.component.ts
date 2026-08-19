@@ -78,6 +78,8 @@ export class DocumentTableComponent implements OnInit {
     viewChild.required<DocumentDeleteModal>('deleteModal');
 
   documents: InputSignal<Document[]> = input<Document[]>([]);
+  isSkeleton: InputSignal<boolean> = input<boolean>(true);
+
   deleted = output<string>();
   uploaded = output<void>();
 
@@ -98,13 +100,8 @@ export class DocumentTableComponent implements OnInit {
   displayedDocuments: WritableSignal<Document[]> = signal([]);
 
   selectedDocument: WritableSignal<Document | undefined> = signal(undefined);
-  isSkeleton: InputSignal<boolean> = input<boolean>(true);
   model: WritableSignal<TableModel> = signal(new TableModel());
   isUploading: WritableSignal<boolean> = signal(false);
-  searchValue: WritableSignal<string> = signal('');
-
-  private readonly documentTableModal =
-    viewChild.required<DocumentTableModal>('documentTableModal');
 
   private businessKey?: BusinessKey;
   private caseDefinitionKey?: string;
