@@ -55,6 +55,10 @@ export class DocumentTableComponent implements OnInit {
   private readonly notificationService: UserNotificationService = inject(
     UserNotificationService,
   );
+  private readonly uploadMetadataModal =
+    viewChild.required<DocumentUploadMetadataModal>('uploadMetadataModal');
+  private readonly deleteDocumentModal =
+    viewChild.required<DocumentDeleteModal>('deleteModal');
 
   documents: InputSignal<Document[]> = input<Document[]>([]);
   deleted = output<string>();
