@@ -71,7 +71,7 @@ export class UpdateStatusModalComponent {
       description: actieverzoek.description,
       productId: actieverzoek.productId,
       status: this.mapUpdateStatusToActieverzoekStatusType(
-        this.updateStatus.content,
+        this.updateStatus.value,
       ),
       title: actieverzoek.title,
     };
