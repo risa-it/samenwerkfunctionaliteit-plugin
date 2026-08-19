@@ -47,13 +47,13 @@ export class NotificatieCardComponent
   private getTypeText() {
     switch (this.inputs().type) {
       case NotificatieCardTypes.Document:
-        return 'samenwerkfunctionaliteit.notifications.types.document';
+        return 'samenwerkfunctionaliteit.types.notification.document';
       case NotificatieCardTypes.Message:
-        return 'samenwerkfunctionaliteit.notifications.types.message';
+        return 'samenwerkfunctionaliteit.types.notification.message';
       case NotificatieCardTypes.Status:
-        return 'samenwerkfunctionaliteit.notifications.types.status';
+        return 'samenwerkfunctionaliteit.types.notification.status';
       case NotificatieCardTypes.System:
-        return 'samenwerkfunctionaliteit.notifications.types.system';
+        return 'samenwerkfunctionaliteit.types.notification.system';
       default:
         return '';
     }
