@@ -138,11 +138,52 @@ export class DocumentTableComponent implements OnInit {
       .subscribe();
   }
 
-  protected uploadDocument() {
+  protected onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (!input.files?.length) {
+      return;
+    }
+
+    const file = input.files[0];
+
+    const businessKey = this.businessKey;
+    const caseDefinitionKey = this.caseDefinitionKey;
+
+    if (!businessKey || !caseDefinitionKey) {
+      return;
+    }
+
     this.isUploading.set(true);
-    setTimeout(() => {
+
+    this.documentModalService
+      .openUploadMetadata(this.uploadMetadataModal())
+      .pipe(
+        switchMap((metadata) =>
+          this.swfDocumentService
+            .getSamenwerkingProperties(businessKey)
+            .pipe(
+              switchMap((samenwerkingProps) =>
+                this.uploadWorkFlowService.startUpload(
+                  file,
+                  samenwerkingProps.samenwerkingId,
+                  businessKey,
+                  caseDefinitionKey,
+                  metadata,
+                ),
+              ),
+            ),
+        ),
+
+        tap(() => {
+          this.uploaded.emit();
+        }),
+        finalize(() => {
       this.isUploading.set(false);
-    }, 1500);
+        }),
+      )
+      .subscribe();
+  }
   }
 
   protected filterFileNames(fileName: string) {
