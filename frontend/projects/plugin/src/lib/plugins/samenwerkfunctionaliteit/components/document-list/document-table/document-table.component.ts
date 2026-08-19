@@ -333,17 +333,17 @@ export class DocumentTableComponent implements OnInit {
     return [
       new TableHeaderItem({
         data: this.translateService.instant(
-          'samenwerkfunctionaliteit.documentTable.fileName',
+          'samenwerkfunctionaliteit.types.document.fileName',
         ),
       }),
       new TableHeaderItem({
         data: this.translateService.instant(
-          'samenwerkfunctionaliteit.documentTable.confidentialityType',
+          'samenwerkfunctionaliteit.types.document.confidentialityType',
         ),
       }),
       new TableHeaderItem({
         data: this.translateService.instant(
-          'samenwerkfunctionaliteit.documentTable.dateCreated',
+          'samenwerkfunctionaliteit.types.document.dateCreated',
         ),
       }),
     ];
