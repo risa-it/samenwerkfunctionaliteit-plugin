@@ -23,13 +23,20 @@ import {
   TableModel,
   TableModule,
 } from 'carbon-components-angular';
-import { catchError, of } from 'rxjs';
+import { catchError, finalize, of, switchMap, tap } from 'rxjs';
+import { UserNotification } from '../../../interface/user-notification.interface';
 import { Document } from '../../../models/document.model';
+import { DocumentModalService } from '../../../service/document-modal.service';
 import { DocumentService } from '../../../service/document.service';
+import { SwfDocumentService } from '../../../service/swf-document.service';
+import { UploadWorkFlowService } from '../../../service/upload-workflow.service';
 import { UserNotificationService } from '../../../service/user-notification.service';
 import { getPaginationTranslations } from '../../../shared/carbon/pagination-translations';
+import { BusinessKey, toBusinessKey } from '../../../types/business-key.type';
+import { confidentialityTypeToTranslationKey } from '../../../types/confidentiality.type';
 import { documentTableDeleteModalConfig } from '../config/document-table-modal-config';
-import { DocumentTableModal } from '../modal/document-table-modal';
+import { DocumentDeleteModal } from './modal/delete/document-delete-modal.component';
+import { DocumentUploadMetadataModal } from './modal/upload/document-upload-metadata-modal.component';
 
 @Component({
   selector: 'document-table',
@@ -42,7 +49,8 @@ import { DocumentTableModal } from '../modal/document-table-modal';
     IconModule,
     PlaceholderModule,
     TranslatePipe,
-    DocumentTableModal,
+    DocumentUploadMetadataModal,
+    DocumentDeleteModal,
   ],
   templateUrl: './document-table.component.html',
   styleUrl: './document-table.component.css',
@@ -52,9 +60,18 @@ export class DocumentTableComponent implements OnInit {
   private readonly translateService: TranslateService =
     inject(TranslateService);
   private readonly documentService: DocumentService = inject(DocumentService);
+  private readonly uploadWorkFlowService: UploadWorkFlowService = inject(
+    UploadWorkFlowService,
+  );
   private readonly notificationService: UserNotificationService = inject(
     UserNotificationService,
   );
+  private readonly swfDocumentService: SwfDocumentService =
+    inject(SwfDocumentService);
+  readonly route: ActivatedRoute = inject(ActivatedRoute);
+  private readonly documentModalService: DocumentModalService =
+    inject(DocumentModalService);
+
   private readonly uploadMetadataModal =
     viewChild.required<DocumentUploadMetadataModal>('uploadMetadataModal');
   private readonly deleteDocumentModal =
