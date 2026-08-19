@@ -1,19 +1,45 @@
 export const pluginNlTranslations = {
   samenwerkfunctionaliteit: {
-    notifications: {
-      types: {
+    common: {
+      actions: {
+        cancel: 'Annuleren',
+        continue: 'Bevestigen',
+        delete: 'Verwijderen',
+        download: 'Downloaden',
+        search: 'Zoeken',
+        upload: 'Uploaden',
+      },
+    },
+    types: {
+      confidentiality: {
+        confidential: 'Vertrouwelijk',
+        strictlyConfidential: 'Strict vertrouwelijk',
+      },
+      notification: {
         status: 'Status',
         document: 'Document',
         system: 'Systeem',
         message: 'Bericht',
       },
+      document: {
+        fileName: 'Bestandsnaam',
+        confidentialityType: 'Vertrouwelijkheid',
+        dateCreated: 'Datum aangemaakt',
+        numberWithinSystem: 'Nummer binnen systeem',
+        systemId: 'Kenmerk van het systeem',
+        documentDescription: 'Documentomschrijving',
+      },
     },
     documentTable: {
-      delete: 'Verwijderen',
-      fileName: 'Bestandsnaam',
-      confidentialityType: 'Vertrouwelijkheidsaanduiding',
-      dateCreated: 'Datum aangemaakt',
       selectedFile: '{{ filename }} geselecteerd',
+      documentUploadModal: {
+        title: 'Document uploaden',
+      },
+      documentDeleteModal: {
+        title: 'Document verwijderen',
+        message:
+          "Weet je zeker dat je '{{filename}}' uit de samenwerking wilt verwijderen? Het document zal niet meer voor jou en andere deelnemers beschikbaar zijn.",
+      },
     },
     feedback: {
       userNotification: {
@@ -23,7 +49,22 @@ export const pluginNlTranslations = {
         genericSuccessTitle: 'Gelukt',
         genericSuccessMessage: 'De actie is succesvol uitgevoerd',
 
-        downloadDocumentFailureTitle: 'Er ging iets mis tijdens het downloaden',
+        downloadDocument: {
+          failure: {
+            title: 'Er ging iets mis tijdens het downloaden',
+          },
+        },
+
+        deleteDocument: {
+          success: {
+            title: 'Document verwijderd',
+            message:
+              'Het document {{ filename }} is succesvol uit de samenwerking verwijderd.',
+          },
+          failure: {
+            title: 'Er ging iets mis tijdens het verwijderen van het document',
+          },
+        },
 
         fetchDocuments: {
           failure: {
