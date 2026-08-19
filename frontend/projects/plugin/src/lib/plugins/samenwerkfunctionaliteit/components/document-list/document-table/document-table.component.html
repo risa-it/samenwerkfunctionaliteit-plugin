@@ -45,13 +45,11 @@
   ></cds-pagination>
 </cds-table-container>
 
-<document-table-modal
-  #documentTableModal
-  [buttons]="deleteConfig.buttons"
-  [modalContent]="deleteConfig.content"
-  [modalTitle]="deleteConfig.title"
-  [modalType]="deleteConfig.type"
-  [showCloseButton]="deleteConfig.showCloseButton"
-  [size]="deleteConfig.size"
->
-</document-table-modal>
+<document-upload-metadata-modal
+  #uploadMetadataModal
+></document-upload-metadata-modal>
+
+<document-delete-modal
+  #deleteModal
+  [document]="selectedDocument()"
+></document-delete-modal>
