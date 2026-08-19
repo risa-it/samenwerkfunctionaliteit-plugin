@@ -186,6 +186,44 @@ export class DocumentTableComponent implements OnInit {
       )
       .subscribe();
   }
+
+  protected deleteDocument(): void {
+    const document = this.selectedDocument();
+    if (!document?.documentId) {
+      return;
+    }
+
+    this.documentModalService
+      .openDelete(this.deleteDocumentModal())
+      .pipe(
+        switchMap(() => {
+          return this.documentService.deleteDocument(document.documentId).pipe(
+            tap(() => {
+              const notification: UserNotification = {
+                titleKey:
+                  'samenwerkfunctionaliteit.feedback.userNotification.deleteDocument.success.title',
+                messageKey:
+                  'samenwerkfunctionaliteit.feedback.userNotification.deleteDocument.success.message',
+                messageParam: { filename: document.filename },
+              };
+
+              this.notificationService.showSuccess(notification);
+
+              this.hideToolbar();
+
+              this.deleted.emit(document.documentId);
+            }),
+            catchError(() => {
+              this.notificationService.showError({
+                titleKey:
+                  'samenwerkfunctionaliteit.feedback.userNotification.deleteDocument.failure.title',
+              });
+              return of(undefined);
+            }),
+          );
+        }),
+      )
+      .subscribe();
   }
 
   protected filterFileNames(fileName: string) {
