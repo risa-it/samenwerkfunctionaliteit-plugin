@@ -85,7 +85,6 @@ export class DocumentListComponent implements OnInit {
     this.swfDocumentService
       .getSamenwerkingProperties(this.businessKey)
       .pipe(
-        take(1),
         tap((samenwerkingProperties: SamenwerkingProperties): void => {
           if (!samenwerkingProperties.samenwerkingId) {
             throw new Error(

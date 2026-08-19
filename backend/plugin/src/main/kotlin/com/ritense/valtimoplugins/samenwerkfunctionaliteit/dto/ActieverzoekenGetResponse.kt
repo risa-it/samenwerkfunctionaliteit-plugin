@@ -9,6 +9,6 @@ data class ActieverzoekenGetResponse(
     val links: Links? = null,
 ) {
     data class Actieverzoeken(
-        val actieverzoeken: List<Actieverzoek>
+        val actieverzoeken: List<Actieverzoek>,
     )
 }

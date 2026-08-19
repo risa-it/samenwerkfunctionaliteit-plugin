@@ -21,9 +21,8 @@ data class Actieverzoek(
     val status: ActieverzoekStatus? = null,
     val titel: String? = null,
     val zender: String? = null,
-    val zenderNaam: String? = null
-){
-
+    val zenderNaam: String? = null,
+) {
     enum class ActieverzoekStatus {
         OPEN,
         IN_BEHANDELING,

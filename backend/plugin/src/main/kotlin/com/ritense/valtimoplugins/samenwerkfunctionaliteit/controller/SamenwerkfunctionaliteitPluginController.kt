@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import com.ritense.plugin.service.PluginConfigurationSearchParameters
 import com.ritense.plugin.service.PluginService
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.config.FrontendConfig
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.FrontendAccessibleProperties
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -16,8 +17,8 @@ class SamenwerkfunctionaliteitPluginController(
     private val frontendConfig: FrontendConfig,
 ) {
     @GetMapping("properties")
-    fun getProperties(): SamenwerkfunctionaliteitProperties =
-        SamenwerkfunctionaliteitProperties(
+    fun getProperties(): FrontendAccessibleProperties =
+        FrontendAccessibleProperties(
             oinNummer =
                 extractPropertyFromSamenwerkfunctionaliteitPluginConfiguration(
                     SAMENWERKFUNCTIONALITEIT_PLUGIN_OIN_PROPERTY_NAME,
@@ -45,12 +46,6 @@ class SamenwerkfunctionaliteitPluginController(
             ?.let { node ->
                 if (node.isTextual) node.asText() else null
             }
-
-    data class SamenwerkfunctionaliteitProperties(
-        val oinNummer: String?,
-        val baseUrl: String?,
-        val backupUploadsToDocumentenApi: Boolean,
-    )
 
     companion object {
         private val logger = KotlinLogging.logger { }

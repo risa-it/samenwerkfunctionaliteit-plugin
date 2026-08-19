@@ -1,11 +1,9 @@
 @use '@carbon/styles/scss/colors' as carbon-color;
 
 .status-card {
-  padding: 24px;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-bottom: 1em;
 
   border: 2px solid carbon-color.$gray-10;
   border-radius: 0.25rem;
@@ -14,14 +12,10 @@
   &__header-container {
     display: flex;
     justify-content: space-between;
-    gap: 8px;
   }
 
   &__header-title {
     color: var(--widget-text-color, var(--cds-text-primary));
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 24px;
   }
 
 }

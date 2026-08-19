@@ -19,7 +19,7 @@ import {
   take,
 } from 'rxjs';
 import { Config } from '../../models';
-import { FormModule, InputModule } from '@valtimo/components';
+import { FormModule, FormOutput, InputModule } from '@valtimo/components';
 import { AsyncPipe, NgIf } from '@angular/common';
 
 @Component({
@@ -58,8 +58,8 @@ export class SamenwerkfunctionaliteitPluginConfigurationComponent
     this.saveSubscription?.unsubscribe();
   }
 
-  formValueChange(formValue: Config): void {
-    this.formValue$.next(formValue);
+  formValueChange(formValue: FormOutput): void {
+    this.formValue$.next(formValue as Config);
 
     const valid = !!(
       formValue.samenwerkfunctionaliteitUrl && formValue.certificate
@@ -74,7 +74,7 @@ export class SamenwerkfunctionaliteitPluginConfigurationComponent
       combineLatest([this.formValue$, this.valid$])
         .pipe(take(1))
         .subscribe(([formValue, valid]) => {
-          if (valid && formValue) {
+          if (valid) {
             this.configuration.emit(formValue);
           }
         });

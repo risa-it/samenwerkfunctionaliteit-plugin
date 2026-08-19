@@ -16,11 +16,11 @@
   >
   </v-input>
   <v-input
-          name="samenwerkfunctionaliteitUrl"
-          [title]="'samenwerkfunctionaliteitUrl' | pluginTranslate : pluginId | async"
+    name="baseUrl"
+    [title]="'baseUrl' | pluginTranslate : pluginId | async"
           [margin]="true"
           [fullWidth]="true"
-          [defaultValue]="obs.prefill?.samenwerkfunctionaliteitUrl"
+    [defaultValue]="obs.prefill?.baseUrl"
           [disabled]="obs.disabled"
           [required]="true"
   >

@@ -10,21 +10,15 @@
   overflow: hidden;
 }
 
-.samenwerking-section {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  gap: 0.5rem;
-  width: 50%;
-}
-
-.section {
-  width: 50%;
-}
-
-.sections-container {
-  display: flex;
+.content-wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   width: 100%;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }

@@ -1,7 +1,7 @@
 import {PluginConfigurationData} from '@valtimo/plugin';
 
 interface Config extends PluginConfigurationData {
-  samenwerkfunctionaliteitUrl: string;
+  baseUrl: string;
   certificate: string;
   oinNummer: string;
 }

@@ -11,11 +11,9 @@ import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Notificatie
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Page
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.SamenwerkfunctionaliteitProperties
 import org.springframework.core.io.InputStreamResource
-import org.springframework.stereotype.Service
 import java.time.ZonedDateTime
 import java.util.UUID
 
-@Service
 class DefaultSamenwerkfunctionaliteitService(
     private val samenwerkfunctionaliteitClient: SamenwerkfunctionaliteitClient,
 ) : SamenwerkfunctionaliteitService {

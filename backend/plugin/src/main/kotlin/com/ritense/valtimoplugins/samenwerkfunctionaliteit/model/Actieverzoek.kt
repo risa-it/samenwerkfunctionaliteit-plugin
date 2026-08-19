@@ -1,8 +1,8 @@
 package com.ritense.valtimoplugins.samenwerkfunctionaliteit.model
 
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.Document
 import java.time.OffsetDateTime
 import java.util.UUID
-import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.Document
 
 data class Actieverzoek(
     val links: Links? = null,
@@ -22,7 +22,7 @@ data class Actieverzoek(
     val status: ActieverzoekStatus? = null,
     val titel: String? = null,
     val zender: String? = null,
-    val zenderNaam: String? = null
+    val zenderNaam: String? = null,
 ) {
     enum class ActieverzoekStatus {
         OPEN,
@@ -30,6 +30,6 @@ data class Actieverzoek(
         GEWEIGERD,
         INGETROKKEN,
         GEREEDGEMELD,
-        GEREED
+        GEREED,
     }
 }

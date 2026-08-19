@@ -12,20 +12,34 @@
   </div>
 }
 
-@if (!hasError() && !isLoading()) {
-  <div class="sections-container">
-    <section class="samenwerking-section">
-      <samenwerkingsstatus [samenwerking]="this.samenwerking()"></samenwerkingsstatus>
-      <samenwerking [samenwerking]="this.samenwerking()"></samenwerking>
-    </section>
-    <section class="samenwerking-section">
-      <update-actieverzoek-status [actieverzoek]="actieverzoek()"
-                                  [actieverzoekStatusTypes]="actieverzoekStatusTypes()"></update-actieverzoek-status>
-    </section>
-    <section class="samenwerking-section">
-      <document-list [isLightMode]="true"></document-list>
-    </section>
+@if (isSamenwerkingDossier() && !isLoading()) {
+  <div class="content-wrapper">
+    <div class="column">
+      <samenwerkingsstatus class="samenwerkingsstatus" [samenwerking]="this.samenwerking()"></samenwerkingsstatus>
+      <samenwerking class="samenwerking" [samenwerking]="this.samenwerking()"></samenwerking>
+    </div>
+    <div class="column">
+      <actieverzoek-card [actieverzoek]="actieverzoek()"></actieverzoek-card>
+      @if (statusTypeDropdownListItems().length > 0) {
+        <update-status-modal
+          [actieverzoek]="actieverzoek()"
+          [statusTypeDropdownListItems]="statusTypeDropdownListItems()"
+          [allowedStatusTypes]="actieverzoekStatusTypes()"
+        ></update-status-modal>
+      }
+    </div>
+    <div class="column">
+      <document-list class="document-list" [isLightMode]="true"></document-list>
+    </div>
+
   </div>
-} @else {
-  <p>{{ this.errorMessage() }}</p>
+} @else if (!isSamenwerkingDossier() && !isLoading()) {
+  <cds-notification
+    [notificationObj]="{
+          type: 'info',
+          title: 'samenwerkfunctionaliteit.feedback.notAnSwfCaseMessage.samenwerkingTitle' | translate,
+          message: 'samenwerkfunctionaliteit.feedback.notAnSwfCaseMessage.genericMessage' | translate,
+          showClose: true
+        }"
+  ></cds-notification>
 }

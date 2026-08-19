@@ -1,10 +1,9 @@
 <div class="cds-panel">
   <div class="cds-form">
     <div class="cds-field">
-      <cds-label>Wijzig actieverzoek status</cds-label>
+      <cds-label>Wijzig actieverzoekstatus</cds-label>
       <cds-dropdown
         [(ngModel)]="updateStatus"
-        (selected)="onUpdateStatus()"
       >
         <cds-dropdown-list
           [items]="statusTypeDropdownListItems()"
@@ -20,6 +19,7 @@
         id="explanation"
         [(ngModel)]="explanation"
         rows="5"
+        [invalid]="hasError()"
       ></textarea>
     </div>
 
@@ -27,8 +27,15 @@
       <button
         cdsButton
         type="button"
+        (click)="onSubmit()"
+        [disabled]="isSending()"
       >
-        Bevestigen
+        Status wijzigen
+        <svg
+          cdsIcon="save"
+          size="16"
+          class="cds--btn__icon"
+        ></svg>
       </button>
     </div>
   </div>

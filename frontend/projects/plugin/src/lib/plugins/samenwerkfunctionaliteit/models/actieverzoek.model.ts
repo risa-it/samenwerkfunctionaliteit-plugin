@@ -22,3 +22,11 @@ export interface Actieverzoek {
   sender: string;
   senderName: string;
 }
+
+export interface ActieverzoekUpdateData {
+  notice: string;
+  description: string;
+  productId: string;
+  status: ActieverzoekStatusType;
+  title: string;
+}

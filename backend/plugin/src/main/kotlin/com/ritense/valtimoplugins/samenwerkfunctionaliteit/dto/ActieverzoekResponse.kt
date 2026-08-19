@@ -23,5 +23,5 @@ data class ActieverzoekResponse(
     val status: Actieverzoek.ActieverzoekStatus? = null,
     val titel: String? = null,
     val zender: String? = null,
-    val zenderNaam: String? = null
+    val zenderNaam: String? = null,
 )
