@@ -1,19 +1,27 @@
 <cds-table-container>
-  <cds-table-toolbar [model]="model()" [batchText]="batchText" #toolbar>
+  <cds-table-toolbar
+    [model]="model()"
+    [batchText]="batchText"
+    [cancelText]="{
+      CANCEL: ('samenwerkfunctionaliteit.common.actions.cancel' | translate),
+    }"
+    #toolbar
+  >
     <cds-table-toolbar-actions>
       <button cdsButton="primary" (click)="deleteDocument()">
-        {{ 'samenwerkfunctionaliteit.documentTable.delete' | translate }}
+        {{ 'samenwerkfunctionaliteit.common.actions.delete' | translate }}
         <svg size="16" class="cds--btn__icon"></svg>
       </button>
       <button cdsButton="primary" (click)="downloadDocument()">
-        Download
+        {{ 'samenwerkfunctionaliteit.common.actions.download' | translate }}
         <svg size="16" class="cds--btn__icon"></svg>
       </button>
     </cds-table-toolbar-actions>
     <cds-table-toolbar-content *ngIf="!toolbar.selected">
       <cds-table-toolbar-search
         [expandable]="true"
-        (valueChange)="filterFileNames($event)"
+        [placeholder]="searchFieldPlaceholder"
+        (valueChange)="searchValue.set($event)"
         (clear)="searchValue.set('')"
       >
       </cds-table-toolbar-search>
