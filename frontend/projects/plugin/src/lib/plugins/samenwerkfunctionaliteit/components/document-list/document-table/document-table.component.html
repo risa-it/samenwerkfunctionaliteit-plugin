@@ -17,13 +17,15 @@
         (clear)="searchValue.set('')"
       >
       </cds-table-toolbar-search>
+      <input #fileInput type="file" hidden (change)="onFileSelected($event)" />
+
       <button
         cdsButton="primary"
         size="sm"
-        (click)="uploadDocument()"
+        (click)="fileInput.click()"
         [disabled]="isUploading()"
       >
-        Upload
+        {{ 'samenwerkfunctionaliteit.common.actions.upload' | translate }}
         <svg cdsIcon="add" size="20" class="cds--btn__icon"></svg>
       </button>
     </cds-table-toolbar-content>
