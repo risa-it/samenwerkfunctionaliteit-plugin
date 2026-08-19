@@ -59,7 +59,23 @@ export class DocumentTableComponent implements OnInit {
   documents: InputSignal<Document[]> = input<Document[]>([]);
   deleted = output<string>();
   uploaded = output<void>();
+
+  searchValue: WritableSignal<string> = signal('');
+
+  readonly filteredDocuments = computed(() => {
+    const search = this.searchValue().trim().toLowerCase();
+
+    if (!search) {
+      return this.documents();
+    }
+
+    return this.documents().filter((document) =>
+      document.filename.toLowerCase().includes(search),
+    );
+  });
+
   displayedDocuments: WritableSignal<Document[]> = signal([]);
+
   selectedDocument: WritableSignal<Document | undefined> = signal(undefined);
   isSkeleton: InputSignal<boolean> = input<boolean>(true);
   model: WritableSignal<TableModel> = signal(new TableModel());
@@ -75,14 +91,18 @@ export class DocumentTableComponent implements OnInit {
   protected readonly deleteConfig: AlertModalData =
     documentTableDeleteModalConfig;
 
+  protected searchFieldPlaceholder: string = this.translateService.instant(
+    'samenwerkfunctionaliteit.common.actions.search',
+  );
+
   striped: boolean = false;
   enableSingleSelect: boolean = true;
   showSelectionColumn: boolean = false;
 
   private readonly documentsEffect = effect(() => {
-    const documents = this.documents();
+    const documents = this.filteredDocuments();
 
-    this.setTableModelFilterAndHeader(documents);
+    this.setTableModel(documents);
     this.selectPage(1);
   });
 
@@ -227,9 +247,7 @@ export class DocumentTableComponent implements OnInit {
   }
 
   protected filterFileNames(fileName: string) {
-    this.searchValue.update(() => {
-      return fileName;
-    });
+    this.searchValue.set(fileName);
   }
 
   protected get batchText(): { SINGLE: string; MULTIPLE: string } {
@@ -256,11 +274,12 @@ export class DocumentTableComponent implements OnInit {
   }
 
   private getDocumentsForPage(page: number): Document[] {
-    const documents = this.documents();
-    const startIndex: number = (page - 1) * this.model().pageLength;
-    const endIndex: number = Math.min(
-      page * this.model().pageLength,
-      this.model().totalDataLength,
+    const documents = this.filteredDocuments();
+
+    const startIndex = (page - 1) * this.model().pageLength;
+    const endIndex = Math.min(
+      startIndex + this.model().pageLength,
+      documents.length,
     );
 
     return documents.slice(startIndex, endIndex);
@@ -280,16 +299,10 @@ export class DocumentTableComponent implements OnInit {
     ]);
   }
 
-  private setTableModelFilterAndHeader(documents: Document[]): void {
+  private setTableModel(documents: Document[]): void {
     this.model.update((model: TableModel): TableModel => {
       model.totalDataLength = documents.length;
       model.header = this.createTableHeadersForTableModel();
-      model.isRowFiltered = (index: number) => {
-        const fileName = model.row(index)[0].data;
-        return !fileName
-          .toLowerCase()
-          .includes(this.searchValue().toLowerCase());
-      };
 
       return model;
     });
