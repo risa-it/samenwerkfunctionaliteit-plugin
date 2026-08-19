@@ -12,6 +12,8 @@
     <document-table
       [documents]="documents()"
       [isSkeleton]="isLoading()"
+      (deleted)="onDocumentDeleted($event)"
+      (uploaded)="onDocumentUploaded()"
     ></document-table>
   } @else {
     <document-table [isSkeleton]="isLoading()"></document-table>

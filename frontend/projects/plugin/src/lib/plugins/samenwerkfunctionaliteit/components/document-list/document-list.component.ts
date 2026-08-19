@@ -20,6 +20,7 @@ import { SwfDocumentService } from '../../service/swf-document.service';
 import { UserNotificationService } from '../../service/user-notification.service';
 
 import { BusinessKey, toBusinessKey } from '../../types/business-key.type';
+import { UUID } from '../../types/uuid.type';
 import { DocumentTableComponent } from './document-table/document-table.component';
 import { DocumentTableLightComponent } from './document-table/light/document-table-light.component';
 
@@ -64,6 +65,10 @@ export class DocumentListComponent implements OnInit {
         return document.documentId !== documentId;
       }),
     );
+  }
+
+  protected onDocumentUploaded(): void {
+    this.fetchDocumenten();
   }
 
   private fetchDocumenten(): void {

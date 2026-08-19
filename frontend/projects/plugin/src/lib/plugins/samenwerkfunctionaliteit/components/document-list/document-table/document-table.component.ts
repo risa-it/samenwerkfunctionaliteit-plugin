@@ -57,6 +57,8 @@ export class DocumentTableComponent implements OnInit {
   );
 
   documents: InputSignal<Document[]> = input<Document[]>([]);
+  deleted = output<string>();
+  uploaded = output<void>();
   displayedDocuments: WritableSignal<Document[]> = signal([]);
   selectedDocument: WritableSignal<Document | undefined> = signal(undefined);
   isSkeleton: InputSignal<boolean> = input<boolean>(true);
