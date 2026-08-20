@@ -56,7 +56,7 @@ export class DocumentUploadMetadataModal {
     'samenwerkfunctionaliteit.types.document.confidentialityType',
   );
 
-  confidentialityOptions = [
+  protected confidentialityOptions = [
     {
       content: this.translateService.instant(
         'samenwerkfunctionaliteit.types.confidentiality.confidential',
