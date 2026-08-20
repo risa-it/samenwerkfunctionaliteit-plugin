@@ -44,7 +44,6 @@ export class UploadWorkFlowService {
     caseDefinitionKey: string,
     metadata: UploadDocumentMetadata,
   ): Observable<void> {
-    // TODO: replace with call to modal service to collect data from user. For now: return some mock data to test;
     return forkJoin({
       versionTag: this.getVersionTag(businessKey),
       metadata: of<UploadDocumentMetadata>(metadata),
