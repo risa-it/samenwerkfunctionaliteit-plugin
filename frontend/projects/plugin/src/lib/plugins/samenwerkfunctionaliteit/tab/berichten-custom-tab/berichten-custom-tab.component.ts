@@ -68,7 +68,7 @@ export class BerichtenCustomTabComponent implements OnInit {
     );
 
     if (!documentId) {
-      throw new Error('Could not retreive business key from the route');
+      throw new Error('Could not retrieve business key from the route');
     }
 
     return toBusinessKey(documentId);
