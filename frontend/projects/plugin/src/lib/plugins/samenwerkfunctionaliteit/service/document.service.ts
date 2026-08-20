@@ -41,9 +41,6 @@ export class DocumentService {
       map((documentenOverzichtResponse: DocumentenOverzichtResponse) => {
         return mapDocumentenResponseToModels(documentenOverzichtResponse);
       }),
-      map((documenten: DocumentInterface[]) => {
-        return documenten;
-      }),
       catchError((error: Error) => {
         return throwError(() => error);
       }),
