@@ -1,18 +1,10 @@
-import {
-  Component,
-  inject,
-  output,
-  signal,
-  viewChild,
-  WritableSignal,
-} from '@angular/core';
+import { Component, inject, output, viewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   ButtonModule,
   DropdownModule,
   InputModule,
-  ListItem,
 } from 'carbon-components-angular';
 
 import {
@@ -49,8 +41,6 @@ export class DocumentUploadMetadataModal {
 
   readonly submitted = output<UploadDocumentMetadata>();
   readonly cancelled = output<void>();
-
-  confidentialityTypes: WritableSignal<ListItem[]> = signal([]);
 
   protected readonly metadataForm = this.formBuilder.group({
     documentDescription: [''],
