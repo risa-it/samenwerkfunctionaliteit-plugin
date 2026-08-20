@@ -150,7 +150,7 @@ export class DocumentTableComponent implements OnInit {
   }
 
   protected onRowSelected(event: Object): void {
-    const { model, selectedRowIndex } = event as {
+    const { selectedRowIndex } = event as {
       model: TableModel;
       selectedRowIndex: number;
     };
