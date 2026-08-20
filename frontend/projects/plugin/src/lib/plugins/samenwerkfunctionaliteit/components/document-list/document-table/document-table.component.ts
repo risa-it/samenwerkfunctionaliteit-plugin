@@ -114,6 +114,12 @@ export class DocumentTableComponent implements OnInit {
   protected readonly deleteConfig: AlertModalData =
     documentTableDeleteModalConfig;
 
+  protected readonly paginationTranslations = getPaginationTranslations(
+    this.translateService,
+    'document',
+    'documenten',
+  );
+
   protected searchFieldPlaceholder: string = this.translateService.instant(
     'samenwerkfunctionaliteit.common.actions.search',
   );
@@ -273,12 +279,6 @@ export class DocumentTableComponent implements OnInit {
       MULTIPLE: '',
     };
   }
-
-  protected readonly paginationTranslations = getPaginationTranslations(
-    this.translateService,
-    'document',
-    'documenten',
-  );
 
   private hideToolbar(): void {
     this.selectedDocument.set(undefined);
