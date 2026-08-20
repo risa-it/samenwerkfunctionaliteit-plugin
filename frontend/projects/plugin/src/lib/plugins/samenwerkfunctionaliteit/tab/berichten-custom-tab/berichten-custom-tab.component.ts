@@ -50,14 +50,14 @@ export class BerichtenCustomTabComponent implements OnInit {
 
   ngOnInit(): void {
     this.iconService.registerAll([Collaborate32]);
-    this.getBerichten(this.getBusinessKey());
+    this.fetchChat(this.getBusinessKey());
 
     this.isLoading.set(false);
   }
 
   protected refreshMessages(): void {
     this.isLoading.set(true);
-    this.getBerichten(this.getBusinessKey());
+    this.fetchChat(this.getBusinessKey());
     this.isLoading.set(false);
   }
 
@@ -87,7 +87,7 @@ export class BerichtenCustomTabComponent implements OnInit {
       );
   }
 
-  private getBerichten(businessKey: BusinessKey): void {
+  private fetchChat(businessKey: BusinessKey): void {
     this.fetchSamenwerkingProperties()
       .pipe(
         switchMap((samenwerkingProperties: SamenwerkingProperties) =>
