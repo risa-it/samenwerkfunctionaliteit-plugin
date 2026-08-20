@@ -267,10 +267,6 @@ export class DocumentTableComponent implements OnInit {
       .subscribe();
   }
 
-  protected filterFileNames(fileName: string) {
-    this.searchValue.set(fileName);
-  }
-
   protected get batchText(): {
     SINGLE: string;
     MULTIPLE: string;
