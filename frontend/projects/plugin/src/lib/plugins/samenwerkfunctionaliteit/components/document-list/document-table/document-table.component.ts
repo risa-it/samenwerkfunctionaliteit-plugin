@@ -240,15 +240,7 @@ export class DocumentTableComponent implements OnInit {
         switchMap(() => {
           return this.documentService.deleteDocument(document.documentId).pipe(
             tap(() => {
-              const notification: UserNotification = {
-                titleKey:
-                  'samenwerkfunctionaliteit.feedback.userNotification.deleteDocument.success.title',
-                messageKey:
-                  'samenwerkfunctionaliteit.feedback.userNotification.deleteDocument.success.message',
-                messageParam: { filename: document.filename },
-              };
-
-              this.notificationService.showSuccess(notification);
+              this.sendDocumentDeletionSuccessMessage(document);
 
               this.hideToolbar();
 
@@ -348,5 +340,17 @@ export class DocumentTableComponent implements OnInit {
         ),
       }),
     ];
+  }
+
+  private sendDocumentDeletionSuccessMessage(document: Document): void {
+    const notification: UserNotification = {
+      titleKey:
+        'samenwerkfunctionaliteit.feedback.userNotification.deleteDocument.success.title',
+      messageKey:
+        'samenwerkfunctionaliteit.feedback.userNotification.deleteDocument.success.message',
+      messageParam: { filename: document.filename },
+    };
+
+    this.notificationService.showSuccess(notification);
   }
 }
