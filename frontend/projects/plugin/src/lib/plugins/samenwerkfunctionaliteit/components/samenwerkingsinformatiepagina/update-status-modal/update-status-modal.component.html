@@ -1,7 +1,7 @@
 <div class="cds-panel">
   <div class="cds-form">
     <div class="cds-field">
-      <cds-label>Wijzig actieverzoekstatus</cds-label>
+      <cds-label>{{ 'samenwerkfunctionaliteit.actieverzoekUpdateStatusModal.updateStatusTo' | translate }}</cds-label>
       <cds-dropdown
         [(ngModel)]="updateStatus"
       >
@@ -13,7 +13,7 @@
     </div>
 
     <div class="cds-field">
-      <cds-label>Toelichting</cds-label>
+      <cds-label>{{ 'samenwerkfunctionaliteit.actieverzoekUpdateStatusModal.updateStatusExplanation' | translate }}</cds-label>
       <textarea
         cdsTextArea
         id="explanation"
@@ -30,7 +30,7 @@
         (click)="onSubmit()"
         [disabled]="isSending()"
       >
-        Status wijzigen
+        {{ 'samenwerkfunctionaliteit.actieverzoekUpdateStatusModal.updateStatus' | translate }}
         <svg
           cdsIcon="save"
           size="16"

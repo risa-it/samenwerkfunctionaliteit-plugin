@@ -35,6 +35,7 @@ import { ActieverzoekService } from '../../../service/actieverzoek.service';
 import {
   ActieverzoekStatusList,
   ActieverzoekStatusType,
+  getActieverzoekTypeText,
 } from '../../../types/actieverzoek-status.type';
 import { SamenwerkingProperties } from '../../../models/samenwerking-properties.model';
 import { ActieverzoekCardComponent } from '../actieverzoek-card/actieverzoek-card.component';
@@ -44,7 +45,7 @@ import {
   mapLinkActionToActieverzoekStatus,
 } from '../../../dto/actieverzoek.dto';
 import { PluginTranslatePipeModule } from '@valtimo/plugin';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'swf-informatie-pagina',
@@ -68,6 +69,7 @@ export class SwfInformatiePaginaComponent implements OnInit {
   samenwerkingService = inject(SamenwerkingService);
   swfDocumentService = inject(SwfDocumentService);
   actieverzoekService = inject(ActieverzoekService);
+  translateService = inject(TranslateService);
   route = inject(ActivatedRoute);
 
   samenwerking: WritableSignal<Samenwerking> = signal(null);
@@ -170,8 +172,12 @@ export class SwfInformatiePaginaComponent implements OnInit {
   ): ListItem[] {
     return actieverzoekStatusTypes.map(
       (actieverzoekStatusType: ActieverzoekStatusType): ListItem => {
+        const translatedType = this.translateService.instant(
+          getActieverzoekTypeText(actieverzoekStatusType),
+        );
         return {
-          content: actieverzoekStatusType,
+          content: translatedType,
+          value: actieverzoekStatusType,
           selected: false,
         };
       },

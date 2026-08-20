@@ -93,5 +93,10 @@ export const pluginNlTranslations = {
       productCode: 'Productcode',
       description: 'Omschrijving',
     },
+    actieverzoekUpdateStatusModal: {
+      updateStatusTo: 'Wijzig actieverzoekstatus naar',
+      updateStatusExplanation: 'Toelichting',
+      updateStatus: 'Status wijzigen',
+    },
   },
 };

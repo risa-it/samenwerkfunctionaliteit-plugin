@@ -3,8 +3,8 @@ import { Actieverzoek } from '../../../models/actieverzoek.model';
 import { DatePipe } from '@angular/common';
 import { InputModule } from 'carbon-components-angular';
 import { capitalize } from '../../../utils/capitalize';
-import { ActieverzoekStatusTypes } from '../../../types/actieverzoek-status.type';
 import { TranslatePipe } from '@ngx-translate/core';
+import { getActieverzoekTypeText } from '../../../types/actieverzoek-status.type';
 
 @Component({
   selector: 'actieverzoek-card',
@@ -18,25 +18,6 @@ export class ActieverzoekCardComponent {
   protected statusText: string = '';
 
   ngOnInit() {
-    this.statusText = this.getTypeText();
-  }
-
-  private getTypeText() {
-    switch (this.actieverzoek().status) {
-      case ActieverzoekStatusTypes.Open:
-        return 'samenwerkfunctionaliteit.actieverzoekStatusTypes.open';
-      case ActieverzoekStatusTypes.InProgress:
-        return 'samenwerkfunctionaliteit.actieverzoekStatusTypes.inProgress';
-      case ActieverzoekStatusTypes.Rejected:
-        return 'samenwerkfunctionaliteit.actieverzoekStatusTypes.rejected';
-      case ActieverzoekStatusTypes.Withdrawn:
-        return 'samenwerkfunctionaliteit.actieverzoekStatusTypes.withdrawn';
-      case ActieverzoekStatusTypes.ReportedReady:
-        return 'samenwerkfunctionaliteit.actieverzoekStatusTypes.reportedReady';
-      case ActieverzoekStatusTypes.Ready:
-        return 'samenwerkfunctionaliteit.actieverzoekStatusTypes.ready';
-      default:
-        throw Error('Unknown actieverzoek status type');
-    }
+    this.statusText = getActieverzoekTypeText(this.actieverzoek().status);
   }
 }
