@@ -80,7 +80,7 @@ export class BerichtenCustomTabComponent implements OnInit {
       .pipe(
         tap((samenwerkingProperties: SamenwerkingProperties) => {
           if (!samenwerkingProperties.actieverzoekDetails.actieverzoekId) {
-            throw Error('Dossier heeft geen actieverzoekId');
+            throw Error("Case doesn't have an actieverzoekId");
           }
           this.samenwerkingProperties = samenwerkingProperties;
         }),
