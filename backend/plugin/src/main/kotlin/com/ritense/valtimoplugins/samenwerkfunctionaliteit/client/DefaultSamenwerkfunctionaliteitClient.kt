@@ -149,6 +149,19 @@ class DefaultSamenwerkfunctionaliteitClient(
             }.retrieve()
             .body(DocumentenOverzichtResponse::class.java) ?: error("No list of Documents received.")
 
+    override fun getDocumentenOverzicht(
+        properties: SamenwerkfunctionaliteitProperties,
+        samenwerkingId: String,
+    ): DocumentenOverzichtResponse =
+        restClient(properties)
+            .get()
+            .uri { uriBuilder ->
+                uriBuilder
+                    .path("$SWF_SAMENWERKING_PATH/$samenwerkingId/documenten")
+                    .build()
+            }.retrieve()
+            .body(DocumentenOverzichtResponse::class.java) ?: error("No list of Documents received.")
+
     override fun downloadDocument(
         properties: SamenwerkfunctionaliteitProperties,
         documentId: UUID,

@@ -57,6 +57,11 @@ interface SamenwerkfunctionaliteitClient {
         query: DocumentenOverzichtQuery,
     ): DocumentenOverzichtResponse
 
+    fun getDocumentenOverzicht(
+        properties: SamenwerkfunctionaliteitProperties,
+        samenwerkingId: String,
+    ): DocumentenOverzichtResponse
+
     fun downloadDocument(
         properties: SamenwerkfunctionaliteitProperties,
         documentId: UUID,

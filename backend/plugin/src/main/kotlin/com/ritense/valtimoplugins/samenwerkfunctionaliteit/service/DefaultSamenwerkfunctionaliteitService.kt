@@ -3,11 +3,13 @@ package com.ritense.valtimoplugins.samenwerkfunctionaliteit.service
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.client.SamenwerkfunctionaliteitClient
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.CreateBerichtRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtQuery
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.UpdateActieverzoekRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.mapper.toModel
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Actieverzoek
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Bericht
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Document
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.DocumentenOverzicht
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Notificatie
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Page
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.SamenwerkfunctionaliteitProperties
@@ -79,7 +81,7 @@ class DefaultSamenwerkfunctionaliteitService(
         TODO("Not yet implemented")
     }
 
-    override fun getDocumentenOverzicht(
+    override fun getDocumenten(
         properties: SamenwerkfunctionaliteitProperties,
         samenwerkingId: String,
         query: DocumentenOverzichtQuery,
@@ -93,6 +95,16 @@ class DefaultSamenwerkfunctionaliteitService(
             ?.documenten
             ?.map { it.toModel() }
             ?: emptyList()
+
+    override fun getDocumentenOverzicht(
+        properties: SamenwerkfunctionaliteitProperties,
+        samenwerkingId: String,
+    ): DocumentenOverzichtResponse =
+        samenwerkfunctionaliteitClient
+            .getDocumentenOverzicht(
+                properties,
+                samenwerkingId,
+            )
 
     override fun downloadDocument(
         properties: SamenwerkfunctionaliteitProperties,
