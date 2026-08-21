@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import com.ritense.plugin.service.PluginConfigurationSearchParameters
 import com.ritense.plugin.service.PluginService
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.config.FrontendConfig
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Actieverzoek
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.FrontendAccessibleProperties
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Samenwerking
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.service.SamenwerkfunctionaliteitService
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.util.UUID
 
 @RestController
 @RequestMapping("samenwerkfunctionaliteit")
@@ -52,6 +54,20 @@ class SamenwerkfunctionaliteitPluginController(
         val properties = getProperties().toSamenwerkingProperties()
 
         return ResponseEntity.ok(samenwerkfunctionaliteitService.getSamenwerking(samenwerkingId, properties))
+    }
+
+    @GetMapping("v5/actieverzoeken/{actieverzoekId}")
+    fun getActieverzoek(
+        @PathVariable actieverzoekId: UUID,
+    ): ResponseEntity<Actieverzoek> {
+        val properties = getProperties().toSamenwerkingProperties()
+
+        return ResponseEntity.ok(
+            samenwerkfunctionaliteitService.getActieverzoek(
+                properties = properties,
+                actieverzoekId = actieverzoekId,
+            ),
+        )
     }
 
     private fun extractPropertyFromSamenwerkfunctionaliteitPluginConfiguration(name: String): String? =
