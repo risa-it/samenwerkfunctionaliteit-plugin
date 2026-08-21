@@ -1,5 +1,5 @@
 export const SWF_PLUGIN_PROPERTIES_URL =
-  'plugin/samenwerkfunctionaliteit/api/v1/properties';
+  'samenwerkfunctionaliteit/api/v1/properties';
 
 const swf = 'samenwerkfunctionaliteit';
 
