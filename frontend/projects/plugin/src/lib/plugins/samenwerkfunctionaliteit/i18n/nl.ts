@@ -1,18 +1,45 @@
 export const pluginNlTranslations = {
   samenwerkfunctionaliteit: {
-    notifications: {
-      types: {
+    common: {
+      actions: {
+        cancel: 'Annuleren',
+        continue: 'Bevestigen',
+        delete: 'Verwijderen',
+        download: 'Downloaden',
+        search: 'Zoeken',
+        upload: 'Uploaden',
+      },
+    },
+    types: {
+      confidentiality: {
+        confidential: 'Vertrouwelijk',
+        strictlyConfidential: 'Strict vertrouwelijk',
+      },
+      notification: {
         status: 'Status',
         document: 'Document',
         system: 'Systeem',
         message: 'Bericht',
       },
+      document: {
+        fileName: 'Bestandsnaam',
+        confidentialityType: 'Vertrouwelijkheid',
+        dateCreated: 'Datum aangemaakt',
+        numberWithinSystem: 'Nummer binnen systeem',
+        systemId: 'Kenmerk van het systeem',
+        documentDescription: 'Documentomschrijving',
+      },
     },
-    documenttable: {
-      delete: 'Verwijderen',
-      fileName: 'Bestandsnaam',
-      confidentialityType: 'Vertrouwelijkheidsaanduiding',
-      dateCreated: 'Datum aangemaakt',
+    documentTable: {
+      selectedFile: '{{ filename }} geselecteerd',
+      documentUploadModal: {
+        title: 'Document uploaden',
+      },
+      documentDeleteModal: {
+        title: 'Document verwijderen',
+        message:
+          "Weet je zeker dat je '{{filename}}' uit de samenwerking wilt verwijderen? Het document zal niet meer voor jou en andere deelnemers beschikbaar zijn.",
+      },
     },
     feedback: {
       notAnSwfCaseMessage: {
@@ -29,7 +56,22 @@ export const pluginNlTranslations = {
         genericSuccessTitle: 'Gelukt',
         genericSuccessMessage: 'De actie is succesvol uitgevoerd',
 
-        downloadDocumentFailureTitle: 'Er ging iets mis tijdens het downloaden',
+        downloadDocument: {
+          failure: {
+            title: 'Er ging iets mis tijdens het downloaden',
+          },
+        },
+
+        deleteDocument: {
+          success: {
+            title: 'Document verwijderd',
+            message:
+              'Het document {{ filename }} is succesvol uit de samenwerking verwijderd.',
+          },
+          failure: {
+            title: 'Er ging iets mis tijdens het verwijderen van het document',
+          },
+        },
 
         fetchDocuments: {
           failure: {
@@ -97,6 +139,19 @@ export const pluginNlTranslations = {
       updateStatusTo: 'Wijzig actieverzoekstatus naar',
       updateStatusExplanation: 'Toelichting',
       updateStatus: 'Status wijzigen',
+    },
+  },
+  carbon: {
+    pagination: {
+      itemsPerPage: 'Aantal {{ itemNamePlural}} per pagina:',
+      openListOfOptions: 'Lijst met opties openen',
+      previousPage: 'Vorige pagina',
+      nextPage: 'Volgende pagina',
+      totalItemsUnknown: '{{start}}-{{end}} {{ itemNamePlural }}',
+      totalItems: '{{start}}-{{end}} van {{total}} {{ itemNamePlural }}',
+      totalItem: '{{start}}-{{end}} van {{total}} {{ itemNameSingular }}',
+      ofLastPages: "van {{last}} pagina's",
+      ofLastPage: 'van {{last}} pagina',
     },
   },
 };

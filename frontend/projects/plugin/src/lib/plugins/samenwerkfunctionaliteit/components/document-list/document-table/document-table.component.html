@@ -1,23 +1,39 @@
 <cds-table-container>
-  <cds-table-toolbar [model]="model()" #toolbar>
+  <cds-table-toolbar
+    [model]="model()"
+    [batchText]="batchText"
+    [cancelText]="{
+      CANCEL: ('samenwerkfunctionaliteit.common.actions.cancel' | translate),
+    }"
+    #toolbar
+  >
     <cds-table-toolbar-actions>
       <button cdsButton="primary" (click)="deleteDocument()">
-        {{ 'samenwerkfunctionaliteit.documenttable.delete' | translate }}
+        {{ 'samenwerkfunctionaliteit.common.actions.delete' | translate }}
         <svg size="16" class="cds--btn__icon"></svg>
       </button>
       <button cdsButton="primary" (click)="downloadDocument()">
-        Download
+        {{ 'samenwerkfunctionaliteit.common.actions.download' | translate }}
         <svg size="16" class="cds--btn__icon"></svg>
       </button>
     </cds-table-toolbar-actions>
     <cds-table-toolbar-content *ngIf="!toolbar.selected">
       <cds-table-toolbar-search
         [expandable]="true"
-        (valueChange)="filterFileNames($event)"
-        (clear)="searchValue.set('')">
+        [placeholder]="searchFieldPlaceholder"
+        (valueChange)="searchValue.set($event)"
+        (clear)="searchValue.set('')"
+      >
       </cds-table-toolbar-search>
-      <button cdsButton="primary" size="sm" (click)="uploadDocument()" [disabled]="isUploading()">
-        Upload
+      <input #fileInput type="file" hidden (change)="onFileSelected($event)" />
+
+      <button
+        cdsButton="primary"
+        size="sm"
+        (click)="fileInput.click()"
+        [disabled]="isUploading()"
+      >
+        {{ 'samenwerkfunctionaliteit.common.actions.upload' | translate }}
         <svg cdsIcon="add" size="20" class="cds--btn__icon"></svg>
       </button>
     </cds-table-toolbar-content>
@@ -32,16 +48,19 @@
     (selectRow)="onRowSelected($event)"
   >
   </cds-table>
-  <cds-pagination [model]="model()" (selectPage)="selectPage($event)"></cds-pagination>
+  <cds-pagination
+    [model]="model()"
+    (selectPage)="selectPage($event)"
+    [translations]="paginationTranslations"
+    [skeleton]="isSkeleton()"
+  ></cds-pagination>
 </cds-table-container>
 
-<document-table-modal
-  #documentTableModal
-  [buttons]="deleteConfig.buttons"
-  [modalContent]="deleteConfig.content"
-  [modalTitle]="deleteConfig.title"
-  [modalType]="deleteConfig.type"
-  [showCloseButton]="deleteConfig.showCloseButton"
-  [size]="deleteConfig.size"
->
-</document-table-modal>
+<document-upload-metadata-modal
+  #uploadMetadataModal
+></document-upload-metadata-modal>
+
+<document-delete-modal
+  #deleteModal
+  [document]="selectedDocument()"
+></document-delete-modal>
