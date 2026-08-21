@@ -7,6 +7,8 @@ import com.ritense.valtimoplugins.samenwerkfunctionaliteit.config.FrontendConfig
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.UpdateActieverzoekRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Actieverzoek
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.FrontendAccessibleProperties
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Notificatie
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Page
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Samenwerking
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.service.SamenwerkfunctionaliteitService
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -90,6 +92,12 @@ class SamenwerkfunctionaliteitPluginController(
                 request = updateActieverzoekRequest,
             ),
         )
+    }
+
+    @GetMapping("v5/notificaties")
+    fun getAllNotificaties(): ResponseEntity<Page<List<Notificatie>>> {
+        val properties = getProperties().toSamenwerkingProperties()
+        return ResponseEntity.ok(samenwerkfunctionaliteitService.getAllNotificaties(properties))
     }
 
     private fun extractPropertyFromSamenwerkfunctionaliteitPluginConfiguration(name: String): String? =
