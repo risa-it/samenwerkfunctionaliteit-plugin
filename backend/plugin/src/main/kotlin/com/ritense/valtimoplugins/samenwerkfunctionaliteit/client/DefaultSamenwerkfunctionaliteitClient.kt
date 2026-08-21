@@ -8,6 +8,7 @@ import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzic
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.NotificatieGetResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedNotificatieGetResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.SamenwerkingResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.SamenwerkfunctionaliteitProperties
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.core.io.InputStreamResource
@@ -189,6 +190,24 @@ class DefaultSamenwerkfunctionaliteitClient(
             handleInternalServerError(e)
         } catch (e: RestClientResponseException) {
             handleResponseException(e, "Error getting page $pageNumber of notificaties.")
+        }
+    }
+
+    override fun getSamenwerking(
+        samenwerkingId: String,
+        properties: SamenwerkfunctionaliteitProperties,
+    ): SamenwerkingResponse {
+        try {
+            return restClient(properties = properties)
+                .get()
+                .uri("${SWF_SAMENWERKING_PATH}/$samenwerkingId")
+                .retrieve()
+                .body<SamenwerkingResponse>()
+                ?: throw IllegalStateException("Error fetching Samenwerking: response body was null")
+        } catch (e: HttpServerErrorException.InternalServerError) {
+            handleInternalServerError(e)
+        } catch (e: RestClientResponseException) {
+            handleResponseException(e, "Error getting Samenwerking.")
         }
     }
 

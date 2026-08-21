@@ -10,6 +10,7 @@ import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Document
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Notificatie
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Page
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.SamenwerkfunctionaliteitProperties
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Samenwerking
 import org.springframework.core.io.InputStreamResource
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -136,5 +137,13 @@ class DefaultSamenwerkfunctionaliteitService(
             totalElements = response.page.number,
             totalPages = response.page.number,
         )
+    }
+
+    override fun getSamenwerking(
+        samenwerkingId: String,
+        properties: SamenwerkfunctionaliteitProperties,
+    ): Samenwerking {
+        val response = samenwerkfunctionaliteitClient.getSamenwerking(samenwerkingId, properties)
+        return response.toModel()
     }
 }
