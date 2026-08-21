@@ -3,6 +3,7 @@ package com.ritense.valtimoplugins.samenwerkfunctionaliteit.service
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.client.SamenwerkfunctionaliteitClient
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.CreateBerichtRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtQuery
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.UpdateActieverzoekRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.mapper.toModel
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Actieverzoek
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Bericht
@@ -41,6 +42,18 @@ class DefaultSamenwerkfunctionaliteitService(
                 organisatie = organisatie,
             ).toModel()
     }
+
+    override fun updateActieverzoek(
+        properties: SamenwerkfunctionaliteitProperties,
+        actieverzoekId: UUID,
+        request: UpdateActieverzoekRequest,
+    ): Actieverzoek =
+        samenwerkfunctionaliteitClient
+            .updateActieverzoek(
+                properties = properties,
+                actieverzoekId = actieverzoekId,
+                request = request,
+            ).toModel()
 
     override fun getBericht(
         properties: SamenwerkfunctionaliteitProperties,

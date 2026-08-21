@@ -9,6 +9,7 @@ import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzic
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.NotificatieGetResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedNotificatieGetResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.SamenwerkingResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.UpdateActieverzoekRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.SamenwerkfunctionaliteitProperties
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.core.io.InputStreamResource
@@ -75,6 +76,27 @@ class DefaultSamenwerkfunctionaliteitClient(
             handleInternalServerError(e)
         } catch (e: RestClientResponseException) {
             handleResponseException(e, "Error getting all actieverzoeken.")
+        }
+    }
+
+    override fun updateActieverzoek(
+        properties: SamenwerkfunctionaliteitProperties,
+        actieverzoekId: UUID,
+        request: UpdateActieverzoekRequest,
+    ): ActieverzoekResponse {
+        try {
+            return restClient(properties = properties)
+                .patch()
+                .uri("${SWF_ACTIEVERZOEK_PATH}/$actieverzoekId")
+                .header("Content-Type", UPDATE_ACTIEVERZOEK_HEADER)
+                .body(request)
+                .retrieve()
+                .body<ActieverzoekResponse>()
+                ?: throw IllegalStateException("Error updating Actieverzoek: response body was null")
+        } catch (e: HttpServerErrorException.InternalServerError) {
+            handleInternalServerError(e)
+        } catch (e: RestClientResponseException) {
+            handleResponseException(e, "Error updating Actieverzoek.")
         }
     }
 
@@ -282,6 +304,7 @@ class DefaultSamenwerkfunctionaliteitClient(
         private const val NOTIFICATIES_PAGE_PARAM = "page"
         private const val SWF_SAMENWERKING_PATH = "v5/samenwerkingen"
         private const val SWF_ACTIEVERZOEK_PATH = "v5/actieverzoeken"
+        private const val UPDATE_ACTIEVERZOEK_HEADER = "application/merge-patch+json"
         private const val SAMENWERKING_ID = "samenwerkingId"
         private const val ORGANISATIE = "organisatie"
         private val logger = KotlinLogging.logger { }

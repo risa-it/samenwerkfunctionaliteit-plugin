@@ -2,6 +2,7 @@ package com.ritense.valtimoplugins.samenwerkfunctionaliteit.service
 
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.CreateBerichtRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtQuery
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.UpdateActieverzoekRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Actieverzoek
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Bericht
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Document
@@ -9,6 +10,7 @@ import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Notificatie
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Page
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.SamenwerkfunctionaliteitProperties
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Samenwerking
+import jdk.jfr.ContentType
 import org.springframework.core.io.InputStreamResource
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -24,6 +26,12 @@ interface SamenwerkfunctionaliteitService {
         samenwerkingId: String,
         isOrganisationTheReceiver: Boolean,
     ): List<Actieverzoek>
+
+    fun updateActieverzoek(
+        properties: SamenwerkfunctionaliteitProperties,
+        actieverzoekId: UUID,
+        request: UpdateActieverzoekRequest,
+    ): Actieverzoek
 
     fun getBericht(
         properties: SamenwerkfunctionaliteitProperties,
