@@ -8,6 +8,7 @@ import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Document
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Notificatie
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Page
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.SamenwerkfunctionaliteitProperties
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Samenwerking
 import org.springframework.core.io.InputStreamResource
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -69,4 +70,9 @@ interface SamenwerkfunctionaliteitService {
         properties: SamenwerkfunctionaliteitProperties,
         pageNumber: Int,
     ): Page<List<Notificatie>>
+
+    fun getSamenwerking(
+        samenwerkingId: String,
+        properties: SamenwerkfunctionaliteitProperties,
+    ): Samenwerking
 }

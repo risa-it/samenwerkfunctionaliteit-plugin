@@ -8,6 +8,7 @@ import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzic
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.NotificatieGetResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedNotificatieGetResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.SamenwerkingResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.SamenwerkfunctionaliteitProperties
 import org.springframework.core.io.InputStreamResource
 import java.time.ZonedDateTime
@@ -70,4 +71,9 @@ interface SamenwerkfunctionaliteitClient {
         properties: SamenwerkfunctionaliteitProperties,
         pageNumber: Int,
     ): PagedNotificatieGetResponse
+
+    fun getSamenwerking(
+        samenwerkingId: String,
+        properties: SamenwerkfunctionaliteitProperties,
+    ): SamenwerkingResponse
 }
