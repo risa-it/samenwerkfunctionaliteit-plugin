@@ -5,18 +5,23 @@ import com.ritense.plugin.service.PluginConfigurationSearchParameters
 import com.ritense.plugin.service.PluginService
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.config.FrontendConfig
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.FrontendAccessibleProperties
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Samenwerking
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.service.SamenwerkfunctionaliteitService
 import io.github.oshai.kotlinlogging.KotlinLogging
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("plugin/samenwerkfunctionaliteit/api/v1/")
+@RequestMapping("samenwerkfunctionaliteit")
 class SamenwerkfunctionaliteitPluginController(
     private val pluginService: PluginService,
     private val frontendConfig: FrontendConfig,
+    private val samenwerkfunctionaliteitService: SamenwerkfunctionaliteitService,
 ) {
-    @GetMapping("properties")
+    @GetMapping("api/v1/properties")
     fun getProperties(): FrontendAccessibleProperties =
         FrontendAccessibleProperties(
             oinNummer =
@@ -39,6 +44,15 @@ class SamenwerkfunctionaliteitPluginController(
                 ),
             ).firstOrNull()
             ?.properties
+
+    @GetMapping("v5/samenwerkingen/{samenwerkingId}")
+    fun getSamenwerking(
+        @PathVariable samenwerkingId: String,
+    ): ResponseEntity<Samenwerking> {
+        val properties = getProperties().toSamenwerkingProperties()
+
+        return ResponseEntity.ok(samenwerkfunctionaliteitService.getSamenwerking(samenwerkingId, properties))
+    }
 
     private fun extractPropertyFromSamenwerkfunctionaliteitPluginConfiguration(name: String): String? =
         getSamenwerkfunctionaliteitPluginConfiguration()
