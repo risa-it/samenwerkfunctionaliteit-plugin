@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ActivatedRoute } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   PluginTranslatePipeModule,
   PluginTranslationService,
@@ -70,7 +71,11 @@ describe('StuurBerichtComponent', () => {
     );
 
     await TestBed.configureTestingModule({
-      imports: [StuurBerichtComponent, PluginTranslatePipeModule],
+      imports: [
+        StuurBerichtComponent,
+        PluginTranslatePipeModule,
+        TranslateModule.forRoot(),
+      ],
       providers: [
         { provide: IconService, useValue: iconService },
         { provide: SwfDocumentService, useValue: swfDocumentService },

@@ -41,6 +41,12 @@ export const pluginNlTranslations = {
           "Weet je zeker dat je '{{filename}}' uit de samenwerking wilt verwijderen? Het document zal niet meer voor jou en andere deelnemers beschikbaar zijn.",
       },
     },
+    messenger: {
+      messengerTitle: 'Stuur bericht',
+      messagePlaceholder: 'Typ hier uw bericht',
+      sendMessage: 'Bericht versturen',
+      loadingMessages: 'Berichten aan het laden...',
+    },
     feedback: {
       notAnSwfCaseMessage: {
         genericTitle: 'Tabblad kan niet getoond worden.',
@@ -101,10 +107,23 @@ export const pluginNlTranslations = {
             title: 'Uploaden van archiveringskopie naar Documenten-API mislukt',
           },
         },
+
+        messenger: {
+          success: {
+            title: 'Verzonden',
+            message: 'Het bericht is succesvol verstuurd.',
+          },
+          failure: {
+            title: 'Het bericht kon niet verstuurd worden',
+          },
+          failureMissingActieverzoekId: {
+            message: 'Het actieverzoek kon niet gevonden worden.',
+          },
+        },
       },
     },
     messages: {
-      datetimestamp: {
+      dateTimeStamp: {
         justNow: 'Zojuist',
         today: 'Vandaag',
         minuteSingular: '{{ minuteCount }} minuut geleden',
