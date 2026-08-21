@@ -5,7 +5,7 @@ import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Samenwerking
 
 fun SamenwerkingResponse.toModel() =
     Samenwerking(
-        links = _links?.toModel(),
+        links = _links.mapValues { (_, link) -> link.toModel() },
         aangemaaktDoor = aangemaaktDoor,
         aangemaaktDoorNaam = aangemaaktDoorNaam,
         aantalActieverzoeken = aantalActieverzoeken,

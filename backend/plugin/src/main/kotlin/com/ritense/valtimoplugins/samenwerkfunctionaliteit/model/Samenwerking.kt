@@ -1,7 +1,7 @@
 package com.ritense.valtimoplugins.samenwerkfunctionaliteit.model
 
 data class Samenwerking(
-    val links: Links?,
+    val links: Map<String, Link> = mutableMapOf(),
     val aangemaaktDoor: String?,
     val aangemaaktDoorNaam: String?,
     val aantalActieverzoeken: Int?,
