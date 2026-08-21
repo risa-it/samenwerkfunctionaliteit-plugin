@@ -146,9 +146,32 @@ class DefaultSamenwerkfunctionaliteitService(
         return Page(
             item = notificaties,
             number = response.page.number,
-            size = response.page.number,
-            totalElements = response.page.number,
-            totalPages = response.page.number,
+            size = response.page.size,
+            totalElements = response.page.totalElements,
+            totalPages = response.page.totalPages,
+        )
+    }
+
+    override fun getAllNotificaties(properties: SamenwerkfunctionaliteitProperties): Page<List<Notificatie>> {
+        val response =
+            samenwerkfunctionaliteitClient
+                .getAllNotificaties(
+                    properties = properties,
+                )
+
+        val notificaties =
+            response.embedded
+                ?.notificaties
+                ?.map {
+                    it.toModel()
+                } ?: emptyList()
+
+        return Page(
+            item = notificaties,
+            number = response.page.number,
+            size = response.page.size,
+            totalElements = response.page.totalElements,
+            totalPages = response.page.totalPages,
         )
     }
 

@@ -215,6 +215,26 @@ class DefaultSamenwerkfunctionaliteitClient(
         }
     }
 
+    override fun getAllNotificaties(properties: SamenwerkfunctionaliteitProperties): PagedNotificatieGetResponse {
+        try {
+            return restClient(properties = properties)
+                .get()
+                .uri(NOTIFICATIES_ENDPOINT)
+                .retrieve()
+                .body<PagedNotificatieGetResponse>()
+                .also {
+                    logger.info {
+                        it?.page
+                    }
+                }
+                ?: throw IllegalStateException("Error fetching notificaties: response body was null")
+        } catch (e: HttpServerErrorException.InternalServerError) {
+            handleInternalServerError(e)
+        } catch (e: RestClientResponseException) {
+            handleResponseException(e, "Error getting notificaties.")
+        }
+    }
+
     override fun getSamenwerking(
         samenwerkingId: String,
         properties: SamenwerkfunctionaliteitProperties,

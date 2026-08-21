@@ -79,6 +79,8 @@ interface SamenwerkfunctionaliteitService {
         pageNumber: Int,
     ): Page<List<Notificatie>>
 
+    fun getAllNotificaties(properties: SamenwerkfunctionaliteitProperties): Page<List<Notificatie>>
+
     fun getSamenwerking(
         samenwerkingId: String,
         properties: SamenwerkfunctionaliteitProperties,
