@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import com.ritense.plugin.service.PluginConfigurationSearchParameters
 import com.ritense.plugin.service.PluginService
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.config.FrontendConfig
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.UpdateActieverzoekRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Actieverzoek
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.FrontendAccessibleProperties
@@ -94,10 +95,19 @@ class SamenwerkfunctionaliteitPluginController(
         )
     }
 
-    @GetMapping("v5/notificaties")
+    @GetMapping("v5/documenten")
     fun getAllNotificaties(): ResponseEntity<Page<List<Notificatie>>> {
         val properties = getProperties().toSamenwerkingProperties()
         return ResponseEntity.ok(samenwerkfunctionaliteitService.getAllNotificaties(properties))
+    }
+
+    @GetMapping("v5/samenwerkingen/{samenwerkingId}/documenten")
+    fun getDocumentenBySamenwerkingId(
+        @PathVariable samenwerkingId: String,
+    ): ResponseEntity<DocumentenOverzichtResponse> {
+        val properties = getProperties().toSamenwerkingProperties()
+
+        return ResponseEntity.ok(samenwerkfunctionaliteitService.getDocumentenOverzicht(properties, samenwerkingId))
     }
 
     private fun extractPropertyFromSamenwerkfunctionaliteitPluginConfiguration(name: String): String? =
