@@ -6,7 +6,7 @@ import java.util.UUID
 
 data class ActieverzoekResponse(
     @JsonProperty("_links")
-    val links: Links? = null,
+    val links: Map<String, Link> = mutableMapOf(),
     val aantalBerichten: Int? = null,
     val actieverzoekId: UUID? = null,
     val creatieDatumTijd: OffsetDateTime? = null,
