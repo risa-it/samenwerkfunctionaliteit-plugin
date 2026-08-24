@@ -1,5 +1,6 @@
 package com.ritense.valtimoplugins.samenwerkfunctionaliteit.service
 
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.BerichtResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.CreateBerichtRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtQuery
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtResponse
@@ -45,7 +46,7 @@ interface SamenwerkfunctionaliteitService {
         properties: SamenwerkfunctionaliteitProperties,
         actieverzoekId: UUID,
         requestBody: CreateBerichtRequest,
-    ): Bericht
+    ): BerichtResponse
 
     fun deleteBericht(
         properties: SamenwerkfunctionaliteitProperties,
