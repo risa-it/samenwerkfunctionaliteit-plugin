@@ -4,6 +4,8 @@ import com.ritense.valtimoplugins.samenwerkfunctionaliteit.client.Samenwerkfunct
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.CreateBerichtRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtQuery
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedBerichtenGetResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedNotificatieGetResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.UpdateActieverzoekRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.mapper.toModel
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Actieverzoek
@@ -57,13 +59,14 @@ class DefaultSamenwerkfunctionaliteitService(
                 request = request,
             ).toModel()
 
-    override fun getBericht(
+    override fun getBerichten(
         properties: SamenwerkfunctionaliteitProperties,
-        actieVerzoekId: UUID,
-        berichtId: UUID,
-    ): Bericht {
-        TODO("Not yet implemented")
-    }
+        actieverzoekId: UUID,
+    ): PagedBerichtenGetResponse =
+        samenwerkfunctionaliteitClient.getBerichten(
+            properties = properties,
+            actieverzoekId = actieverzoekId,
+        )
 
     override fun postBericht(
         properties: SamenwerkfunctionaliteitProperties,
@@ -167,28 +170,11 @@ class DefaultSamenwerkfunctionaliteitService(
         )
     }
 
-    override fun getAllNotificaties(properties: SamenwerkfunctionaliteitProperties): Page<List<Notificatie>> {
-        val response =
-            samenwerkfunctionaliteitClient
-                .getAllNotificaties(
-                    properties = properties,
-                )
-
-        val notificaties =
-            response.embedded
-                ?.notificaties
-                ?.map {
-                    it.toModel()
-                } ?: emptyList()
-
-        return Page(
-            item = notificaties,
-            number = response.page.number,
-            size = response.page.size,
-            totalElements = response.page.totalElements,
-            totalPages = response.page.totalPages,
-        )
-    }
+    override fun getAllNotificaties(properties: SamenwerkfunctionaliteitProperties): PagedNotificatieGetResponse =
+        samenwerkfunctionaliteitClient
+            .getAllNotificaties(
+                properties = properties,
+            )
 
     override fun getSamenwerking(
         samenwerkingId: String,
