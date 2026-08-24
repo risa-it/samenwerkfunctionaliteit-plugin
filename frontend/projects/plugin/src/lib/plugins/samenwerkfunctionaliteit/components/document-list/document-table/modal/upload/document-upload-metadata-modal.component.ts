@@ -4,9 +4,13 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   ButtonModule,
   DropdownModule,
+  IconModule,
+  IconService,
   InputModule,
+  TooltipModule,
 } from 'carbon-components-angular';
 
+import { Information32 } from '@carbon/icons';
 import {
   ModalService,
   VModalComponent,
@@ -28,6 +32,8 @@ import {
     ButtonModule,
     TranslatePipe,
     VModalModule,
+    IconModule,
+    TooltipModule,
   ],
   templateUrl: './document-upload-metadata-modal.component.html',
   styleUrl: './document-upload-metadata-modal.component.scss',
@@ -36,6 +42,7 @@ export class DocumentUploadMetadataModal {
   private readonly modalService = inject(ModalService);
   private readonly formBuilder = inject(FormBuilder);
   private readonly translateService = inject(TranslateService);
+  private readonly iconService = inject(IconService);
 
   readonly modal = viewChild.required<VModalComponent>('uploadModal');
 
@@ -56,6 +63,10 @@ export class DocumentUploadMetadataModal {
     'samenwerkfunctionaliteit.types.document.confidentialityType',
   );
 
+  protected confidentialityTypeTooltipText = this.translateService.instant(
+    'samenwerkfunctionaliteit.documentTable.documentUploadModal.confidentialityTypeTooltip',
+  );
+
   protected confidentialityOptions = [
     {
       content: this.translateService.instant(
@@ -72,6 +83,10 @@ export class DocumentUploadMetadataModal {
       selected: false,
     },
   ];
+
+  ngOnInit() {
+    this.iconService.registerAll([Information32]);
+  }
 
   protected submit(): void {
     this.submitted.emit({

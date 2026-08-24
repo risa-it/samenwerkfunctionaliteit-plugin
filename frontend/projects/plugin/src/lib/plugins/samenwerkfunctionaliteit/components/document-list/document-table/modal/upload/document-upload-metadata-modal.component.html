@@ -33,9 +33,22 @@
       </div>
 
       <div class="form-field">
+        <cds-label
+          >{{
+            'samenwerkfunctionaliteit.types.document.confidentialityType'
+              | translate
+          }}
+          <cds-tooltip
+            [autoAlign]="true"
+            [description]="confidentialityTypeTooltipText"
+            ><svg
+              class="tooltip-icon"
+              cdsIcon="information"
+              size="32"
+            ></svg></cds-tooltip
+        ></cds-label>
         <cds-dropdown
           formControlName="confidentialityType"
-          [label]="confidentialityOptionsLabel"
           [appendInline]="true"
           [itemValueKey]="'id'"
         >
