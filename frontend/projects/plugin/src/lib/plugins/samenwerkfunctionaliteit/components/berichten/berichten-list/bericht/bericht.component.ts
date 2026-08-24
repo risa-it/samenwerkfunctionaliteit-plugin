@@ -41,15 +41,15 @@ export class BerichtComponent {
 
     if (diffMinutes < 1) {
       return this.translateService.instant(
-        'samenwerkfunctionaliteit.messages.dateTimeStamp.justNow',
+        'samenwerkfunctionaliteit.messages.timestamp.justNow',
       );
     }
 
     if (diffMinutes < 60) {
       return this.translateService.instant(
         diffMinutes === 1
-          ? 'samenwerkfunctionaliteit.messages.dateTimeStamp.minuteSingular'
-          : 'samenwerkfunctionaliteit.messages.dateTimeStamp.minutePlural',
+          ? 'samenwerkfunctionaliteit.messages.timestamp.minuteSingular'
+          : 'samenwerkfunctionaliteit.messages.timestamp.minutePlural',
         {
           minuteCount: diffMinutes,
         },
@@ -59,7 +59,7 @@ export class BerichtComponent {
     if (date.getDate() === now.getDate()) {
       return (
         this.translateService.instant(
-          'samenwerkfunctionaliteit.messages.dateTimeStamp.today',
+          'samenwerkfunctionaliteit.messages.timestamp.today',
         ) +
         `, ${new Intl.DateTimeFormat(this.translateService.currentLang, {
           timeStyle: 'short',

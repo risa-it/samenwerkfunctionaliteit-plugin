@@ -123,7 +123,7 @@ export const pluginNlTranslations = {
       },
     },
     messages: {
-      dateTimeStamp: {
+      timestamp: {
         justNow: 'Zojuist',
         today: 'Vandaag',
         minuteSingular: '{{ minuteCount }} minuut geleden',
