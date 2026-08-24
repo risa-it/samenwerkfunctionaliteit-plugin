@@ -5,11 +5,11 @@ import com.ritense.plugin.service.PluginConfigurationSearchParameters
 import com.ritense.plugin.service.PluginService
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.config.FrontendConfig
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedBerichtenGetResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedNotificatieGetResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.UpdateActieverzoekRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Actieverzoek
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.FrontendAccessibleProperties
-import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Notificatie
-import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Page
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Samenwerking
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.service.SamenwerkfunctionaliteitService
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -99,7 +99,7 @@ class SamenwerkfunctionaliteitPluginController(
     }
 
     @GetMapping("v5/notificaties")
-    fun getAllNotificaties(): ResponseEntity<Page<List<Notificatie>>> {
+    fun getAllNotificaties(): ResponseEntity<PagedNotificatieGetResponse> {
         val properties = getProperties().toSamenwerkingProperties()
         return ResponseEntity.ok(samenwerkfunctionaliteitService.getAllNotificaties(properties))
     }
@@ -129,6 +129,19 @@ class SamenwerkfunctionaliteitPluginController(
         val properties = getProperties().toSamenwerkingProperties()
         samenwerkfunctionaliteitService.uploadDocument(properties, file, metadata, samenwerkingId)
         return ResponseEntity.ok().build()
+    }
+
+    @GetMapping("v5/actieverzoeken/{actieverzoekId}/berichten")
+    fun getBerichten(
+        @PathVariable actieverzoekId: UUID,
+    ): ResponseEntity<PagedBerichtenGetResponse> {
+        val properties = getProperties().toSamenwerkingProperties()
+        return ResponseEntity.ok(
+            samenwerkfunctionaliteitService.getBerichten(
+                properties = properties,
+                actieverzoekId = actieverzoekId,
+            ),
+        )
     }
 
     private fun extractPropertyFromSamenwerkfunctionaliteitPluginConfiguration(name: String): String? =
