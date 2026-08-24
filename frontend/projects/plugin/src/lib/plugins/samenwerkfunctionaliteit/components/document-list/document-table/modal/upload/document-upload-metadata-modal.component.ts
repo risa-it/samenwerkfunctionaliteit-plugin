@@ -10,7 +10,7 @@ import {
   TooltipModule,
 } from 'carbon-components-angular';
 
-import { Information32 } from '@carbon/icons';
+import { Information32, Upload32 } from '@carbon/icons';
 import {
   ModalService,
   VModalComponent,
@@ -85,7 +85,7 @@ export class DocumentUploadMetadataModal {
   ];
 
   ngOnInit() {
-    this.iconService.registerAll([Information32]);
+    this.iconService.registerAll([Information32, Upload32]);
   }
 
   protected submit(): void {
