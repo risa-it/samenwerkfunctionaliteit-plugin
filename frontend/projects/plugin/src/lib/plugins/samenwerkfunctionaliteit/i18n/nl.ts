@@ -108,6 +108,10 @@ export const pluginNlTranslations = {
           failure: {
             title: 'Uploaden van archiveringskopie naar Documenten-API mislukt',
           },
+          NoLinkedUploadProcessFailure: {
+            message:
+              'Geen gekoppeld uploadproces gevonden. Controleer de configuratie van dit dossiertype. ',
+          },
         },
 
         messenger: {

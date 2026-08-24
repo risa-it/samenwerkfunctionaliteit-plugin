@@ -99,7 +99,9 @@ export class UploadWorkFlowService {
               if (error instanceof NoLinkedUploadProcessError) {
                 this.notificationService.showError({
                   titleKey:
-                    'samenwerkfunctionaliteit.feedback.userNotification.uploadDocumentToSWF.failure.title',
+                    'samenwerkfunctionaliteit.feedback.userNotification.uploadDocumentToDocumentenApi.failure.title',
+                  messageKey:
+                    'samenwerkfunctionaliteit.feedback.userNotification.uploadDocumentToSWF.NoLinkedUploadProcessFailure.message',
                 });
               } else {
                 this.notificationService.showError({
