@@ -14,7 +14,9 @@ import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.UpdateActieverzoe
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.SamenwerkfunctionaliteitProperties
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.http.client.MultipartBodyBuilder
 import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.RestClient
 import org.springframework.web.client.RestClientResponseException
@@ -212,7 +214,27 @@ class DefaultSamenwerkfunctionaliteitClient(
         metadata: Map<String, String>?,
         samenwerkingId: String,
     ) {
-        TODO("Not yet implemented")
+        val multipartBody =
+            MultipartBodyBuilder()
+                .apply {
+                    part("file", file.resource)
+                        .filename(file.originalFilename ?: "document")
+
+                    metadata.orEmpty().forEach { (key, value) ->
+                        part(key, value)
+                    }
+                }.build()
+
+        restClient(properties)
+            .post()
+            .uri { builder ->
+                builder
+                    .path("${SWF_SAMENWERKING_PATH}/{samenwerkingId}/documenten")
+                    .build(samenwerkingId)
+            }.contentType(MediaType.MULTIPART_FORM_DATA)
+            .body(multipartBody)
+            .retrieve()
+            .toBodilessEntity()
     }
 
     override fun getSamenwerkingNotificaties(
