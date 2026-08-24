@@ -1,4 +1,4 @@
-name: samenwerkfunctionaliteit-plugin-docker-compose
+name: samenwerkfunctionaliteitplugin-docker-compose
 
 services:
   plugin-keycloak:
