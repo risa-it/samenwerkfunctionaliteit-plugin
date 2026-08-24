@@ -7,12 +7,12 @@ import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.CreateBerichtRequ
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtQuery
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.NotificatieGetResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedBerichtenGetResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedNotificatieGetResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.SamenwerkingResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.UpdateActieverzoekRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.SamenwerkfunctionaliteitProperties
 import io.github.oshai.kotlinlogging.KotlinLogging
-import org.springframework.core.io.InputStreamResource
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.client.HttpServerErrorException
@@ -103,12 +103,23 @@ class DefaultSamenwerkfunctionaliteitClient(
         }
     }
 
-    override fun getBericht(
+    override fun getBerichten(
         properties: SamenwerkfunctionaliteitProperties,
-        actieVerzoekId: UUID,
-        berichtId: UUID,
-    ): BerichtResponse {
-        TODO("Not yet implemented")
+        actieverzoekId: UUID,
+    ): PagedBerichtenGetResponse {
+        try {
+            return restClient(properties = properties)
+                .get()
+                .uri { uriBuilder ->
+                    uriBuilder.path("$SWF_ACTIEVERZOEK_PATH/$actieverzoekId/berichten").build()
+                }.retrieve()
+                .body<PagedBerichtenGetResponse>()
+                ?: throw IllegalStateException("Error fetching berichten: response body was null")
+        } catch (e: HttpServerErrorException.InternalServerError) {
+            handleInternalServerError(e)
+        } catch (e: RestClientResponseException) {
+            handleResponseException(e, "Error getting all berichten.")
+        }
     }
 
     override fun postBericht(

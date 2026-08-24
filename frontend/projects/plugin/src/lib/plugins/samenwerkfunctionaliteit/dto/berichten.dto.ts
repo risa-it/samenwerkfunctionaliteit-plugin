@@ -2,8 +2,8 @@ import { Links } from './links.dto';
 import { Page } from './page.dto';
 
 export interface BerichtenOverzichtResponse {
-  _embedded: Berichten | null;
-  _links: Links | null;
+  _embedded: Berichten;
+  _links: Links;
   page: Page;
 }
 
