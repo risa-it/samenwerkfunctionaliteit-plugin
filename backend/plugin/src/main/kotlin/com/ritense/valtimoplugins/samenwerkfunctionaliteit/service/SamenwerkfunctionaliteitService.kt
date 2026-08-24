@@ -12,6 +12,8 @@ import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Page
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.SamenwerkfunctionaliteitProperties
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Samenwerking
 import org.springframework.core.io.InputStreamResource
+import org.springframework.http.ResponseEntity
+import org.springframework.web.multipart.MultipartFile
 import java.time.ZonedDateTime
 import java.util.UUID
 
@@ -65,10 +67,12 @@ interface SamenwerkfunctionaliteitService {
     fun downloadDocument(
         properties: SamenwerkfunctionaliteitProperties,
         documentId: UUID,
-    ): InputStreamResource
+    ): ResponseEntity<ByteArray>
 
     fun uploadDocument(
         properties: SamenwerkfunctionaliteitProperties,
+        file: MultipartFile,
+        metadata: Map<String, String>?,
         samenwerkingId: String,
     )
 
