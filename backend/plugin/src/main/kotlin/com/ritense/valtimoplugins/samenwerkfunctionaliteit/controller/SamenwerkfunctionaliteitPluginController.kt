@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import com.ritense.plugin.service.PluginConfigurationSearchParameters
 import com.ritense.plugin.service.PluginService
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.config.FrontendConfig
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.BerichtResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.CreateBerichtRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedBerichtenGetResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedNotificatieGetResponse
@@ -13,6 +15,7 @@ import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.FrontendAccessi
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Samenwerking
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.service.SamenwerkfunctionaliteitService
 import io.github.oshai.kotlinlogging.KotlinLogging
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -57,7 +60,7 @@ class SamenwerkfunctionaliteitPluginController(
             ?.properties
 
     @GetMapping("v5/samenwerkingen/{samenwerkingId}")
-    fun getSamenwerking(
+    fun getSamenwerkingProxy(
         @PathVariable samenwerkingId: String,
     ): ResponseEntity<Samenwerking> {
         val properties = getProperties().toSamenwerkingProperties()
@@ -66,7 +69,7 @@ class SamenwerkfunctionaliteitPluginController(
     }
 
     @GetMapping("v5/actieverzoeken/{actieverzoekId}")
-    fun getActieverzoek(
+    fun getActieverzoekProxy(
         @PathVariable actieverzoekId: UUID,
     ): ResponseEntity<Actieverzoek> {
         val properties = getProperties().toSamenwerkingProperties()
@@ -80,9 +83,9 @@ class SamenwerkfunctionaliteitPluginController(
     }
 
     @PatchMapping("v5/actieverzoeken/{actieverzoekId}")
-    fun updateActieverzoek(
+    fun updateActieverzoekProxy(
         @PathVariable actieverzoekId: UUID,
-        @RequestBody updateActieverzoekRequest: UpdateActieverzoekRequest,
+        @RequestBody @Valid updateActieverzoekRequest: UpdateActieverzoekRequest,
     ): ResponseEntity<Actieverzoek> {
         val properties = getProperties().toSamenwerkingProperties()
         logger.info {
@@ -99,13 +102,13 @@ class SamenwerkfunctionaliteitPluginController(
     }
 
     @GetMapping("v5/notificaties")
-    fun getAllNotificaties(): ResponseEntity<PagedNotificatieGetResponse> {
+    fun getAllNotificatiesProxy(): ResponseEntity<PagedNotificatieGetResponse> {
         val properties = getProperties().toSamenwerkingProperties()
         return ResponseEntity.ok(samenwerkfunctionaliteitService.getAllNotificaties(properties))
     }
 
     @GetMapping("v5/samenwerkingen/{samenwerkingId}/documenten")
-    fun getDocumentenBySamenwerkingId(
+    fun getDocumentenBySamenwerkingIdProxy(
         @PathVariable samenwerkingId: String,
     ): ResponseEntity<DocumentenOverzichtResponse> {
         val properties = getProperties().toSamenwerkingProperties()
@@ -113,7 +116,7 @@ class SamenwerkfunctionaliteitPluginController(
     }
 
     @GetMapping("v5/documenten/{documentId}/content")
-    fun getDocumentContentByDocumentId(
+    fun getDocumentContentByDocumentIdProxy(
         @PathVariable documentId: UUID,
     ): ResponseEntity<ByteArray> {
         val properties = getProperties().toSamenwerkingProperties()
@@ -121,7 +124,7 @@ class SamenwerkfunctionaliteitPluginController(
     }
 
     @PostMapping("v5/samenwerkingen/{samenwerkingId}/documenten")
-    fun uploadDocument(
+    fun uploadDocumentProxy(
         @PathVariable samenwerkingId: String,
         @RequestParam file: MultipartFile,
         @RequestParam(required = false) metadata: Map<String, String>?,
@@ -132,7 +135,7 @@ class SamenwerkfunctionaliteitPluginController(
     }
 
     @GetMapping("v5/actieverzoeken/{actieverzoekId}/berichten")
-    fun getBerichten(
+    fun getBerichtenProxy(
         @PathVariable actieverzoekId: UUID,
     ): ResponseEntity<PagedBerichtenGetResponse> {
         val properties = getProperties().toSamenwerkingProperties()
@@ -141,6 +144,17 @@ class SamenwerkfunctionaliteitPluginController(
                 properties = properties,
                 actieverzoekId = actieverzoekId,
             ),
+        )
+    }
+
+    @PostMapping("v5/actieverzoeken/{actieverzoekId}/berichten")
+    fun postBerichtProxy(
+        @PathVariable actieverzoekId: UUID,
+        @RequestBody @Valid postBerichtRequest: CreateBerichtRequest,
+    ): ResponseEntity<BerichtResponse> {
+        val properties = getProperties().toSamenwerkingProperties()
+        return ResponseEntity.ok(
+            samenwerkfunctionaliteitService.postBericht(properties, actieverzoekId, postBerichtRequest),
         )
     }
 

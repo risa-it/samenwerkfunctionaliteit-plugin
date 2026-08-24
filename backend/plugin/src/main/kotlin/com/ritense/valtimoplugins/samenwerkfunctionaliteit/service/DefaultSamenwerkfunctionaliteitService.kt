@@ -1,6 +1,7 @@
 package com.ritense.valtimoplugins.samenwerkfunctionaliteit.service
 
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.client.SamenwerkfunctionaliteitClient
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.BerichtResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.CreateBerichtRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtQuery
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtResponse
@@ -72,9 +73,12 @@ class DefaultSamenwerkfunctionaliteitService(
         properties: SamenwerkfunctionaliteitProperties,
         actieverzoekId: UUID,
         requestBody: CreateBerichtRequest,
-    ): Bericht {
-        TODO("Not yet implemented")
-    }
+    ): BerichtResponse =
+        samenwerkfunctionaliteitClient.postBericht(
+            properties = properties,
+            actieverzoekId = actieverzoekId,
+            requestBody = requestBody,
+        )
 
     override fun deleteBericht(
         properties: SamenwerkfunctionaliteitProperties,

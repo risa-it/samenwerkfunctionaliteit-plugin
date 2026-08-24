@@ -127,7 +127,20 @@ class DefaultSamenwerkfunctionaliteitClient(
         actieverzoekId: UUID,
         requestBody: CreateBerichtRequest,
     ): BerichtResponse {
-        TODO("Not yet implemented")
+        try {
+            return restClient(properties = properties)
+                .post()
+                .uri { uriBuilder ->
+                    uriBuilder.path("$SWF_ACTIEVERZOEK_PATH/$actieverzoekId/berichten").build()
+                }.body(requestBody)
+                .retrieve()
+                .body<BerichtResponse>()
+                ?: throw IllegalStateException("Error sending bericht: response body was null")
+        } catch (e: HttpServerErrorException.InternalServerError) {
+            handleInternalServerError(e)
+        } catch (e: RestClientResponseException) {
+            handleResponseException(e, "Error sending bericht.")
+        }
     }
 
     override fun deleteBericht(
