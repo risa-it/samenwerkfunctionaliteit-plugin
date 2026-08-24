@@ -9,12 +9,12 @@ import com.ritense.valtimoplugins.samenwerkfunctionaliteit.mapper.toModel
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Actieverzoek
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Bericht
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Document
-import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.DocumentenOverzicht
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Notificatie
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Page
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.SamenwerkfunctionaliteitProperties
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Samenwerking
-import org.springframework.core.io.InputStreamResource
+import org.springframework.http.ResponseEntity
+import org.springframework.web.multipart.MultipartFile
 import java.time.ZonedDateTime
 import java.util.UUID
 
@@ -109,16 +109,19 @@ class DefaultSamenwerkfunctionaliteitService(
     override fun downloadDocument(
         properties: SamenwerkfunctionaliteitProperties,
         documentId: UUID,
-    ): InputStreamResource {
-        TODO("Not yet implemented")
-    }
+    ): ResponseEntity<ByteArray> = samenwerkfunctionaliteitClient.downloadDocument(properties, documentId)
 
     override fun uploadDocument(
         properties: SamenwerkfunctionaliteitProperties,
+        file: MultipartFile,
+        metadata: Map<String, String>?,
         samenwerkingId: String,
-    ) {
-        TODO("Not yet implemented")
-    }
+    ) = samenwerkfunctionaliteitClient.uploadDocument(
+        properties = properties,
+        file = file,
+        metadata = metadata,
+        samenwerkingId = samenwerkingId,
+    )
 
     override fun getSamenwerkingNotificaties(
         properties: SamenwerkfunctionaliteitProperties,

@@ -14,10 +14,13 @@ import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Samenwerkfuncti
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.core.io.InputStreamResource
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.RestClient
 import org.springframework.web.client.RestClientResponseException
 import org.springframework.web.client.body
+import org.springframework.web.client.toEntity
+import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.server.ResponseStatusException
 import org.springframework.web.util.UriBuilder
 import org.springframework.web.util.UriComponentsBuilder
@@ -165,12 +168,24 @@ class DefaultSamenwerkfunctionaliteitClient(
     override fun downloadDocument(
         properties: SamenwerkfunctionaliteitProperties,
         documentId: UUID,
-    ): InputStreamResource {
-        TODO("Not yet implemented")
+    ): ResponseEntity<ByteArray> {
+        try {
+            return restClient(properties = properties)
+                .get()
+                .uri("${SWF_DOCUMENTEN_PATH}/$documentId/content")
+                .retrieve()
+                .toEntity<ByteArray>()
+        } catch (e: HttpServerErrorException.InternalServerError) {
+            handleInternalServerError(e)
+        } catch (e: RestClientResponseException) {
+            handleResponseException(e, "Error getting all notificaties.")
+        }
     }
 
     override fun uploadDocument(
         properties: SamenwerkfunctionaliteitProperties,
+        file: MultipartFile,
+        metadata: Map<String, String>?,
         samenwerkingId: String,
     ) {
         TODO("Not yet implemented")
@@ -337,6 +352,7 @@ class DefaultSamenwerkfunctionaliteitClient(
         private const val NOTIFICATIES_PAGE_PARAM = "page"
         private const val SWF_SAMENWERKING_PATH = "v5/samenwerkingen"
         private const val SWF_ACTIEVERZOEK_PATH = "v5/actieverzoeken"
+        private const val SWF_DOCUMENTEN_PATH = "v5/documenten"
         private const val UPDATE_ACTIEVERZOEK_HEADER = "application/merge-patch+json"
         private const val SAMENWERKING_ID = "samenwerkingId"
         private const val ORGANISATIE = "organisatie"

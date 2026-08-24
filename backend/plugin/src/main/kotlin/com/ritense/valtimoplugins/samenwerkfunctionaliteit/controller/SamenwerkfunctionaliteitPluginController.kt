@@ -17,9 +17,12 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.multipart.MultipartFile
 import java.util.UUID
 
 @RestController
@@ -106,8 +109,26 @@ class SamenwerkfunctionaliteitPluginController(
         @PathVariable samenwerkingId: String,
     ): ResponseEntity<DocumentenOverzichtResponse> {
         val properties = getProperties().toSamenwerkingProperties()
-
         return ResponseEntity.ok(samenwerkfunctionaliteitService.getDocumentenOverzicht(properties, samenwerkingId))
+    }
+
+    @GetMapping("v5/documenten/{documentId}/content")
+    fun getDocumentContentByDocumentId(
+        @PathVariable documentId: UUID,
+    ): ResponseEntity<ByteArray> {
+        val properties = getProperties().toSamenwerkingProperties()
+        return samenwerkfunctionaliteitService.downloadDocument(properties, documentId)
+    }
+
+    @PostMapping("v5/samenwerkingen/{samenwerkingId}/documenten")
+    fun uploadDocument(
+        @PathVariable samenwerkingId: String,
+        @RequestParam file: MultipartFile,
+        @RequestParam(required = false) metadata: Map<String, String>?,
+    ): ResponseEntity<Void> {
+        val properties = getProperties().toSamenwerkingProperties()
+        samenwerkfunctionaliteitService.uploadDocument(properties, file, metadata, samenwerkingId)
+        return ResponseEntity.ok().build()
     }
 
     private fun extractPropertyFromSamenwerkfunctionaliteitPluginConfiguration(name: String): String? =
