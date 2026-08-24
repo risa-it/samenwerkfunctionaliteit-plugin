@@ -2,7 +2,6 @@ package com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.NotificatieGetResponse.Notificaties
-import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Links
 
 data class NotificatieGetResponse(
     @field:JsonProperty("_embedded")
