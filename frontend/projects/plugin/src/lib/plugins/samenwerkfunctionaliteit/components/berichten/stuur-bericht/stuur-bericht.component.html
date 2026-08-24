@@ -1,45 +1,22 @@
-@if (this.isMissingActieverzoekId()) {
-  <cds-notification
-    [notificationObj]="{
-      type: 'info',
-      title: ('stuurBerichtMissingActieverzoekIdTitle' | pluginTranslate: pluginId | async),
-      message: ('stuurBerichtMissingActieverzoekIdMessage' | pluginTranslate: pluginId | async),
-      showClose: false
-    }"
-  ></cds-notification>
-} @else {
-  <div class="stuur-bericht">
-    <textarea
-      cdsTextArea
-      class="textarea-field message-body"
-      [placeholder]="'stuurBerichtPlaceholder' | pluginTranslate: pluginId | async"
-      [rows]="rows"
-      [maxLength]="maxLength"
-      [(ngModel)]="message"
-    ></textarea>
+<div class="stuur-bericht">
+  <textarea
+    cdsTextArea
+    class="textarea-field message-body"
+    [placeholder]="
+      'samenwerkfunctionaliteit.messenger.messagePlaceholder' | translate
+    "
+    [rows]="rows"
+    [maxLength]="maxLength"
+    [(ngModel)]="message"
+  ></textarea>
 
-    <cds-icon-button
-      [description]="'stuurBerichtSendButtonDescription' | pluginTranslate: pluginId | async"
-      [disabled]="isSubmitting() || !message.trim()"
-      (click)="onClick()"
-    >
-      <svg
-        cdsIcon="send"
-        size="32"
-        class="cds--btn__icon">
-      </svg>
-    </cds-icon-button>
-
-    @if (notification()) {
-      <cds-notification
-        [notificationObj]="{
-          type: notification()!.type,
-          title: (notification()!.titleKey | pluginTranslate: pluginId | async),
-          message: (notification()!.messageKey | pluginTranslate: pluginId | async),
-          showClose: true
-        }"
-        (close)="dismissNotification()"
-      ></cds-notification>
-    }
-  </div>
-}
+  <cds-icon-button
+    [description]="'samenwerkfunctionaliteit.messenger.sendMessage' | translate"
+    [disabled]="isSubmitting() || !message.trim()"
+    (click)="onSend()"
+    [showTooltipWhenDisabled]="true"
+    [autoAlign]="true"
+  >
+    <svg cdsIcon="send" size="32" class="cds--btn__icon"></svg>
+  </cds-icon-button>
+</div>

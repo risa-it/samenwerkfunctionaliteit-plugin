@@ -1,0 +1,72 @@
+<v-modal #uploadModal>
+  <div role="header">
+    <h4>
+      {{
+        'samenwerkfunctionaliteit.documentTable.documentUploadModal.title'
+          | translate
+      }}
+    </h4>
+  </div>
+
+  <div role="content">
+    <form [formGroup]="metadataForm">
+      <div class="form-field">
+        <cds-label>
+          {{
+            'samenwerkfunctionaliteit.types.document.documentDescription'
+              | translate
+          }}
+
+          <input cdsText formControlName="documentDescription" />
+        </cds-label>
+      </div>
+
+      <div class="form-field">
+        <cds-label>
+          {{
+            'samenwerkfunctionaliteit.types.document.numberWithinSystem'
+              | translate
+          }}
+
+          <input cdsText formControlName="numberWithinSystem" />
+        </cds-label>
+      </div>
+
+      <div class="form-field">
+        <cds-dropdown
+          formControlName="confidentialityType"
+          [label]="confidentialityOptionsLabel"
+          [appendInline]="true"
+          [itemValueKey]="'id'"
+        >
+          <cds-dropdown-list
+            [items]="confidentialityOptions"
+          ></cds-dropdown-list>
+        </cds-dropdown>
+      </div>
+
+      <div class="form-field">
+        <cds-label>
+          {{ 'samenwerkfunctionaliteit.types.document.systemId' | translate }}
+
+          <input cdsText formControlName="systemId" />
+        </cds-label>
+      </div>
+    </form>
+  </div>
+
+  <div role="footer">
+    <button cdsButton="secondary" type="button" (click)="cancel()">
+      {{ 'samenwerkfunctionaliteit.common.actions.cancel' | translate }}
+    </button>
+
+    <button
+      cdsButton="primary"
+      type="button"
+      (click)="submit()"
+      [disabled]="metadataForm.invalid"
+    >
+      {{ 'samenwerkfunctionaliteit.common.actions.continue' | translate }}
+    </button>
+  </div>
+</v-modal>

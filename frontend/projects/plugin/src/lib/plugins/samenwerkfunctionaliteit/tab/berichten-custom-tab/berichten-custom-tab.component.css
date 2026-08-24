@@ -15,3 +15,18 @@
   width: 2rem;
   margin-right: 0.8rem;
 }
+
+::ng-deep textarea.textarea-field.message-body.cds--text-area,
+::ng-deep .message-list {
+  background-color: var(--cds-layer-02);
+  border-radius: 0.25rem;
+  border: none;
+}
+
+::ng-deep textarea.textarea-field.message-body.cds--text-area {
+
+  &:focus,
+  &:active {
+    background-color: var(--cds-layer-01);
+  }
+}

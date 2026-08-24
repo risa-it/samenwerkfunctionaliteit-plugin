@@ -1,4 +1,5 @@
 @use '@carbon/styles/css/styles.css' as carbon-styles;
+@use '../../../../styles/_shadows' as shadows;
 
 .message-bubble-container {
   display: flex;
@@ -18,7 +19,7 @@
   padding: 1rem;
   border-radius: 0.5rem;
   position: relative;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: shadows.$shadow-elevation-low;
 }
 
 .message-bubble-container:not(.sent) .message-bubble {
@@ -28,7 +29,7 @@
 }
 
 .message-bubble-container.sent .message-bubble {
-  background-color: var(--cds-interactive-01, #0f62fe);
+  background-color: var(--cds-background-brand);
   border-top-right-radius: 0;
   color: var(--cds-ui-01, #ffffff);
 }

@@ -4,20 +4,21 @@ import {
   ConfidentialityType,
   ConfidentialityTypes,
 } from '../types/confidentiality.type';
+import { toUUID } from '../types/uuid.type';
 import { Links } from './links.dto';
 import { Page } from './page.dto';
 
 export interface DocumentenOverzichtResponse {
-  _embedded: Documenten | null;
+  _embedded: DocumentenResponse | null;
   _links: Links | null;
   page: Page;
 }
 
-interface Documenten {
-  documenten: DocumentenResponse[];
+interface DocumentenResponse {
+  documenten: DocumentResponse[];
 }
 
-export interface DocumentenResponse {
+export interface DocumentResponse {
   documentId: string;
   bestandsNaam: string;
   kenmerkSysteem: string | null;
@@ -38,11 +39,11 @@ export interface DocumentenResponse {
 }
 
 export function mapDocumentenResponseToModel(
-  documentenResponse: DocumentenResponse,
+  documentenResponse: DocumentResponse,
 ): DocumentInterface {
   return new Document(
     documentenResponse.samenwerkingId,
-    documentenResponse.documentId,
+    toUUID(documentenResponse.documentId),
     documentenResponse.bestandsNaam,
     mapVertrouwelijkheidsAanduidingToConfidentialityType(
       documentenResponse.vertrouwelijkheidsAanduiding,
@@ -52,13 +53,15 @@ export function mapDocumentenResponseToModel(
 }
 
 function mapVertrouwelijkheidsAanduidingToConfidentialityType(
-  vertrouwelijkheidsAanduiding: string,
+  vertrouwelijkheidsAanduiding: string | null,
 ): ConfidentialityType {
   switch (vertrouwelijkheidsAanduiding) {
     case 'RV':
       return ConfidentialityTypes.Confidential;
     case 'SV':
       return ConfidentialityTypes.StrictlyConfidential;
+    case null:
+      return ConfidentialityTypes.Confidential;
     default:
       throw new Error(
         `Unknown vertrouwelijkheidsAanduiding: ${vertrouwelijkheidsAanduiding}`,
@@ -82,5 +85,7 @@ export function mapConfidentialityTypeToVertrouwelijkheidsaanduiding(
 export function mapDocumentenResponseToModels(
   documenten: DocumentenOverzichtResponse,
 ): DocumentInterface[] {
-  return documenten._embedded.documenten.map(mapDocumentenResponseToModel);
+  return documenten._embedded
+    ? documenten._embedded.documenten.map(mapDocumentenResponseToModel)
+    : [];
 }

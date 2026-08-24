@@ -7,11 +7,11 @@ export interface BerichtenOverzichtResponse {
   page: Page;
 }
 
-interface Berichten {
-  berichten: BerichtenResponse[];
+interface BerichtenResponse {
+  berichten: BerichtResponse[];
 }
 
-interface BerichtenResponse {
+interface BerichtResponse {
   _links?: Links;
   actieverzoekId: string;
   berichtId: string;
