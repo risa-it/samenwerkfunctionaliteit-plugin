@@ -7,11 +7,11 @@ import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.CreateBerichtRequ
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtQuery
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.NotificatieGetResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedBerichtenGetResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedNotificatieGetResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.SamenwerkingResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.UpdateActieverzoekRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.SamenwerkfunctionaliteitProperties
-import org.springframework.core.io.InputStreamResource
 import org.springframework.http.ResponseEntity
 import org.springframework.web.multipart.MultipartFile
 import java.time.ZonedDateTime
@@ -35,11 +35,10 @@ interface SamenwerkfunctionaliteitClient {
         request: UpdateActieverzoekRequest,
     ): ActieverzoekResponse
 
-    fun getBericht(
+    fun getBerichten(
         properties: SamenwerkfunctionaliteitProperties,
-        actieVerzoekId: UUID,
-        berichtId: UUID,
-    ): BerichtResponse
+        actieverzoekId: UUID,
+    ): PagedBerichtenGetResponse
 
     fun postBericht(
         properties: SamenwerkfunctionaliteitProperties,

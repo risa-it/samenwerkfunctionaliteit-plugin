@@ -3,6 +3,8 @@ package com.ritense.valtimoplugins.samenwerkfunctionaliteit.service
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.CreateBerichtRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtQuery
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedBerichtenGetResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedNotificatieGetResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.UpdateActieverzoekRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Actieverzoek
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Bericht
@@ -11,7 +13,6 @@ import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Notificatie
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Page
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.SamenwerkfunctionaliteitProperties
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Samenwerking
-import org.springframework.core.io.InputStreamResource
 import org.springframework.http.ResponseEntity
 import org.springframework.web.multipart.MultipartFile
 import java.time.ZonedDateTime
@@ -35,11 +36,10 @@ interface SamenwerkfunctionaliteitService {
         request: UpdateActieverzoekRequest,
     ): Actieverzoek
 
-    fun getBericht(
+    fun getBerichten(
         properties: SamenwerkfunctionaliteitProperties,
-        actieVerzoekId: UUID,
-        berichtId: UUID,
-    ): Bericht
+        actieverzoekId: UUID,
+    ): PagedBerichtenGetResponse
 
     fun postBericht(
         properties: SamenwerkfunctionaliteitProperties,
@@ -88,7 +88,7 @@ interface SamenwerkfunctionaliteitService {
         pageNumber: Int,
     ): Page<List<Notificatie>>
 
-    fun getAllNotificaties(properties: SamenwerkfunctionaliteitProperties): Page<List<Notificatie>>
+    fun getAllNotificaties(properties: SamenwerkfunctionaliteitProperties): PagedNotificatieGetResponse
 
     fun getSamenwerking(
         samenwerkingId: String,
