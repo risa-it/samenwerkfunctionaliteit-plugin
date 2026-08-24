@@ -4,11 +4,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import com.ritense.plugin.service.PluginConfigurationSearchParameters
 import com.ritense.plugin.service.PluginService
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.config.FrontendConfig
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.ActieverzoekResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.BerichtResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.CreateBerichtRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedBerichtenGetResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedNotificatieGetResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.SamenwerkingResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.UpdateActieverzoekRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Actieverzoek
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.FrontendAccessibleProperties
@@ -62,7 +64,7 @@ class SamenwerkfunctionaliteitPluginController(
     @GetMapping("v5/samenwerkingen/{samenwerkingId}")
     fun getSamenwerkingProxy(
         @PathVariable samenwerkingId: String,
-    ): ResponseEntity<Samenwerking> {
+    ): ResponseEntity<SamenwerkingResponse> {
         val properties = getProperties().toSamenwerkingProperties()
 
         return ResponseEntity.ok(samenwerkfunctionaliteitService.getSamenwerking(samenwerkingId, properties))
@@ -71,7 +73,7 @@ class SamenwerkfunctionaliteitPluginController(
     @GetMapping("v5/actieverzoeken/{actieverzoekId}")
     fun getActieverzoekProxy(
         @PathVariable actieverzoekId: UUID,
-    ): ResponseEntity<Actieverzoek> {
+    ): ResponseEntity<ActieverzoekResponse> {
         val properties = getProperties().toSamenwerkingProperties()
 
         return ResponseEntity.ok(

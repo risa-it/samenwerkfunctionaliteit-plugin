@@ -1,11 +1,13 @@
 package com.ritense.valtimoplugins.samenwerkfunctionaliteit.service
 
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.ActieverzoekResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.BerichtResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.CreateBerichtRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtQuery
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedBerichtenGetResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedNotificatieGetResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.SamenwerkingResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.UpdateActieverzoekRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Actieverzoek
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Bericht
@@ -23,7 +25,7 @@ interface SamenwerkfunctionaliteitService {
     fun getActieverzoek(
         properties: SamenwerkfunctionaliteitProperties,
         actieverzoekId: UUID,
-    ): Actieverzoek
+    ): ActieverzoekResponse
 
     fun getAllActieverzoeken(
         properties: SamenwerkfunctionaliteitProperties,
@@ -94,5 +96,5 @@ interface SamenwerkfunctionaliteitService {
     fun getSamenwerking(
         samenwerkingId: String,
         properties: SamenwerkfunctionaliteitProperties,
-    ): Samenwerking
+    ): SamenwerkingResponse
 }

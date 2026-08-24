@@ -1,12 +1,14 @@
 package com.ritense.valtimoplugins.samenwerkfunctionaliteit.service
 
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.client.SamenwerkfunctionaliteitClient
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.ActieverzoekResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.BerichtResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.CreateBerichtRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtQuery
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedBerichtenGetResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedNotificatieGetResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.SamenwerkingResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.UpdateActieverzoekRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.mapper.toModel
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Actieverzoek
@@ -27,12 +29,12 @@ class DefaultSamenwerkfunctionaliteitService(
     override fun getActieverzoek(
         properties: SamenwerkfunctionaliteitProperties,
         actieverzoekId: UUID,
-    ): Actieverzoek =
+    ): ActieverzoekResponse =
         samenwerkfunctionaliteitClient
             .getActieverzoek(
                 properties = properties,
                 actieverzoekId = actieverzoekId,
-            ).toModel()
+            )
 
     override fun getAllActieverzoeken(
         properties: SamenwerkfunctionaliteitProperties,
@@ -183,8 +185,5 @@ class DefaultSamenwerkfunctionaliteitService(
     override fun getSamenwerking(
         samenwerkingId: String,
         properties: SamenwerkfunctionaliteitProperties,
-    ): Samenwerking {
-        val response = samenwerkfunctionaliteitClient.getSamenwerking(samenwerkingId, properties)
-        return response.toModel()
-    }
+    ): SamenwerkingResponse = samenwerkfunctionaliteitClient.getSamenwerking(samenwerkingId, properties)
 }
