@@ -37,7 +37,7 @@ interface SamenwerkfunctionaliteitService {
         properties: SamenwerkfunctionaliteitProperties,
         actieverzoekId: UUID,
         request: UpdateActieverzoekRequest,
-    ): Actieverzoek
+    ): ActieverzoekResponse
 
     fun getBerichten(
         properties: SamenwerkfunctionaliteitProperties,

@@ -54,13 +54,13 @@ class DefaultSamenwerkfunctionaliteitService(
         properties: SamenwerkfunctionaliteitProperties,
         actieverzoekId: UUID,
         request: UpdateActieverzoekRequest,
-    ): Actieverzoek =
+    ): ActieverzoekResponse =
         samenwerkfunctionaliteitClient
             .updateActieverzoek(
                 properties = properties,
                 actieverzoekId = actieverzoekId,
                 request = request,
-            ).toModel()
+            )
 
     override fun getBerichten(
         properties: SamenwerkfunctionaliteitProperties,

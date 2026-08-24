@@ -88,10 +88,10 @@ class SamenwerkfunctionaliteitPluginController(
     fun updateActieverzoekProxy(
         @PathVariable actieverzoekId: UUID,
         @RequestBody @Valid updateActieverzoekRequest: UpdateActieverzoekRequest,
-    ): ResponseEntity<Actieverzoek> {
+    ): ResponseEntity<ActieverzoekResponse> {
         val properties = getProperties().toSamenwerkingProperties()
         logger.info {
-            "Updating $actieverzoekId and $updateActieverzoekRequest"
+            "Updating $actieverzoekId with $updateActieverzoekRequest"
         }
 
         return ResponseEntity.ok(
