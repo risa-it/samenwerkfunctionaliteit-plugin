@@ -98,7 +98,7 @@ class SamenwerkfunctionaliteitPluginController(
         )
     }
 
-    @GetMapping("v5/documenten")
+    @GetMapping("v5/notificaties")
     fun getAllNotificaties(): ResponseEntity<Page<List<Notificatie>>> {
         val properties = getProperties().toSamenwerkingProperties()
         return ResponseEntity.ok(samenwerkfunctionaliteitService.getAllNotificaties(properties))
