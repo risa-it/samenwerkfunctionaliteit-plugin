@@ -1,8 +1,3 @@
-import { Links } from './links.dto';
-import {
-  DocumentenResponse,
-  mapDocumentenResponseToModel,
-} from './document.dto';
 import {
   Actieverzoek,
   ActieverzoekUpdateData,
@@ -11,13 +6,15 @@ import {
   ActieverzoekStatusType,
   ActieverzoekStatusTypes,
 } from '../types/actieverzoek-status.type';
+import { DocumentResponse, mapDocumentenResponseToModel } from './document.dto';
+import { Links } from './links.dto';
 
 export interface ActieverzoekResponse {
   _links: Links;
   aantalBerichten: number;
   actieverzoekId: string;
   creatieDatumTijd: string;
-  documenten: DocumentenResponse[];
+  documenten: DocumentResponse[];
   laatstAangepastDatumTijd: string;
   laatstAangepastDoor: string;
   laatstAangepastDoorNaam: string;

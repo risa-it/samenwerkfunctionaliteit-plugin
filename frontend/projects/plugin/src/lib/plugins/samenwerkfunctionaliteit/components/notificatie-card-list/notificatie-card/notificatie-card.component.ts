@@ -1,4 +1,4 @@
-import { NotificatieCardInterface } from '../interface/notificatie-card.interface';
+import { DatePipe } from '@angular/common';
 import {
   Component,
   computed,
@@ -7,12 +7,12 @@ import {
   OnInit,
   Signal,
 } from '@angular/core';
-import { NotificatieCardTypes } from '../type/notificatie-card.type';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { SkeletonModule } from 'carbon-components-angular';
-import { DatePipe } from '@angular/common';
-import { NotificatieCardInput } from '../model/notificatie-card-input.model';
 import { capitalize } from '../../../utils/capitalize';
+import { NotificatieCardInterface } from '../interface/notificatie-card.interface';
+import { NotificatieCardInput } from '../model/notificatie-card-input.model';
+import { NotificatieCardTypes } from '../type/notificatie-card.type';
 
 @Component({
   templateUrl: './notificatie-card.component.html',
@@ -47,13 +47,13 @@ export class NotificatieCardComponent
   private getTypeText() {
     switch (this.inputs().type) {
       case NotificatieCardTypes.Document:
-        return 'samenwerkfunctionaliteit.notifications.types.document';
+        return 'samenwerkfunctionaliteit.types.notification.document';
       case NotificatieCardTypes.Message:
-        return 'samenwerkfunctionaliteit.notifications.types.message';
+        return 'samenwerkfunctionaliteit.types.notification.message';
       case NotificatieCardTypes.Status:
-        return 'samenwerkfunctionaliteit.notifications.types.status';
+        return 'samenwerkfunctionaliteit.types.notification.status';
       case NotificatieCardTypes.System:
-        return 'samenwerkfunctionaliteit.notifications.types.system';
+        return 'samenwerkfunctionaliteit.types.notification.system';
       default:
         return '';
     }

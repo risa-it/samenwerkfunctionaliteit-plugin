@@ -41,11 +41,6 @@ export class DocumentService {
       map((documentenOverzichtResponse: DocumentenOverzichtResponse) => {
         return mapDocumentenResponseToModels(documentenOverzichtResponse);
       }),
-      map((documenten: DocumentInterface[]) => {
-        return documenten.filter((document) => {
-          return document.samenwerkingId === samenwerkingId;
-        });
-      }),
       catchError((error: Error) => {
         return throwError(() => error);
       }),
@@ -104,6 +99,10 @@ export class DocumentService {
           ),
         ),
       );
+  }
+
+  deleteDocument(documentId: UUID): Observable<void> {
+    return this.documentClient.deleteDocument(documentId);
   }
 
   downloadDocument(documentId: UUID): Observable<FileDownload> {

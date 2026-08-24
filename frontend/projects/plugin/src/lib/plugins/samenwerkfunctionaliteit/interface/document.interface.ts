@@ -1,9 +1,10 @@
 import { ConfidentialityType } from '../types/confidentiality.type';
+import { UUID } from '../types/uuid.type';
 
 export interface DocumentInterface {
   samenwerkingId: string;
-  documentId: string;
-  fileName: string;
-  confidentialityLevel: ConfidentialityType;
+  documentId: UUID;
+  filename: string;
+  confidentialityType: ConfidentialityType;
   creationDate: string;
 }

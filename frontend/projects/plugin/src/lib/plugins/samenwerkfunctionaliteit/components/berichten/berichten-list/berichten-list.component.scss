@@ -7,10 +7,6 @@
 
   overflow-y: auto;
   overflow-x: hidden;
-
-  background-color: var(--cds-ui-02, #f4f4f4);
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .messages-wrapper {
@@ -27,16 +23,15 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  color: var(--cds-text-02, #525252);
-  font-family: 'IBM Plex Sans', sans-serif;
+  color: var(--cds-text-02);
 }
 
 .loading-indicator::before {
   content: '';
   width: 1.5rem;
   height: 1.5rem;
-  border: 2px solid var(--cds-ui-03, #e0e0e0);
-  border-top-color: var(--cds-interactive-01, #0f62fe);
+  border: 2px solid transparent;
+  border-top-color: var(--cds-interactive-01);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
   margin-right: 0.75rem;
@@ -46,24 +41,6 @@
   to {
     transform: rotate(360deg);
   }
-}
-
-.message-list::-webkit-scrollbar {
-  width: 0.5rem;
-}
-
-.message-list::-webkit-scrollbar-track {
-  background: var(--cds-ui-03, #e0e0e0);
-  border-radius: 0.25rem;
-}
-
-.message-list::-webkit-scrollbar-thumb {
-  background: var(--cds-ui-04, #c6c6c6);
-  border-radius: 0.25rem;
-}
-
-.message-list::-webkit-scrollbar-thumb:hover {
-  background: var(--cds-text-02, #525252);
 }
 
 @media (max-width: 600px) {

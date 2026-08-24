@@ -4,6 +4,8 @@
       <swf-bericht [message]="message" [oinNumber]="oinNumber()" />
     }
   } @else {
-    <div class="loading-indicator">Loading messages...</div>
+    <div class="loading-indicator">
+      {{ 'samenwerkfunctionaliteit.messenger.loadingMessages' | translate }}
+    </div>
   }
 </div>

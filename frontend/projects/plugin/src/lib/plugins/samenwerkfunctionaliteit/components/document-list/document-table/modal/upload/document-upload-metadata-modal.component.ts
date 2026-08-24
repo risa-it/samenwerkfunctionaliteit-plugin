@@ -1,0 +1,95 @@
+import { Component, inject, output, viewChild } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+  ButtonModule,
+  DropdownModule,
+  InputModule,
+} from 'carbon-components-angular';
+
+import {
+  ModalService,
+  VModalComponent,
+  VModalModule,
+} from '@valtimo/components';
+import { UploadDocumentMetadata } from '../../../../../interface/upload-document-metadata.interface';
+import {
+  ConfidentialityType,
+  ConfidentialityTypes,
+} from '../../../../../types/confidentiality.type';
+
+@Component({
+  selector: 'document-upload-metadata-modal',
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    InputModule,
+    DropdownModule,
+    ButtonModule,
+    TranslatePipe,
+    VModalModule,
+  ],
+  templateUrl: './document-upload-metadata-modal.component.html',
+  styleUrl: './document-upload-metadata-modal.component.scss',
+})
+export class DocumentUploadMetadataModal {
+  private readonly modalService = inject(ModalService);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly translateService = inject(TranslateService);
+
+  readonly modal = viewChild.required<VModalComponent>('uploadModal');
+
+  readonly submitted = output<UploadDocumentMetadata>();
+  readonly cancelled = output<void>();
+
+  protected readonly metadataForm = this.formBuilder.group({
+    documentDescription: [''],
+    numberWithinSystem: [''],
+    systemId: [''],
+    confidentialityType: [
+      ConfidentialityTypes.Confidential as ConfidentialityType,
+      Validators.required,
+    ],
+  });
+
+  protected confidentialityOptionsLabel = this.translateService.instant(
+    'samenwerkfunctionaliteit.types.document.confidentialityType',
+  );
+
+  protected confidentialityOptions = [
+    {
+      content: this.translateService.instant(
+        'samenwerkfunctionaliteit.types.confidentiality.confidential',
+      ),
+      id: ConfidentialityTypes.Confidential,
+      selected: false,
+    },
+    {
+      content: this.translateService.instant(
+        'samenwerkfunctionaliteit.types.confidentiality.strictlyConfidential',
+      ),
+      id: ConfidentialityTypes.StrictlyConfidential,
+      selected: false,
+    },
+  ];
+
+  protected submit(): void {
+    this.submitted.emit({
+      documentDescription:
+        this.metadataForm.controls.documentDescription.value || undefined,
+      numberWithinSystem:
+        this.metadataForm.controls.numberWithinSystem.value || undefined,
+      systemId: this.metadataForm.controls.systemId.value || undefined,
+      confidentialityType:
+        this.metadataForm.controls.confidentialityType.value || undefined,
+    });
+
+    this.modalService.closeModal();
+  }
+
+  protected cancel(): void {
+    this.modalService.closeModal(() => {
+      this.cancelled.emit();
+    });
+  }
+}

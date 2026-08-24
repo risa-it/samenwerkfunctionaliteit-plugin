@@ -1,8 +1,10 @@
 import { TestBed } from '@angular/core/testing';
+import { UploadProviderService } from '@valtimo/resource';
+import { DocumentenApiLinkProcessService } from '@valtimo/zgw';
+import { NGXLogger } from 'ngx-logger';
 import { DocumentClient } from '../client/document-client.service';
 import { DocumentService } from './document.service';
 import { FileDownloadService } from './file-download.service';
-import { UserNotificationService } from './user-notification.service';
 
 describe('DocumentService', () => {
   let service: DocumentService;
@@ -13,7 +15,9 @@ describe('DocumentService', () => {
         DocumentService,
         { provide: DocumentClient, useValue: {} },
         { provide: FileDownloadService, useValue: {} },
-        { provide: UserNotificationService, useValue: {} },
+        { provide: DocumentenApiLinkProcessService, useValue: {} },
+        { provide: UploadProviderService, useValue: {} },
+        { provide: NGXLogger, useValue: {} },
       ],
     });
     service = TestBed.inject(DocumentService);

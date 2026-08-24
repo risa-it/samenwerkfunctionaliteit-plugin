@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ChatBericht } from '../../../models/bericht.model';
+import { TranslateModule } from '@ngx-translate/core';
+import { Message } from '../../../models/bericht.model';
 import { BerichtenListComponent } from './berichten-list.component';
 
-const mockBerichten: ChatBericht[] = [];
+const mockBerichten: Message[] = [];
 const mockIsLoading: boolean = true;
 
 describe('BerichtenListComponent', () => {
@@ -12,7 +13,7 @@ describe('BerichtenListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BerichtenListComponent],
+      imports: [BerichtenListComponent, TranslateModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(BerichtenListComponent);
