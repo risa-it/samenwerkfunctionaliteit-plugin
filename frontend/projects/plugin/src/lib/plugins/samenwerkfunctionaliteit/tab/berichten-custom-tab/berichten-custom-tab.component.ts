@@ -41,8 +41,6 @@ export class BerichtenCustomTabComponent implements OnInit {
 
   messages: WritableSignal<Message[]> = signal<Message[]>([]);
   oinNumber: WritableSignal<string> = signal<string>('');
-  hasError: WritableSignal<boolean> = signal<boolean>(false);
-  errorMessage: WritableSignal<string> = signal<string>('');
   isLoading: WritableSignal<boolean> = signal<boolean>(true);
   otherParticipant: WritableSignal<string> = signal<string>('');
 
@@ -107,15 +105,7 @@ export class BerichtenCustomTabComponent implements OnInit {
           this.isLoading.set(false);
         }),
       )
-      .subscribe({
-        next: () => {
-          this.hasError.set(false);
-        },
-        error: (error: Error) => {
-          this.hasError.set(true);
-          this.errorMessage.set(error.message);
-        },
-      });
+      .subscribe();
   }
 
   private fetchOtherParticipant(
