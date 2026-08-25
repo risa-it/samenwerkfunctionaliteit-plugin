@@ -44,6 +44,7 @@ export class StuurBerichtComponent {
   isSubmitting = signal(false);
 
   isLoading = input<boolean>(false);
+  otherParticipant = input<string>('');
   messageSent = output<void>();
 
   rows = 1;
@@ -89,6 +90,7 @@ export class StuurBerichtComponent {
               'samenwerkfunctionaliteit.feedback.userNotification.messenger.sendMessage.success.title',
             messageKey:
               'samenwerkfunctionaliteit.feedback.userNotification.messenger.sendMessage.success.message',
+            messageParam: { otherParticipant: this.otherParticipant() },
           });
           this.message = '';
           this.messageSent.emit();

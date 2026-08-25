@@ -118,7 +118,7 @@ export const pluginNlTranslations = {
           sendMessage: {
             success: {
               title: 'Verzonden',
-              message: 'Het bericht is succesvol verstuurd.',
+              message: 'Het bericht is verstuurd aan {{ otherParticipant }}.',
             },
             failure: {
               title: 'Het bericht kon niet verstuurd worden',
