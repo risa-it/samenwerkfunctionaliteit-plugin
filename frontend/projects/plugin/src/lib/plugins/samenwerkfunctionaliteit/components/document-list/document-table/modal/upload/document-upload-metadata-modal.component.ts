@@ -56,6 +56,7 @@ export class DocumentUploadMetadataModal {
       ConfidentialityTypes.Confidential as ConfidentialityType,
       Validators.required,
     ],
+    systemId: [''],
   });
 
   protected confidentialityOptionsLabel = this.translateService.instant(
