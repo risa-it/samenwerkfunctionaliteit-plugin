@@ -52,7 +52,6 @@ export class DocumentUploadMetadataModal {
   protected readonly metadataForm = this.formBuilder.group({
     documentDescription: [''],
     numberWithinSystem: [''],
-    systemId: [''],
     confidentialityType: [
       ConfidentialityTypes.Confidential as ConfidentialityType,
       Validators.required,
@@ -94,9 +93,9 @@ export class DocumentUploadMetadataModal {
         this.metadataForm.controls.documentDescription.value || undefined,
       numberWithinSystem:
         this.metadataForm.controls.numberWithinSystem.value || undefined,
-      systemId: this.metadataForm.controls.systemId.value || undefined,
       confidentialityType:
         this.metadataForm.controls.confidentialityType.value || undefined,
+      systemId: this.metadataForm.controls.systemId.value || undefined,
     });
 
     this.modalService.closeModal();
