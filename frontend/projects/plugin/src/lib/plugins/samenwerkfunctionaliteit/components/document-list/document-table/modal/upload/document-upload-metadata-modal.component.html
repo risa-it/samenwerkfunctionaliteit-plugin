@@ -77,10 +77,14 @@
       cdsButton="primary"
       type="button"
       (click)="submit()"
-      [disabled]="metadataForm.invalid"
+      [disabled]="metadataForm.invalid || isUploading()"
     >
       {{ 'samenwerkfunctionaliteit.common.actions.upload' | translate }}
-      <svg class="cds--btn__icon" cdsIcon="upload" size="32"></svg>
+      @if (isUploading()) {
+        <cds-loading class="cds--btn__icon" size="sm"></cds-loading>
+      } @else {
+        <svg class="cds--btn__icon" cdsIcon="upload" size="32"></svg>
+      }
     </button>
   </div>
 </v-modal>

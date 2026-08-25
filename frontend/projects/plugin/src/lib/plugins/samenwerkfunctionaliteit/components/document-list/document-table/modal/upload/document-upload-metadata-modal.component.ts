@@ -1,4 +1,4 @@
-import { Component, inject, output, viewChild } from '@angular/core';
+import { Component, inject, input, output, viewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
@@ -7,6 +7,7 @@ import {
   IconModule,
   IconService,
   InputModule,
+  LoadingModule,
   TooltipModule,
 } from 'carbon-components-angular';
 
@@ -34,6 +35,7 @@ import {
     VModalModule,
     IconModule,
     TooltipModule,
+    LoadingModule,
   ],
   templateUrl: './document-upload-metadata-modal.component.html',
   styleUrl: './document-upload-metadata-modal.component.scss',
@@ -46,6 +48,7 @@ export class DocumentUploadMetadataModal {
 
   readonly modal = viewChild.required<VModalComponent>('uploadModal');
 
+  readonly isUploading = input(false);
   readonly submitted = output<UploadDocumentMetadata>();
   readonly cancelled = output<void>();
 
