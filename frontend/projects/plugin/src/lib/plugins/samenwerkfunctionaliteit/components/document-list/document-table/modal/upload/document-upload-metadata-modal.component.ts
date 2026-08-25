@@ -91,6 +91,18 @@ export class DocumentUploadMetadataModal {
     this.iconService.registerAll([Information32, Upload32]);
   }
 
+  resetForm(): void {
+    this.metadataForm.reset({
+      documentDescription: '',
+      numberWithinSystem: '',
+      confidentialityType: ConfidentialityTypes.Confidential,
+      systemId: '',
+    });
+
+    this.metadataForm.markAsPristine();
+    this.metadataForm.markAsUntouched();
+  }
+
   protected submit(): void {
     this.submitted.emit({
       documentDescription:
@@ -104,6 +116,8 @@ export class DocumentUploadMetadataModal {
   }
 
   protected cancel(): void {
+    this.resetForm();
+
     this.modalService.closeModal(() => {
       this.cancelled.emit();
     });
