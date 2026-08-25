@@ -55,7 +55,7 @@ export class NotificatieCardListComponent implements OnInit {
   documentId: string = '';
   FIRST_PAGE: number = 1;
 
-  readonly page = signal(1);
+  readonly page = signal(this.FIRST_PAGE);
   readonly pageSize = signal(10);
   readonly totalNotifications = signal(0);
 
