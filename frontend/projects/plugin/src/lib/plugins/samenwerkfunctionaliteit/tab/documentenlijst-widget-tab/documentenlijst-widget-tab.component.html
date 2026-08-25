@@ -1,22 +1,19 @@
 @if (isSamenwerkingDossier()) {
   <document-list></document-list>
-  <ng-container [ngTemplateOutlet]="documentenApiText"></ng-container>
 
-  <ng-template #documentenApiText>
-    <cds-text-label class="documenten-api-text" [skeleton]="isLoading()">
-      {{
-        'samenwerkfunctionaliteit.documentTable.documentenApiHelperText.before'
-          | translate
-      }}<a [href]="this.openZaakUrl" target="_blank">{{
-        'samenwerkfunctionaliteit.documentTable.documentenApiHelperText.link'
-          | translate
-      }}</a
-      >{{
-        'samenwerkfunctionaliteit.documentTable.documentenApiHelperText.after'
-          | translate
-      }}
-    </cds-text-label>
-  </ng-template>
+  <cds-text-label class="documenten-api-text" [skeleton]="isLoading()">
+    {{
+      'samenwerkfunctionaliteit.documentTable.documentenApiHelperText.before'
+        | translate
+    }}<a [href]="this.openZaakUrl" target="_blank">{{
+      'samenwerkfunctionaliteit.documentTable.documentenApiHelperText.link'
+        | translate
+    }}</a
+    >{{
+      'samenwerkfunctionaliteit.documentTable.documentenApiHelperText.after'
+        | translate
+    }}
+  </cds-text-label>
 }
 
 @if (!isSamenwerkingDossier() && !isLoading()) {
