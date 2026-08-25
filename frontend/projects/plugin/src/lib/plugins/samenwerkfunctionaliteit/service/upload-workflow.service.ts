@@ -10,13 +10,16 @@ import {
   switchMap,
   take,
   tap,
+  throwError,
 } from 'rxjs';
 import { NoLinkedUploadProcessError } from '../errors/no-link-upload-process.error';
+import { UploadContext } from '../interface/upload-context.interface';
 import { UploadDocumentMetadata } from '../interface/upload-document-metadata.interface';
 import { UserNotification } from '../interface/user-notification.interface';
 import { BusinessKey } from '../types/business-key.type';
 import { ConfidentialityTypes } from '../types/confidentiality.type';
 import { DocumentService } from './document.service';
+import { SwfDocumentService } from './swf-document.service';
 import { SwfPluginService } from './swf-plugin.service';
 import { UserNotificationService } from './user-notification.service';
 
@@ -30,6 +33,8 @@ export class UploadWorkFlowService {
   private readonly notificationService: UserNotificationService = inject(
     UserNotificationService,
   );
+  private readonly swfDocumentService: SwfDocumentService =
+    inject(SwfDocumentService);
   private readonly valtimoDocumentService: ValtimoDocumentService = inject(
     ValtimoDocumentService,
   );
@@ -37,27 +42,30 @@ export class UploadWorkFlowService {
 
   private caseDefinitionVersionTag?: string;
 
-  startUpload(
+  upload(
     file: File,
-    samenwerkingId: string,
     businessKey: BusinessKey,
     caseDefinitionKey: string,
     metadata: UploadDocumentMetadata,
   ): Observable<void> {
     return forkJoin({
       versionTag: this.getVersionTag(businessKey),
+      samenwerkingProps:
+        this.swfDocumentService.getSamenwerkingProperties(businessKey),
       metadata: of<UploadDocumentMetadata>(metadata),
       config: this.swfPluginService.getSwfPluginProperties(),
     }).pipe(
-      map(({ versionTag, metadata, config }) => {
+      map(({ versionTag, samenwerkingProps, metadata, config }) => {
+        const context: UploadContext = {
+          file,
+          samenwerkingId: samenwerkingProps.samenwerkingId,
+          businessKey,
+          caseDefinitionKey,
+          caseDefinitionVersionTag: versionTag,
+        };
+
         return {
-          context: {
-            file,
-            samenwerkingId,
-            businessKey,
-            caseDefinitionKey,
-            caseDefinitionVersionTag: versionTag,
-          },
+          context,
           metadata,
           config,
         };
@@ -99,7 +107,9 @@ export class UploadWorkFlowService {
               if (error instanceof NoLinkedUploadProcessError) {
                 this.notificationService.showError({
                   titleKey:
-                    'samenwerkfunctionaliteit.feedback.userNotification.uploadDocumentToSWF.failure.title',
+                    'samenwerkfunctionaliteit.feedback.userNotification.uploadDocumentToDocumentenApi.failure.title',
+                  messageKey:
+                    'samenwerkfunctionaliteit.feedback.userNotification.uploadDocumentToSWF.NoLinkedUploadProcessFailure.message',
                 });
               } else {
                 this.notificationService.showError({
@@ -126,12 +136,12 @@ export class UploadWorkFlowService {
             this.notificationService.showSuccess(notification);
           }),
 
-          catchError(() => {
+          catchError((error) => {
             this.notificationService.showError({
               titleKey:
                 'samenwerkfunctionaliteit.feedback.userNotification.uploadDocumentToSWF.failure.title',
             });
-            return of(undefined);
+            return throwError(() => error);
           }),
         ),
       ),

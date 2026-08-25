@@ -27,7 +27,7 @@ import {
   TableModel,
   TableModule,
 } from 'carbon-components-angular';
-import { catchError, finalize, of, switchMap, tap } from 'rxjs';
+import { catchError, EMPTY, finalize, of, switchMap, tap } from 'rxjs';
 import { UploadDocumentMetadata } from '../../../interface/upload-document-metadata.interface';
 import { UserNotification } from '../../../interface/user-notification.interface';
 import { Document } from '../../../models/document.model';
@@ -187,7 +187,7 @@ export class DocumentTableComponent implements OnInit {
       .subscribe();
   }
 
-  protected onFileSelected(event: Event): void {
+  protected uploadDocument(event: Event): void {
     const input = event.target as HTMLInputElement;
 
     if (!input.files?.length) {
@@ -203,32 +203,28 @@ export class DocumentTableComponent implements OnInit {
       return;
     }
 
-    this.isUploading.set(true);
-
     this.documentModalService
       .openUploadMetadata(this.uploadMetadataModal())
       .pipe(
-        switchMap((metadata: UploadDocumentMetadata) =>
-          this.swfDocumentService
-            .getSamenwerkingProperties(businessKey)
-            .pipe(
-              switchMap((samenwerkingProps) =>
-                this.uploadWorkFlowService.startUpload(
-                  file,
-                  samenwerkingProps.samenwerkingId,
-                  businessKey,
-                  caseDefinitionKey,
-                  metadata,
-                ),
-              ),
-            ),
-        ),
+        switchMap((metadata: UploadDocumentMetadata) => {
+          this.isUploading.set(true);
 
-        tap(() => {
-          this.uploaded.emit();
-        }),
-        finalize(() => {
-          this.isUploading.set(false);
+          return this.uploadWorkFlowService
+            .upload(file, businessKey, caseDefinitionKey, metadata)
+            .pipe(
+              tap(() => {
+                this.documentModalService.closeUploadMetadata(
+                  this.uploadMetadataModal(),
+                );
+                this.uploaded.emit();
+                this.uploadMetadataModal().resetForm();
+              }),
+
+              catchError(() => EMPTY),
+              finalize(() => {
+                this.isUploading.set(false);
+              }),
+            );
         }),
       )
       .subscribe();

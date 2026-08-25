@@ -33,9 +33,22 @@
       </div>
 
       <div class="form-field">
+        <cds-label
+          >{{
+            'samenwerkfunctionaliteit.types.document.confidentialityType'
+              | translate
+          }}
+          <cds-tooltip
+            [autoAlign]="true"
+            [description]="confidentialityTypeTooltipText"
+            ><svg
+              class="tooltip-icon"
+              cdsIcon="information"
+              size="32"
+            ></svg></cds-tooltip
+        ></cds-label>
         <cds-dropdown
           formControlName="confidentialityType"
-          [label]="confidentialityOptionsLabel"
           [appendInline]="true"
           [itemValueKey]="'id'"
         >
@@ -64,9 +77,14 @@
       cdsButton="primary"
       type="button"
       (click)="submit()"
-      [disabled]="metadataForm.invalid"
+      [disabled]="metadataForm.invalid || isUploading()"
     >
-      {{ 'samenwerkfunctionaliteit.common.actions.continue' | translate }}
+      {{ 'samenwerkfunctionaliteit.common.actions.upload' | translate }}
+      @if (isUploading()) {
+        <cds-loading class="cds--btn__icon" size="sm"></cds-loading>
+      } @else {
+        <svg class="cds--btn__icon" cdsIcon="upload" size="32"></svg>
+      }
     </button>
   </div>
 </v-modal>
