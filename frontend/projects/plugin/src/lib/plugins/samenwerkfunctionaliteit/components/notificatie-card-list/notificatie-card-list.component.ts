@@ -127,8 +127,7 @@ export class NotificatieCardListComponent implements OnInit {
     size: number,
   ): Observable<NotificatiePage> {
     return this.notificatieService
-      .getNotificaties(samenwerkingId, page, size)
-      .pipe(take(1));
+      .getNotificaties(samenwerkingId, page, size);
   }
 
   private loadInputs(notificaties: Notificatie[]): void {
