@@ -14,8 +14,14 @@
   gap: 1rem;
 }
 
-::ng-deep .cds--form-item .cds--text-area__label-wrapper {
+::ng-deep .cds--form-item .cds--text-area__label-wrapper,
+::ng-deep .cds--form-item .cds--label.cds--skeleton {
   height: 0;
+  margin: 0;
+}
+
+::ng-deep .cds--text-area.cds--skeleton {
+  height: 3rem;
 }
 
 textarea.textarea-field.message-body.cds--text-area {
