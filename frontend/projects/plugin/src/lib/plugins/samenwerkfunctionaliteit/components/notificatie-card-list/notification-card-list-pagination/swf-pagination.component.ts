@@ -10,9 +10,9 @@ import { ButtonModule, IconModule } from 'carbon-components-angular';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'swf-notification-pagination',
-  templateUrl: './swf-notification-pagination.component.html',
-  styleUrl: './swf-notification-pagination.component.scss',
+  selector: 'swf-pagination',
+  templateUrl: './swf-pagination.component.html',
+  styleUrl: './swf-pagination.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [IconModule, ButtonModule, FormsModule],
 })

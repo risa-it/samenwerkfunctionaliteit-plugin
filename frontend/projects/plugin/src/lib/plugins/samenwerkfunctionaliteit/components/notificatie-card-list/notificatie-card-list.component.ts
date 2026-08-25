@@ -24,7 +24,7 @@ import {
 } from './type/notificatie-card.type';
 import { NotificatieCardComponent } from './notificatie-card/notificatie-card.component';
 import { toBusinessKey } from '../../types/business-key.type';
-import { PaginationComponent } from './notification-card-list-pagination/swf-notification-pagination.component';
+import { PaginationComponent } from './notification-card-list-pagination/swf-pagination.component';
 
 @Component({
   templateUrl: `notificatie-card-list.component.html`,
