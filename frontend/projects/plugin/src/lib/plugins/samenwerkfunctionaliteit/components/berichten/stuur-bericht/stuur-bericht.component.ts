@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, output, signal } from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Send32 } from '@carbon/icons';
@@ -42,6 +42,8 @@ export class StuurBerichtComponent {
 
   notification = signal<BerichtNotification | null>(null);
   isSubmitting = signal(false);
+
+  isLoading = input<boolean>(false);
   messageSent = output<void>();
 
   rows = 1;

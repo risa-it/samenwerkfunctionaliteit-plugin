@@ -14,5 +14,8 @@
     [isLoading]="isLoading()"
     [oinNumber]="oinNumber()"
   ></berichten-list>
-  <stuur-bericht (messageSent)="refreshMessages()"></stuur-bericht>
+  <stuur-bericht
+    [isLoading]="isLoading()"
+    (messageSent)="refreshMessages()"
+  ></stuur-bericht>
 }
