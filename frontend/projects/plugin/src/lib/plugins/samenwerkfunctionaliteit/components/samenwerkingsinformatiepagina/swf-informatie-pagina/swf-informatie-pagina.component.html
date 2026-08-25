@@ -36,10 +36,14 @@
 } @else if (!isSamenwerkingDossier() && !isLoading()) {
   <cds-notification
     [notificationObj]="{
-          type: 'info',
-          title: 'samenwerkfunctionaliteit.feedback.notAnSwfCaseMessage.samenwerkingTitle' | translate,
-          message: 'samenwerkfunctionaliteit.feedback.notAnSwfCaseMessage.genericMessage' | translate,
-          showClose: true
-        }"
+      type: 'info',
+      title:
+        'samenwerkfunctionaliteit.feedback.notAnSwfCaseMessage.samenwerkingTitle'
+        | translate,
+      message:
+        'samenwerkfunctionaliteit.feedback.notAnSwfCaseMessage.genericMessage'
+        | translate,
+      showClose: false,
+    }"
   ></cds-notification>
 }
