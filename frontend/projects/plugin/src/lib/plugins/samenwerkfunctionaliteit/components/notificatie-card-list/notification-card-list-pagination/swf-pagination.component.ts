@@ -8,13 +8,14 @@ import {
 } from '@angular/core';
 import { ButtonModule, IconModule } from 'carbon-components-angular';
 import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'swf-pagination',
   templateUrl: './swf-pagination.component.html',
   styleUrl: './swf-pagination.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [IconModule, ButtonModule, FormsModule],
+  imports: [IconModule, ButtonModule, FormsModule, TranslatePipe],
 })
 export class PaginationComponent {
   readonly page = input(1);
@@ -50,6 +51,11 @@ export class PaginationComponent {
   readonly pageEnd = computed(() =>
     Math.min(this.page() * this.pageSize(), this.totalItems()),
   );
+
+  readonly pluralItem = 'common.pagination.items';
+  readonly singleItem = 'common.pagination.item';
+  readonly pluralPages = "common.pagination.pagina's";
+  readonly singlePage = 'common.pagination.pagina';
 
   previousPage(): void {
     if (this.canGoPrevious()) {
