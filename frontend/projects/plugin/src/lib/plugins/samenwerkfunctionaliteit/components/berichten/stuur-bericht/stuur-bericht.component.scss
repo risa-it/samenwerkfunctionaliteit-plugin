@@ -14,6 +14,10 @@
   gap: 1rem;
 }
 
+::ng-deep .cds--form-item .cds--text-area__label-wrapper {
+  height: 0;
+}
+
 textarea.textarea-field.message-body.cds--text-area {
   width: 100%;
   padding: .8rem 1rem;
