@@ -87,7 +87,7 @@ export class BerichtenCustomTabComponent implements OnInit {
       );
   }
 
-  private fetchChat(businessKey: BusinessKey): void {
+  private fetchChat(): void {
     this.fetchSamenwerkingProperties()
       .pipe(
         switchMap((samenwerkingProperties: SamenwerkingProperties) =>
@@ -96,8 +96,7 @@ export class BerichtenCustomTabComponent implements OnInit {
               samenwerkingProperties.actieverzoekDetails.actieverzoekId,
             ),
             otherParticipant: this.fetchOtherParticipant(
-              samenwerkingProperties,
-              businessKey,
+              swfCaseProperties.actieverzoekId,
             ),
           }),
         ),
