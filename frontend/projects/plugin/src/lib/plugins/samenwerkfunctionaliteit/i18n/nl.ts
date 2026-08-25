@@ -32,6 +32,12 @@ export const pluginNlTranslations = {
     },
     documentTable: {
       selectedFile: '{{ filename }} geselecteerd',
+      documentenApiHelperText: {
+        before:
+          'Documenten die vanuit GZAC naar de Samenwerkfunctionaliteit worden geüpload, worden ook in Open Zaak opgeslagen. De bewaartermijn kan daar per zaaktype ingesteld worden. In Open Zaak worden documenten per actieverzoek gegroepeerd, in plaats van per samenwerking. ',
+        link: 'Bekijk dit dossier in Open Zaak',
+        after: '.',
+      },
       documentUploadModal: {
         title: 'Document uploaden',
         confidentialityTypeTooltip:
@@ -56,6 +62,7 @@ export const pluginNlTranslations = {
           'Dit dossier is niet gekoppeld aan een samenwerking in het Digitaal Stelsel Omgevingswet.',
 
         samenwerkingTitle: 'Geen samenwerking opgehaald',
+        documentListTabTitle: 'Geen documentenlijst opgehaald',
       },
       userNotification: {
         contactYourAdmin:

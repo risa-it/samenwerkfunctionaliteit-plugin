@@ -7,9 +7,11 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { InputModule } from 'carbon-components-angular';
+import { TranslateModule } from '@ngx-translate/core';
+import { InputModule, NotificationModule } from 'carbon-components-angular';
 import { catchError, finalize, take, tap, throwError } from 'rxjs';
 import { DocumentListComponent } from '../../components/document-list/document-list.component';
+import { SwfCaseProperties } from '../../interface/swf-case-properties.interface';
 import { OpenZaakUrlService } from '../../service/open-zaak-url.service';
 import { SwfDocumentService } from '../../service/swf-document.service';
 import { toBusinessKey } from '../../types/business-key.type';
@@ -18,7 +20,13 @@ import { toBusinessKey } from '../../types/business-key.type';
   templateUrl: `./documentenlijst-widget-tab.component.html`,
   styleUrl: `./documentenlijst-widget-tab.component.scss`,
   selector: 'swf-documentenlijst-widget-tab',
-  imports: [DocumentListComponent, NgTemplateOutlet, InputModule],
+  imports: [
+    DocumentListComponent,
+    NgTemplateOutlet,
+    InputModule,
+    TranslateModule,
+    NotificationModule,
+  ],
 })
 export class DocumentenlijstWidgetTabComponent implements OnInit {
   private readonly openZaakUrlService: OpenZaakUrlService =
@@ -26,7 +34,9 @@ export class DocumentenlijstWidgetTabComponent implements OnInit {
   private readonly swfDocumentService: SwfDocumentService =
     inject(SwfDocumentService);
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
+
   protected isLoading: WritableSignal<boolean> = signal<boolean>(true);
+  protected isSamenwerkingDossier: WritableSignal<boolean> = signal(false);
 
   protected openZaakUrl: string = '';
   protected helperText: string = '';
@@ -36,7 +46,22 @@ export class DocumentenlijstWidgetTabComponent implements OnInit {
       this.route,
       'documentId',
     );
+    if (!documentId) {
+      throw new Error("Couldn't find documentId!");
+    }
+
     this.getOpenZaakInfoAndSetHelperText(documentId);
+
+    this.swfDocumentService
+      .getSamenwerkingProperties(toBusinessKey(documentId))
+      .pipe(
+        take(1),
+        tap((samenwerkingProperties: SwfCaseProperties) => {
+          console.log(samenwerkingProperties);
+          this.isSamenwerkingDossier.set(samenwerkingProperties.isSwfCase);
+        }),
+      )
+      .subscribe();
   }
 
   private getOpenZaakInfoAndSetHelperText(documentId: string) {
@@ -68,11 +93,6 @@ export class DocumentenlijstWidgetTabComponent implements OnInit {
 
   private setHelperText() {
     this.helperText =
-      'Documenten die vanuit GZAC naar de Samenwerkfunctionaliteit worden geüpload, worden daarnaast ook in Open Zaak ' +
-      'opgeslagen. De bewaartermijn kan voor het zaaktype dat hier gebruikt worden ingesteld. Dit kan dus verschillen ' +
-      'van de vaste bewaartermijn die de Samenwerkfunctionaliteit aanhoudt. ' +
-      'In Open Zaak worden de documenten per actieverzoek, en niet — zoals in de Samenwerkfunctionaliteit — ' +
-      `per samenwerking gegroepeerd. Zie de link hieronder om de lijst van documenten die zijn ` +
-      'opgeslagen in te zien.';
+      'Documenten die vanuit GZAC naar de Samenwerkfunctionaliteit worden geüpload, worden daarnaast ook in Open Zaak opgeslagen. De bewaartermijn kan voor het zaaktype dat hier gebruikt worden ingesteld. Dit kan dus verschillen van de vaste bewaartermijn die de Samenwerkfunctionaliteit aanhoudt. In Open Zaak worden de documenten per actieverzoek, en niet — zoals in de Samenwerkfunctionaliteit — per samenwerking gegroepeerd. Zie de link hieronder om de lijst van documenten die zijn opgeslagen in te zien.';
   }
 }
