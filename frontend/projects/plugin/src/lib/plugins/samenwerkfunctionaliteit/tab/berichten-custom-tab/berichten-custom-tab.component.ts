@@ -9,7 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Collaborate32 } from '@carbon/icons';
 import { IconModule, IconService } from 'carbon-components-angular';
 import { forkJoin, Observable, switchMap, tap } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { finalize, map } from 'rxjs/operators';
 import { BerichtenListComponent } from '../../components/berichten/berichten-list/berichten-list.component';
 import { StuurBerichtComponent } from '../../components/berichten/stuur-bericht/stuur-bericht.component';
 import { Message } from '../../models/bericht.model';
@@ -51,8 +51,6 @@ export class BerichtenCustomTabComponent implements OnInit {
   ngOnInit(): void {
     this.iconService.registerAll([Collaborate32]);
     this.fetchChat(this.getBusinessKey());
-
-    this.isLoading.set(false);
   }
 
   protected refreshMessages(): void {
@@ -88,6 +86,7 @@ export class BerichtenCustomTabComponent implements OnInit {
   }
 
   private fetchChat(businessKey: BusinessKey): void {
+    this.isLoading.set(true);
     this.fetchSamenwerkingProperties()
       .pipe(
         switchMap((samenwerkingProperties: SamenwerkingProperties) =>
@@ -103,6 +102,9 @@ export class BerichtenCustomTabComponent implements OnInit {
         ),
         tap(({ messages }) => {
           this.messages.set(messages);
+        }),
+        finalize(() => {
+          this.isLoading.set(false);
         }),
       )
       .subscribe({
