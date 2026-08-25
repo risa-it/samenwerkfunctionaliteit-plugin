@@ -159,11 +159,10 @@ export class SwfInformatiePaginaComponent implements OnInit {
   }
 
   private fetchActieverzoek(
-    actieverzoekId: string,
-    businessKey: BusinessKey,
+    actieverzoekId: ActieverzoekId,
   ): Observable<Actieverzoek> {
     return this.actieverzoekService
-      .getActieverzoek(actieverzoekId, businessKey)
+      .getActieverzoek(actieverzoekId)
       .pipe(take(1));
   }
 
