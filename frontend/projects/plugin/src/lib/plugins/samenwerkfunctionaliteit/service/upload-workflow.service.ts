@@ -10,6 +10,7 @@ import {
   switchMap,
   take,
   tap,
+  throwError,
 } from 'rxjs';
 import { NoLinkedUploadProcessError } from '../errors/no-link-upload-process.error';
 import { UploadContext } from '../interface/upload-context.interface';
@@ -135,12 +136,12 @@ export class UploadWorkFlowService {
             this.notificationService.showSuccess(notification);
           }),
 
-          catchError(() => {
+          catchError((error) => {
             this.notificationService.showError({
               titleKey:
                 'samenwerkfunctionaliteit.feedback.userNotification.uploadDocumentToSWF.failure.title',
             });
-            return of(undefined);
+            return throwError(() => error);
           }),
         ),
       ),
