@@ -1,0 +1,22 @@
+::ng-deep #pagination-override-important .cds--pagination__text {
+    /* Note: this override is only set on this very element of the document table component */
+    margin: 0 !important;
+}
+
+::ng-deep .cds--pagination {
+    border-top: none;
+
+    .cds--pagination__left,
+    .cds--pagination__right {
+        padding: 0;
+    }
+
+
+    .cds--pagination__left .cds--pagination__text {
+        padding-left: 1rem;
+    }
+
+    .cds--pagination__right .cds--pagination__text {
+        padding-right: 1rem;
+    }
+}

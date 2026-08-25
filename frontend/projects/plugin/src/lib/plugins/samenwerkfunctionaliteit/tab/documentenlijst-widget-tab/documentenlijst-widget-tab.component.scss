@@ -1,3 +1,9 @@
+:host {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
 ::ng-deep .cds--text-input__field-outer-wrapper {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
