@@ -19,8 +19,8 @@ export class NotificatieClient {
     size: number,
   ): Observable<NotificatieResponse> {
     const params: HttpParams = new HttpParams()
-      .set('pagina', page.toString())
-      .set('aantal', size.toString());
+      .set('pagina', page)
+      .set('aantal', size);
     return this.http.get<NotificatieResponse>(
       `${SAMENWERKINGEN_URL}/${samenwerkingId}/${NOTIFICATIES_PATH}`,
       {
