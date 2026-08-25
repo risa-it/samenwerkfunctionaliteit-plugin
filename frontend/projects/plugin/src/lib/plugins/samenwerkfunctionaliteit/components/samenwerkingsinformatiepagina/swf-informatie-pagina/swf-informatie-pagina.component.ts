@@ -115,7 +115,7 @@ export class SwfInformatiePaginaComponent implements OnInit {
                 samenwerkingProps.samenwerkingId,
               ),
               actieverzoek: this.fetchActieverzoek(
-                samenwerkingProps.actieverzoekDetails.actieverzoekId,
+                samenwerkingProps.actieverzoekId,
               ),
             });
         }),
