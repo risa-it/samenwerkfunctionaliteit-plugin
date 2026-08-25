@@ -1,5 +1,5 @@
 import { inject, Injectable, OnDestroy } from '@angular/core';
-import { SamenwerkingProperties } from '../models/samenwerking-properties.model';
+import { ActivatedRoute } from '@angular/router';
 import {
   Document as ValtimoDocument,
   DocumentService as ValtimoDocumentService,
@@ -15,7 +15,7 @@ import {
   throwError,
 } from 'rxjs';
 import { SamenwerkfunctionaliteitDocument } from '../interface/document-content.interface';
-import { ActivatedRoute } from '@angular/router';
+import { SamenwerkingProperties } from '../models/samenwerking-properties.model';
 import { BusinessKey } from '../types/business-key.type';
 
 @Injectable({

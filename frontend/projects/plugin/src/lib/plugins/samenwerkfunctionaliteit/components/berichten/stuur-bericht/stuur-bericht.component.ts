@@ -1,5 +1,9 @@
-import { Component, inject, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject, output, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { Send32 } from '@carbon/icons';
+import { TranslatePipe } from '@ngx-translate/core';
 import {
   ButtonModule,
   IconModule,
@@ -7,20 +11,13 @@ import {
   InputModule,
   NotificationModule,
 } from 'carbon-components-angular';
-import { FormsModule } from '@angular/forms';
-import { Send32 } from '@carbon/icons';
-import { ActivatedRoute } from '@angular/router';
 import { NGXLogger } from 'ngx-logger';
 import { finalize, take, tap } from 'rxjs';
+import { BerichtNotification } from '../../../interface/bericht-notification.interface';
+import { SamenwerkingProperties } from '../../../models/samenwerking-properties.model';
 import { BerichtenService } from '../../../service/berichten.service';
 import { SwfDocumentService } from '../../../service/swf-document.service';
-import { BerichtNotification } from '../../../interface/bericht-notification.interface';
-import {
-  ErrorNotification,
-  SuccessNotification,
-} from '../../../config/bericht-notification-config';
-import { SamenwerkingProperties } from '../../../models/samenwerking-properties.model';
-import { PluginTranslatePipeModule } from '@valtimo/plugin';
+import { UserNotificationService } from '../../../service/user-notification.service';
 import { toBusinessKey } from '../../../types/business-key.type';
 
 @Component({
@@ -32,7 +29,7 @@ import { toBusinessKey } from '../../../types/business-key.type';
     FormsModule,
     NotificationModule,
     CommonModule,
-    PluginTranslatePipeModule,
+    TranslatePipe,
   ],
 
   templateUrl: './stuur-bericht.component.html',
@@ -42,15 +39,12 @@ export class StuurBerichtComponent {
   readonly pluginId = 'samenwerkfunctionaliteit';
 
   private actieverzoekId: string | null | undefined;
-  private notificationTimeout: ReturnType<typeof setTimeout> | null = null;
-  private readonly NOTIFICATION_TIMEOUT_DURATION = 4500;
 
   notification = signal<BerichtNotification | null>(null);
   isSubmitting = signal(false);
-  isMissingActieverzoekId = signal<boolean>(false);
   messageSent = output<void>();
 
-  rows = 5;
+  rows = 1;
   maxLength = 512;
   message = '';
 
@@ -59,6 +53,9 @@ export class StuurBerichtComponent {
   private swfService = inject(SwfDocumentService);
   private readonly logger = inject(NGXLogger);
   private readonly iconService = inject(IconService);
+  private readonly notificationService: UserNotificationService = inject(
+    UserNotificationService,
+  );
 
   ngOnInit() {
     this.iconService.registerAll([Send32]);
@@ -66,42 +63,42 @@ export class StuurBerichtComponent {
     this.retrieveActieverzoekId(documentId);
   }
 
-  onClick() {
-    this.notification.set(null);
-
+  onSend() {
     if (!this.actieverzoekId) {
       this.logger.warn('Unable to post message: No actieverzoekId available.');
-      this.assignNotification(ErrorNotification, false);
+      this.notificationService.showError({
+        titleKey:
+          'samenwerkfunctionaliteit.feedback.userNotification.messenger.failure.title',
+      });
       return;
     }
     this.isSubmitting.set(true);
     this.berichtenService
       .postBericht(this.actieverzoekId, this.message)
       .pipe(
-        take(1),
         finalize(() => {
           this.isSubmitting.set(false);
         }),
       )
       .subscribe({
         next: () => {
-          this.assignNotification(SuccessNotification, true);
+          this.notificationService.showSuccess({
+            titleKey:
+              'samenwerkfunctionaliteit.feedback.userNotification.messenger.success.title',
+            messageKey:
+              'samenwerkfunctionaliteit.feedback.userNotification.messenger.success.message',
+          });
           this.message = '';
           this.messageSent.emit();
         },
         error: (response) => {
           this.logger.error(response);
-          this.assignNotification(ErrorNotification, false);
+          this.notificationService.showError({
+            titleKey:
+              'samenwerkfunctionaliteit.feedback.userNotification.messenger.failure.title',
+          });
         },
       });
-  }
-
-  dismissNotification(): void {
-    if (this.notificationTimeout) {
-      clearTimeout(this.notificationTimeout);
-      this.notificationTimeout = null;
-    }
-    this.notification.set(null);
   }
 
   private retrieveActieverzoekId(documentId: string) {
@@ -114,7 +111,7 @@ export class StuurBerichtComponent {
           if (props.actieverzoekDetails.actieverzoekId) {
             this.actieverzoekId = props.actieverzoekDetails.actieverzoekId;
           } else {
-            throw new Error('Dossier heeft geen actieverzoekId.');
+            throw new Error('Case is missing actieverzoekId.');
           }
         }),
       )
@@ -124,27 +121,14 @@ export class StuurBerichtComponent {
             'Unable to retrieve samenwerking properties',
             error,
           );
-          this.isMissingActieverzoekId.set(true);
+
+          this.notificationService.showError({
+            titleKey:
+              'samenwerkfunctionaliteit.feedback.userNotification.messenger.failure.title',
+            messageKey:
+              'samenwerkfunctionaliteit.feedback.userNotification.messenger.failure.failureMissingActieverzoekId',
+          });
         },
       });
-  }
-
-  private assignNotification(
-    notification: BerichtNotification,
-    shouldCloseAutomatically: boolean,
-  ) {
-    if (this.notificationTimeout) {
-      clearTimeout(this.notificationTimeout);
-      this.notificationTimeout = null;
-    }
-
-    this.notification.set(notification);
-
-    if (shouldCloseAutomatically) {
-      this.notificationTimeout = setTimeout(() => {
-        this.notification.set(null);
-        this.notificationTimeout = null;
-      }, this.NOTIFICATION_TIMEOUT_DURATION);
-    }
   }
 }

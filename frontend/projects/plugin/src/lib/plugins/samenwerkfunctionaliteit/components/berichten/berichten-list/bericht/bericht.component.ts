@@ -7,7 +7,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ChatBericht } from '../../../../models/bericht.model';
+import { Message } from '../../../../models/bericht.model';
 
 @Component({
   selector: 'swf-bericht',
@@ -18,7 +18,7 @@ import { ChatBericht } from '../../../../models/bericht.model';
 export class BerichtComponent {
   private readonly translateService: TranslateService =
     inject(TranslateService);
-  message: InputSignal<ChatBericht> = input.required<ChatBericht>();
+  message: InputSignal<Message> = input.required<Message>();
   oinNumber: InputSignal<string> = input.required<string>();
   isSentByCurrentParticipant: WritableSignal<boolean> = signal(false);
   formattedDate: string = '';
@@ -41,15 +41,15 @@ export class BerichtComponent {
 
     if (diffMinutes < 1) {
       return this.translateService.instant(
-        'samenwerkfunctionaliteit.messages.datetimestamp.justNow',
+        'samenwerkfunctionaliteit.messages.dateTimeStamp.justNow',
       );
     }
 
     if (diffMinutes < 60) {
       return this.translateService.instant(
         diffMinutes === 1
-          ? 'samenwerkfunctionaliteit.messages.datetimestamp.minuteSingular'
-          : 'samenwerkfunctionaliteit.messages.datetimestamp.minutePlural',
+          ? 'samenwerkfunctionaliteit.messages.dateTimeStamp.minuteSingular'
+          : 'samenwerkfunctionaliteit.messages.dateTimeStamp.minutePlural',
         {
           minuteCount: diffMinutes,
         },
@@ -59,7 +59,7 @@ export class BerichtComponent {
     if (date.getDate() === now.getDate()) {
       return (
         this.translateService.instant(
-          'samenwerkfunctionaliteit.messages.datetimestamp.today',
+          'samenwerkfunctionaliteit.messages.dateTimeStamp.today',
         ) +
         `, ${new Intl.DateTimeFormat(this.translateService.currentLang, {
           timeStyle: 'short',

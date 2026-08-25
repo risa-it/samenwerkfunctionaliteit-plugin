@@ -32,7 +32,7 @@ class SamenwerkfunctionaliteitClientTest {
 
     @Test
     @DisplayName("Should call documenten endpoint with query parameters")
-    fun ShouldCallEndpointWithQueryParams() {
+    fun shouldCallEndpointWithQueryParams() {
         // Arrange
         val query =
             DocumentenOverzichtQuery(
@@ -78,7 +78,7 @@ class SamenwerkfunctionaliteitClientTest {
 
     @Test
     @DisplayName("Should not include blank or null filter query parameters")
-    fun ShouldNotIncludeBlankOrNullQueryParams() {
+    fun shouldNotIncludeBlankOrNullQueryParams() {
         // Arrange
         val query =
             DocumentenOverzichtQuery(

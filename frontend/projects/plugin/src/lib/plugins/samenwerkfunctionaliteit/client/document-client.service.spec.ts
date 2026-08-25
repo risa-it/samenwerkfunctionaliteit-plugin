@@ -5,7 +5,7 @@ import {
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { SAMENWERKINGEN_URL } from '../config/swf-plugin-config';
-import { UploadDocumentQueryParams } from '../interface/upload-document-query-params.interface';
+import { UploadDocumentMetadata } from '../interface/upload-document-metadata.interface';
 import { ConfidentialityTypes } from '../types/confidentiality.type';
 import { DocumentClient } from './document-client.service';
 
@@ -30,7 +30,7 @@ describe('DocumentClient', () => {
   });
 
   it('should convert a full set of query params to HttpParams', () => {
-    const mockQueryParams: UploadDocumentQueryParams = {
+    const mockQueryParams: UploadDocumentMetadata = {
       documentDescription: 'Mock description',
       numberWithinSystem: '123abc',
       systemId: '456def',
@@ -57,7 +57,7 @@ describe('DocumentClient', () => {
   });
 
   it('should convert a partial set of query params to HttpParams', () => {
-    const mockQueryParams: UploadDocumentQueryParams = {
+    const mockQueryParams: UploadDocumentMetadata = {
       documentDescription: 'Partial set of params here!',
       confidentialityType: ConfidentialityTypes.Confidential,
     };

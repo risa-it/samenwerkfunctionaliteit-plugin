@@ -1,3 +1,5 @@
+@use '@carbon/styles/css/styles.css' as carbon-styles;
+
 :host {
   overflow: hidden;
 }
@@ -7,14 +9,14 @@
 }
 
 .stuur-bericht {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.5rem;
+  display: grid;
+  grid-template-columns: 1fr 3rem;
+  gap: 1rem;
 }
 
-.stuur-bericht cds-icon-button {
-  align-self: flex-end;
+textarea.textarea-field.message-body.cds--text-area {
+  width: 100%;
+  padding: .8rem 1rem;
 }
 
 ::ng-deep .stuur-bericht cds-icon-button .cds--btn--icon-only {
@@ -30,12 +32,4 @@
   width: 2rem;
   height: 2rem;
   margin: 0;
-}
-
-textarea {
-  width: 100%;
-}
-
-textarea.message-body {
-  padding: 0.5rem;
 }

@@ -107,6 +107,25 @@ The following example grants a user role permission to perform all available act
 }
 ```
 
+### Frontend configuration
+
+#### Uploading files within the Samenwerkingsfunctionaliteit API
+The SWF API supports uploading, retrieving, and deleting files within a collaboration (_Samenwerking_).
+
+To support more fine-grained storage policies, the plugin also supports uploading a backup copy to the Documenten API, which is part of the Zaakgericht Werken domain. When this option is enabled, the file is first uploaded to Open Zaak. The UUID of the uploaded document is then passed as the `kenmerkSysteem`  query parameter when uploading the file to the SWF API. This makes it easier to track the uploaded document across both systems.
+
+To enable uploading a backup file to the associated Open Zaak case, follow these steps:
+
+1. In `application.yaml`, add the following property: 
+```yaml
+valtimo:
+    samenwerkfunctionaliteit:
+        frontend:
+            documents:
+                upload-backup-to-documenten-api: true
+```
+2. Configure the upload process for your case. [See the documentation for configuring the case upload process](https://docs.valtimo.nl/features/case/zgw/zgw-documents/upload-to-documenten-api-with-metadata#configuring-the-case-upload-process). 
+
 ## Configuration
 
 List the plugin configuration properties and how to set them.

@@ -1,8 +1,8 @@
-import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { SwfPluginProperties } from '../interface/swf-plugin-properties.interface';
 import { SWF_PLUGIN_PROPERTIES_URL } from '../config/swf-plugin-config';
+import { SwfPluginPropertiesResponse } from '../dto/swf-plugin-properties.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +10,9 @@ import { SWF_PLUGIN_PROPERTIES_URL } from '../config/swf-plugin-config';
 export class SwfPluginClient {
   private readonly httpClient: HttpClient = inject(HttpClient);
 
-  getSwfPluginProperties(): Observable<SwfPluginProperties> {
-    return this.httpClient.get<SwfPluginProperties>(SWF_PLUGIN_PROPERTIES_URL);
+  getSwfPluginProperties(): Observable<SwfPluginPropertiesResponse> {
+    return this.httpClient.get<SwfPluginPropertiesResponse>(
+      SWF_PLUGIN_PROPERTIES_URL,
+    );
   }
 }

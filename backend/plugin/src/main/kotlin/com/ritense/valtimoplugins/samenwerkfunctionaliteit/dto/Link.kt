@@ -11,5 +11,5 @@ data class Link(
     val templated: Boolean? = null,
     val title: String? = null,
     @field:JsonInclude(JsonInclude.Include.NON_NULL)
-    val type: String? = null
+    val type: String? = null,
 )

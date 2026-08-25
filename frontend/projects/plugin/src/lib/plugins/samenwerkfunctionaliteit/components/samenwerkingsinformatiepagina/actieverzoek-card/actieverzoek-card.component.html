@@ -4,27 +4,27 @@
   <div class="card-body">
     <div class="row">
       <cds-label>{{ 'samenwerkfunctionaliteit.actieverzoekCard.status' | translate }}</cds-label>
-      <div class="value">{{ statusText | translate }}</div>
+      <div>{{ statusText | translate }}</div>
     </div>
 
     <div class="row">
       <cds-label>{{ 'samenwerkfunctionaliteit.actieverzoekCard.date' | translate }}</cds-label>
-      <div class="value">{{ actieverzoek().createdOn | date: "dd-MM-yyyy" }}</div>
+      <div>{{ actieverzoek().createdOn | date: "dd-MM-yyyy" }}</div>
     </div>
 
     <div class="row">
       <cds-label>{{ 'samenwerkfunctionaliteit.actieverzoekCard.sentBy' | translate }}</cds-label>
-      <div class="value">{{ capitalize(actieverzoek().senderName) }}</div>
+      <div>{{ capitalize(actieverzoek().senderName) }}</div>
     </div>
 
     <div class="row">
       <cds-label>{{ 'samenwerkfunctionaliteit.actieverzoekCard.productCode' | translate }}</cds-label>
-      <div class="value">{{ actieverzoek().productId }}</div>
+      <div>{{ actieverzoek().productId }}</div>
     </div>
 
     <div class="row">
       <cds-label>{{ 'samenwerkfunctionaliteit.actieverzoekCard.description' | translate }}</cds-label>
-      <div class="value description">{{ actieverzoek().description }}</div>
+      <div class="description">{{ actieverzoek().description }}</div>
     </div>
   </div>
 </div>

@@ -2,16 +2,16 @@ import { Links } from './links.dto';
 import { Page } from './page.dto';
 
 export interface BerichtenOverzichtResponse {
-  _embedded: Berichten | null;
+  _embedded: BerichtenResponse | null;
   _links: Links | null;
   page: Page;
 }
 
-interface Berichten {
-  berichten: BerichtenResponse[];
+interface BerichtenResponse {
+  berichten: BerichtResponse[];
 }
 
-interface BerichtenResponse {
+interface BerichtResponse {
   _links?: Links;
   actieverzoekId: string;
   berichtId: string;

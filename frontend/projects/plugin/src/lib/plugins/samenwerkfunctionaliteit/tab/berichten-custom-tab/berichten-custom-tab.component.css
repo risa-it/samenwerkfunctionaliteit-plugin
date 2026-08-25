@@ -11,10 +11,22 @@
 }
 
 .collaborate-icon {
-  border: 2px solid black;
-  border-radius: 50%;
-  padding: 0.3rem;
-  height: 2.5rem;
-  width: 2.5rem;
-  margin-right: 0.3rem;
+  height: 2rem;
+  width: 2rem;
+  margin-right: 0.8rem;
+}
+
+::ng-deep textarea.textarea-field.message-body.cds--text-area,
+::ng-deep .message-list {
+  background-color: var(--cds-layer-02);
+  border-radius: 0.25rem;
+  border: none;
+}
+
+::ng-deep textarea.textarea-field.message-body.cds--text-area {
+
+  &:focus,
+  &:active {
+    background-color: var(--cds-layer-01);
+  }
 }

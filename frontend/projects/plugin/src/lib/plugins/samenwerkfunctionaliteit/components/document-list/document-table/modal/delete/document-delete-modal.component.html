@@ -1,0 +1,29 @@
+<v-modal #deleteModal>
+  <div role="header">
+    <h4>
+      {{
+        'samenwerkfunctionaliteit.documentTable.documentDeleteModal.title'
+          | translate
+      }}
+    </h4>
+  </div>
+
+  <div role="content">
+    <p>
+      {{
+        'samenwerkfunctionaliteit.documentTable.documentDeleteModal.message'
+          | translate: { filename: document()?.filename }
+      }}
+    </p>
+  </div>
+
+  <div role="footer">
+    <button cdsButton="secondary" type="button" (click)="cancel()">
+      {{ 'samenwerkfunctionaliteit.common.actions.cancel' | translate }}
+    </button>
+
+    <button cdsButton="danger" type="button" (click)="delete()">
+      {{ 'samenwerkfunctionaliteit.common.actions.delete' | translate }}
+    </button>
+  </div>
+</v-modal>

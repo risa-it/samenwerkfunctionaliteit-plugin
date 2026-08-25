@@ -1,38 +1,37 @@
 package com.ritense.valtimoplugins.samenwerkfunctionaliteit
 
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.client.SamenwerkfunctionaliteitClient
-import com.ritense.valtimoplugins.samenwerkfunctionaliteit.service.DefaultSamenwerkfunctionaliteitService
-import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtQuery
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.Document
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.Documenten
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtQuery
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.SamenwerkfunctionaliteitProperties
-import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.Document
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.service.DefaultSamenwerkfunctionaliteitService
 import org.junit.jupiter.api.DisplayName
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
+import java.net.URI
+import java.time.OffsetDateTime
+import java.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
-import org.mockito.kotlin.verify
-import java.net.URI
-import java.util.UUID
-import java.time.OffsetDateTime
 
 class SamenwerkfunctionaliteitServiceTest {
-
     private val client = mock<SamenwerkfunctionaliteitClient>()
     private val service = DefaultSamenwerkfunctionaliteitService(client)
 
     @Test
     @DisplayName("Should map documenten overzicht response to documents")
-    fun ShouldMapResponseToDocuments() {
-
+    fun shouldMapResponseToDocuments() {
         // Arrange
-        val properties = SamenwerkfunctionaliteitProperties(
-            baseUrl = URI("https://example.com"),
-            certificate = "certificate",
-            oinNummer = "oin-123",
-        )
+        val properties =
+            SamenwerkfunctionaliteitProperties(
+                baseUrl = URI("https://example.com"),
+                certificate = "certificate",
+                oinNummer = "oin-123",
+            )
         val samenwerkingId = "SAM-123"
         val query =
             DocumentenOverzichtQuery(
@@ -46,44 +45,48 @@ class SamenwerkfunctionaliteitServiceTest {
             )
         val documentId = UUID.fromString("00000000-0000-0000-0000-000000000001")
         val creatieDatumTijd = OffsetDateTime.parse("2026-01-01T00:00:00Z")
-        val documentResponse = Document(
-            documentId = documentId,
-            bestandsNaam = "test.pdf",
-            kenmerkSysteem = "kenmerk-systeem",
-            nummerBinnenSysteem = "nummer-1",
-            samenwerkingId = samenwerkingId,
-            aangemaaktDoor = "user-id",
-            aangemaaktDoorNaam = "Jan",
-            creatieDatumTijd = creatieDatumTijd,
-            laatstAangepastDoor = null,
-            laatstAangepastDoorNaam = null,
-            laatstAangepastDatumTijd = null,
-            documentOmschrijving = "Test document",
-            vertrouwelijkheidsAanduiding = null,
-            taal = "nl",
-            formaat = "application/pdf",
-            documentHash = "hash-123",
-        )
-        val response = DocumentenOverzichtResponse(
-            embedded = Documenten(
-                documenten = listOf(documentResponse),
-            ),
-        )
+        val documentResponse =
+            Document(
+                documentId = documentId,
+                bestandsNaam = "test.pdf",
+                kenmerkSysteem = "kenmerk-systeem",
+                nummerBinnenSysteem = "nummer-1",
+                samenwerkingId = samenwerkingId,
+                aangemaaktDoor = "user-id",
+                aangemaaktDoorNaam = "Jan",
+                creatieDatumTijd = creatieDatumTijd,
+                laatstAangepastDoor = null,
+                laatstAangepastDoorNaam = null,
+                laatstAangepastDatumTijd = null,
+                documentOmschrijving = "Test document",
+                vertrouwelijkheidsAanduiding = null,
+                taal = "nl",
+                formaat = "application/pdf",
+                documentHash = "hash-123",
+            )
+        val response =
+            DocumentenOverzichtResponse(
+                embedded =
+                    Documenten(
+                        documenten = listOf(documentResponse),
+                    ),
+            )
 
         whenever(
             client.getDocumentenOverzicht(
                 properties,
                 samenwerkingId,
                 query,
-            )
+            ),
         ).thenReturn(response)
 
         // Act
-        val result = service.getDocumentenOverzicht(
-            properties,
-            samenwerkingId,
-            query,
-        )
+        val result =
+            service.getDocumentenOverzicht(
+                properties,
+                samenwerkingId,
+                query,
+            )
 
         // Assert
         assertEquals(1, result.size)
@@ -110,14 +113,14 @@ class SamenwerkfunctionaliteitServiceTest {
 
     @Test
     @DisplayName("Should return empty list when documenten overzicht response has no embedded documents")
-    fun ShouldReturnEmptyListWhenNoEmbeddedDocs() {
-
+    fun shouldReturnEmptyListWhenNoEmbeddedDocs() {
         // Arrange
-        val properties = SamenwerkfunctionaliteitProperties(
-            baseUrl = URI("https://example.com"),
-            certificate = "certificate",
-            oinNummer = "oin-123",
-        )
+        val properties =
+            SamenwerkfunctionaliteitProperties(
+                baseUrl = URI("https://example.com"),
+                certificate = "certificate",
+                oinNummer = "oin-123",
+            )
         val samenwerkingId = "SAM-123"
         val query =
             DocumentenOverzichtQuery(
@@ -136,15 +139,16 @@ class SamenwerkfunctionaliteitServiceTest {
                 properties,
                 samenwerkingId,
                 query,
-            )
+            ),
         ).thenReturn(response)
 
         // Act
-        val result = service.getDocumentenOverzicht(
-            properties,
-            samenwerkingId,
-            query,
-        )
+        val result =
+            service.getDocumentenOverzicht(
+                properties,
+                samenwerkingId,
+                query,
+            )
 
         // Assert
         assertTrue(result.isEmpty())

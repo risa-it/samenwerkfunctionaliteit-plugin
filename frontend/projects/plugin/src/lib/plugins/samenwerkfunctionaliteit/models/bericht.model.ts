@@ -13,13 +13,13 @@ export interface Bericht {
   zenderNaam?: string;
 }
 
-export interface ChatBericht {
+export interface Message {
   messageId: string;
   createdOn: Date;
   content: string;
   receiver: string;
-  receiverName: string;
-  samenwerkingId: string;
-  sender: string;
-  senderName: string;
+  receiverName: string | undefined;
+  samenwerkingId: string | undefined;
+  sender: string | undefined;
+  senderName: string | undefined;
 }

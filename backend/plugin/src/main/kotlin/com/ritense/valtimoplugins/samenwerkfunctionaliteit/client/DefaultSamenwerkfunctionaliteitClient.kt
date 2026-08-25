@@ -12,7 +12,6 @@ import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Samenwerkfuncti
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.core.io.InputStreamResource
 import org.springframework.http.HttpStatus
-import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.RestClient
 import org.springframework.web.client.RestClientResponseException
@@ -26,7 +25,6 @@ import java.time.ZonedDateTime
 import java.util.UUID
 import kotlin.jvm.java
 
-@Component
 class DefaultSamenwerkfunctionaliteitClient(
     private val restClientBuilder: RestClient.Builder,
 ) : SamenwerkfunctionaliteitClient {

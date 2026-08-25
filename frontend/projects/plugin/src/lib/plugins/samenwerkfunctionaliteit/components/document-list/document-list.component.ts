@@ -2,7 +2,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
   inject,
   input,
   InputSignal,
@@ -19,9 +18,8 @@ import { SamenwerkingProperties } from '../../models/samenwerking-properties.mod
 import { DocumentService } from '../../service/document.service';
 import { SwfDocumentService } from '../../service/swf-document.service';
 import { UserNotificationService } from '../../service/user-notification.service';
-import { toBusinessKey } from '../../types/business-key.type';
-import { ConfidentialityTypes } from '../../types/confidentiality.type';
-import { toUUID } from '../../types/uuid.type';
+
+import { BusinessKey, toBusinessKey } from '../../types/business-key.type';
 import { DocumentTableComponent } from './document-table/document-table.component';
 import { DocumentTableLightComponent } from './document-table/light/document-table-light.component';
 
@@ -40,11 +38,12 @@ export class DocumentListComponent implements OnInit {
   private readonly documentService: DocumentService = inject(DocumentService);
   private readonly swfDocumentService: SwfDocumentService =
     inject(SwfDocumentService);
-  private readonly destroyRef: DestroyRef = inject(DestroyRef);
   readonly route: ActivatedRoute = inject(ActivatedRoute);
   private readonly notificationService: UserNotificationService = inject(
     UserNotificationService,
   );
+
+  private businessKey?: BusinessKey;
 
   isLightMode: InputSignal<boolean> = input<boolean>(false);
 
@@ -52,48 +51,39 @@ export class DocumentListComponent implements OnInit {
   isLoading: WritableSignal<boolean> = signal<boolean>(true);
 
   ngOnInit(): void {
-    const documentId: string = this.swfDocumentService.getParam(
-      this.route,
-      'documentId',
+    this.businessKey = toBusinessKey(
+      this.swfDocumentService.getParam(this.route, 'documentId') ?? '',
     );
-    this.fetchDocumenten(documentId);
+
+    this.fetchDocumenten();
   }
 
-  protected onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
+  protected onDocumentDeleted(documentId: string): void {
+    this.documents.update((documents) =>
+      documents.filter((document) => {
+        return document.documentId !== documentId;
+      }),
+    );
+  }
 
-    if (!input.files?.length) {
-      return;
+  protected onDocumentUploaded(): void {
+    this.fetchDocumenten();
+  }
+
+  private fetchDocumenten(): void {
+    if (!this.businessKey) {
+      this.notificationService.showError({
+        titleKey:
+          'samenwerkfunctionaliteit.feedback.userNotification.fetchDocuments.failure.title',
+      });
+      throw new Error(
+        'Cannot fetch documenten because the business key is not available.',
+      );
     }
 
-    const file = input.files[0];
-
-    this.documentService
-      .uploadDocument(file, 'SAM-66497', {
-        documentDescription: 'description',
-        numberWithinSystem: '',
-        systemId: '',
-        confidentialityType: ConfidentialityTypes.Confidential,
-        language: 'Nederlands',
-      })
-      .pipe(take(1))
-      .subscribe();
-  }
-
-  protected downloadDocument(documentId: string): void {
-    this.documentService
-      .downloadDocument(toUUID(documentId))
-      .pipe(take(1))
-      .subscribe();
-  }
-
-  private fetchDocumenten(documentId: string): void {
-    const businessKey = toBusinessKey(documentId);
-
     this.swfDocumentService
-      .getSamenwerkingProperties(businessKey)
+      .getSamenwerkingProperties(this.businessKey)
       .pipe(
-        take(1),
         tap((samenwerkingProperties: SamenwerkingProperties): void => {
           if (!samenwerkingProperties.samenwerkingId) {
             throw new Error(
@@ -123,7 +113,7 @@ export class DocumentListComponent implements OnInit {
         error: (error: HttpErrorResponse) => {
           this.notificationService.showError({
             titleKey:
-              'samenwerkfunctionaliteit.feedback.userNotification.fetchDocumentFailureTitle',
+              'samenwerkfunctionaliteit.feedback.userNotification.fetchDocuments.failure.title',
           });
           throw error;
         },

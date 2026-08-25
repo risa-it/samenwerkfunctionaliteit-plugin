@@ -10,7 +10,7 @@ import {
   mapConfidentialityTypeToVertrouwelijkheidsaanduiding,
 } from '../dto/document.dto';
 import { FileDownload } from '../interface/file-download.interface';
-import { UploadDocumentQueryParams } from '../interface/upload-document-query-params.interface';
+import { UploadDocumentMetadata } from '../interface/upload-document-metadata.interface';
 import { UUID } from '../types/uuid.type';
 import { FileResponseUtil } from '../utils/file-response.util';
 
@@ -44,13 +44,15 @@ export class DocumentClient {
   uploadDocument(
     file: File,
     samenwerkingId: string,
-    queryParams?: UploadDocumentQueryParams,
+    metadata?: UploadDocumentMetadata,
   ): Observable<void> {
     const formData: FormData = new FormData();
 
     formData.append('file', file);
 
-    const params = this.convertQueryParamsToHttpParams(queryParams ?? {});
+    const params = this.convertUploadDocumentMetadataToHttpParams(
+      metadata ?? {},
+    );
 
     return this.http.post<void>(
       `${SAMENWERKINGEN_URL}/${samenwerkingId}/documenten`,
@@ -59,36 +61,34 @@ export class DocumentClient {
     );
   }
 
-  private convertQueryParamsToHttpParams(
-    queryParams: UploadDocumentQueryParams,
+  deleteDocument(documentId: UUID): Observable<void> {
+    return this.http.delete<void>(`${DOCUMENTEN_URL}/${documentId}`);
+  }
+
+  private convertUploadDocumentMetadataToHttpParams(
+    metadata: UploadDocumentMetadata,
   ): HttpParams {
     let params = new HttpParams();
 
-    if (queryParams?.documentDescription != null) {
-      params = params.set(
-        'documentOmschrijving',
-        queryParams.documentDescription,
-      );
+    if (metadata?.documentDescription != null) {
+      params = params.set('documentOmschrijving', metadata.documentDescription);
     }
-    if (queryParams?.numberWithinSystem != null) {
-      params = params.set(
-        'nummerBinnenSysteem',
-        queryParams.numberWithinSystem,
-      );
+    if (metadata?.numberWithinSystem != null) {
+      params = params.set('nummerBinnenSysteem', metadata.numberWithinSystem);
     }
-    if (queryParams?.systemId != null) {
-      params = params.set('kenmerkSysteem', queryParams.systemId);
+    if (metadata?.systemId != null) {
+      params = params.set('kenmerkSysteem', metadata.systemId);
     }
-    if (queryParams?.confidentialityType != null) {
+    if (metadata?.confidentialityType != null) {
       params = params.set(
         'vertrouwelijkheidsAanduiding',
         mapConfidentialityTypeToVertrouwelijkheidsaanduiding(
-          queryParams.confidentialityType,
+          metadata.confidentialityType,
         ),
       );
     }
-    if (queryParams?.language != null) {
-      params = params.set('taal', queryParams.language);
+    if (metadata?.language != null) {
+      params = params.set('taal', metadata.language);
     }
 
     return params;

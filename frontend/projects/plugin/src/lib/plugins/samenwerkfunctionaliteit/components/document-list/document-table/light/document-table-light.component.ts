@@ -6,6 +6,7 @@ import {
   signal,
   WritableSignal,
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
   ButtonModule,
   IconModule,
@@ -15,7 +16,6 @@ import {
   TableModel,
   TableModule,
 } from 'carbon-components-angular';
-import { TranslateService } from '@ngx-translate/core';
 import { Document } from '../../../../models/document.model';
 
 @Component({
@@ -59,7 +59,7 @@ export class DocumentTableLightComponent {
     const pageDocuments: Document[] = documents.slice(startIndex, endIndex);
 
     return pageDocuments.map((document: Document): TableItem[] => [
-      new TableItem({ data: document.fileName }),
+      new TableItem({ data: document.filename }),
       new TableItem({
         data: new Date(document.creationDate).toLocaleDateString(),
       }),
@@ -80,12 +80,12 @@ export class DocumentTableLightComponent {
     return [
       new TableHeaderItem({
         data: this.translateService.instant(
-          'samenwerkfunctionaliteit.documenttable.fileName',
+          'samenwerkfunctionaliteit.documentTable.fileName',
         ),
       }),
       new TableHeaderItem({
         data: this.translateService.instant(
-          'samenwerkfunctionaliteit.documenttable.dateCreated',
+          'samenwerkfunctionaliteit.documentTable.dateCreated',
         ),
       }),
     ];
