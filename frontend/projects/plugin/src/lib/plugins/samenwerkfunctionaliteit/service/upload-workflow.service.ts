@@ -56,6 +56,15 @@ export class UploadWorkFlowService {
     }).pipe(
       map(({ versionTag, samenwerkingProps, metadata, config }) => {
         const context: UploadContext = {
+          file,
+          samenwerkingId: samenwerkingProps.samenwerkingId,
+          businessKey,
+          caseDefinitionKey,
+          caseDefinitionVersionTag: versionTag,
+        };
+
+        return {
+          context,
           metadata,
           config,
         };
