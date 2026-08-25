@@ -1,21 +1,19 @@
-@if (!hasError()) {
-  @if (!isLoading()) {
-    <div class="other-participant">
-      <svg cdsIcon="collaborate" size="32" class="collaborate-icon"></svg>
-      <h3>
-        {{ otherParticipant() }}
-      </h3>
-    </div>
-  }
-
-  <berichten-list
-    class="message-list"
-    [messages]="messages()"
-    [isLoading]="isLoading()"
-    [oinNumber]="oinNumber()"
-  ></berichten-list>
-  <stuur-bericht
-    [isLoading]="isLoading()"
-    (messageSent)="refreshMessages()"
-  ></stuur-bericht>
+@if (!isLoading()) {
+  <div class="other-participant">
+    <svg cdsIcon="collaborate" size="32" class="collaborate-icon"></svg>
+    <h3>
+      {{ otherParticipant() }}
+    </h3>
+  </div>
 }
+
+<berichten-list
+  class="message-list"
+  [messages]="messages()"
+  [isLoading]="isLoading()"
+  [oinNumber]="oinNumber()"
+></berichten-list>
+<stuur-bericht
+  [isLoading]="isLoading()"
+  (messageSent)="refreshMessages()"
+></stuur-bericht>
