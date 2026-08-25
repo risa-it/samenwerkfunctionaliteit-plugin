@@ -117,15 +117,11 @@ export class BerichtenCustomTabComponent implements OnInit {
   }
 
   private fetchOtherParticipant(
-    samenwerkingProperties: SamenwerkingProperties,
-    businessKey: BusinessKey,
+    actieverzoekId: ActieverzoekId,
   ): Observable<string> {
     return forkJoin({
       swfPluginProperties: this.swfPluginService.getSwfPluginProperties(),
-      actieverzoek: this.actieverzoekService.getActieverzoek(
-        samenwerkingProperties.actieverzoekDetails.actieverzoekId,
-        businessKey,
-      ),
+      actieverzoek: this.actieverzoekService.getActieverzoek(actieverzoekId),
     }).pipe(
       tap(({ swfPluginProperties }) => {
         this.oinNumber.set(swfPluginProperties.oinNummer);
