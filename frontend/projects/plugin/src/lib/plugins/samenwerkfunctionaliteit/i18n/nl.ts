@@ -9,6 +9,12 @@ export const pluginNlTranslations = {
         search: 'Zoeken',
         upload: 'Uploaden',
       },
+      pagination: {
+        items: '{{ items }}',
+        item: '{{ item }}',
+        "pagina's": "pagina's",
+        pagina: 'pagina',
+      },
     },
     types: {
       confidentiality: {

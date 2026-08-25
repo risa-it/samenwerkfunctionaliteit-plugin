@@ -1,20 +1,17 @@
-<div
-  class="cds--pagination">
+<div class="cds--pagination">
   <div class="cds--pagination__left">
     <label class="cds--pagination__text" for="itemsPerPage">
-      Aantal {{ pluralItem | translate }} per {{ singlePage | translate }} 
+      Aantal {{ pluralItem }} per {{ singlePage }}:
     </label>
-    <div
-      class="cds--select cds--select--inline cds--select__item-count">
+    <div class="cds--select cds--select--inline cds--select__item-count">
       <select
         id="itemsPerPage"
         [value]="pageSize()"
         (change)="selectPageSize(+$any($event.target).value)"
-        class="cds--select-input">
+        class="cds--select-input"
+      >
         @for (option of itemsPerPageOptions(); track $index) {
-          <option
-            class="cds--select-option"
-            [value]="option">
+          <option class="cds--select-option" [value]="option">
             {{ option }}
           </option>
         }
@@ -24,8 +21,8 @@
         size="16"
         style="display: inherit"
         class="cds--select__arrow"
-        aria-hidden="true">
-      </svg>
+        aria-hidden="true"
+      ></svg>
     </div>
   </div>
 
@@ -42,13 +39,15 @@
           </option>
         }
       </select>
-
       <svg
         cdsIcon="chevron--down"
         size="16"
-        class="cds--select__arrow"
+        /* class="cds--select__arrow" */
         aria-hidden="true"
       ></svg>
+      <label class="cds--pagination__text" for="currentPageSelect"
+        >van {{ totalPages() }} {{ pluralPages }}</label
+      >
     </div>
 
     <div class="cds--pagination__control-buttons">
@@ -66,9 +65,7 @@
       <button
         cdsButton="ghost"
         [iconOnly]="true"
-        class="
-						cds--pagination__button
-						cds--pagination__button--forward"
+        class="cds--pagination__button cds--pagination__button--forward"
         type="button"
         [disabled]="!canGoNext()"
         (click)="nextPage()"

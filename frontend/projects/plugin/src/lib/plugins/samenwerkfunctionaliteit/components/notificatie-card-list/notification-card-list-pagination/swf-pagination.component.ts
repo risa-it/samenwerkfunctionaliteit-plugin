@@ -2,13 +2,14 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
   output,
   signal,
 } from '@angular/core';
 import { ButtonModule, IconModule } from 'carbon-components-angular';
 import { FormsModule } from '@angular/forms';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'swf-pagination',
@@ -18,6 +19,8 @@ import { TranslatePipe } from '@ngx-translate/core';
   imports: [IconModule, ButtonModule, FormsModule, TranslatePipe],
 })
 export class PaginationComponent {
+  private readonly translateService: TranslateService =
+    inject(TranslateService);
   readonly page = input(1);
   readonly pageSize = input(10);
   readonly totalItems = input(0);
@@ -52,10 +55,22 @@ export class PaginationComponent {
     Math.min(this.page() * this.pageSize(), this.totalItems()),
   );
 
-  readonly pluralItem = 'common.pagination.items';
-  readonly singleItem = 'common.pagination.item';
-  readonly pluralPages = "common.pagination.pagina's";
-  readonly singlePage = 'common.pagination.pagina';
+  readonly pluralItem = this.translateService.instant(
+    'samenwerkfunctionaliteit.common.pagination.items',
+    { items: 'notificaties' },
+  );
+  readonly singleItem = this.translateService.instant(
+    'samenwerkfunctionaliteit.common.pagination.item',
+    {
+      item: 'notificatie',
+    },
+  );
+  readonly pluralPages = this.translateService.instant(
+    "samenwerkfunctionaliteit.common.pagination.pagina's",
+  );
+  readonly singlePage = this.translateService.instant(
+    'samenwerkfunctionaliteit.common.pagination.pagina',
+  );
 
   previousPage(): void {
     if (this.canGoPrevious()) {
