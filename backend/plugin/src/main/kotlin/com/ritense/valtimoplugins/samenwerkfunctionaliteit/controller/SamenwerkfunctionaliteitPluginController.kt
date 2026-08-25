@@ -12,9 +12,7 @@ import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedBerichtenGet
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedNotificatieGetResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.SamenwerkingResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.UpdateActieverzoekRequest
-import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Actieverzoek
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.FrontendAccessibleProperties
-import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Samenwerking
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.service.SamenwerkfunctionaliteitService
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.validation.Valid
@@ -51,15 +49,6 @@ class SamenwerkfunctionaliteitPluginController(
             backupUploadsToDocumentenApi =
                 frontendConfig.uploadBackupToDocumentenApi,
         )
-
-    private fun getSamenwerkfunctionaliteitPluginConfiguration(): ObjectNode? =
-        pluginService
-            .getPluginConfigurations(
-                PluginConfigurationSearchParameters(
-                    pluginDefinitionKey = SAMENWERKFUNCTIONALITEIT_PLUGIN_KEY,
-                ),
-            ).firstOrNull()
-            ?.properties
 
     @GetMapping("v5/samenwerkingen/{samenwerkingId}")
     fun getSamenwerkingProxy(
@@ -159,6 +148,15 @@ class SamenwerkfunctionaliteitPluginController(
             samenwerkfunctionaliteitService.postBericht(properties, actieverzoekId, postBerichtRequest),
         )
     }
+
+    private fun getSamenwerkfunctionaliteitPluginConfiguration(): ObjectNode? =
+        pluginService
+            .getPluginConfigurations(
+                PluginConfigurationSearchParameters(
+                    pluginDefinitionKey = SAMENWERKFUNCTIONALITEIT_PLUGIN_KEY,
+                ),
+            ).firstOrNull()
+            ?.properties
 
     private fun extractPropertyFromSamenwerkfunctionaliteitPluginConfiguration(name: String): String? =
         getSamenwerkfunctionaliteitPluginConfiguration()
