@@ -50,14 +50,14 @@ export class BerichtenCustomTabComponent implements OnInit {
 
   ngOnInit(): void {
     this.iconService.registerAll([Collaborate32]);
-    this.fetchChat(this.getBusinessKey());
+    this.fetchChat();
 
     this.isLoading.set(false);
   }
 
   protected refreshMessages(): void {
     this.isLoading.set(true);
-    this.fetchChat(this.getBusinessKey());
+    this.fetchChat();
     this.isLoading.set(false);
   }
 
