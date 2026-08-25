@@ -42,7 +42,7 @@ export class UploadWorkFlowService {
 
   private caseDefinitionVersionTag?: string;
 
-  startUpload(
+  upload(
     file: File,
     businessKey: BusinessKey,
     caseDefinitionKey: string,
