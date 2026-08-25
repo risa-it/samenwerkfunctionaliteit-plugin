@@ -14,7 +14,7 @@ import {
 import { NGXLogger } from 'ngx-logger';
 import { finalize, take, tap } from 'rxjs';
 import { BerichtNotification } from '../../../interface/bericht-notification.interface';
-import { SamenwerkingProperties } from '../../../models/samenwerking-properties.model';
+import { SwfCaseProperties } from '../../../interface/swf-case-properties.interface';
 import { BerichtenService } from '../../../service/berichten.service';
 import { SwfDocumentService } from '../../../service/swf-document.service';
 import { UserNotificationService } from '../../../service/user-notification.service';
@@ -107,9 +107,9 @@ export class StuurBerichtComponent {
       .getSamenwerkingProperties(businessKey)
       .pipe(
         take(1),
-        tap((props: SamenwerkingProperties) => {
-          if (props.actieverzoekDetails.actieverzoekId) {
-            this.actieverzoekId = props.actieverzoekDetails.actieverzoekId;
+        tap((props: SwfCaseProperties) => {
+          if (props.actieverzoekId) {
+            this.actieverzoekId = props.actieverzoekId;
           } else {
             throw new Error('Case is missing actieverzoekId.');
           }

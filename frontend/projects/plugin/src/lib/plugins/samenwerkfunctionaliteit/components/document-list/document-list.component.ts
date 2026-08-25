@@ -14,11 +14,11 @@ import { NotificationModule } from 'carbon-components-angular';
 import { finalize, Observable, switchMap, take, tap } from 'rxjs';
 import { DocumentInterface } from '../../interface/document.interface';
 import { Document } from '../../models/document.model';
-import { SamenwerkingProperties } from '../../models/samenwerking-properties.model';
 import { DocumentService } from '../../service/document.service';
 import { SwfDocumentService } from '../../service/swf-document.service';
 import { UserNotificationService } from '../../service/user-notification.service';
 
+import { SwfCaseProperties } from '../../interface/swf-case-properties.interface';
 import { BusinessKey, toBusinessKey } from '../../types/business-key.type';
 import { DocumentTableComponent } from './document-table/document-table.component';
 import { DocumentTableLightComponent } from './document-table/light/document-table-light.component';
@@ -84,8 +84,8 @@ export class DocumentListComponent implements OnInit {
     this.swfDocumentService
       .getSamenwerkingProperties(this.businessKey)
       .pipe(
-        tap((samenwerkingProperties: SamenwerkingProperties): void => {
-          if (!samenwerkingProperties.samenwerkingId) {
+        tap((swfCaseProperties: SwfCaseProperties): void => {
+          if (!swfCaseProperties.samenwerkingId) {
             throw new Error(
               'Er is geen documentenlijst beschikbaar, omdat dit dossier niet deel uitmaakt van een samenwerking.',
             );
@@ -93,10 +93,10 @@ export class DocumentListComponent implements OnInit {
         }),
         switchMap(
           (
-            samenwerkingProperties: SamenwerkingProperties,
+            swfCaseProperties: SwfCaseProperties,
           ): Observable<DocumentInterface[]> => {
             return this.documentService
-              .getDocumenten(samenwerkingProperties.samenwerkingId)
+              .getDocumenten(swfCaseProperties.samenwerkingId)
               .pipe(
                 take(1),
                 tap((documenten: DocumentInterface[]): void => {

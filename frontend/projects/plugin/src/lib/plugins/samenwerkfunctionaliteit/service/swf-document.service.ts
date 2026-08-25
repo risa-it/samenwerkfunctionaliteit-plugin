@@ -4,19 +4,13 @@ import {
   Document as ValtimoDocument,
   DocumentService as ValtimoDocumentService,
 } from '@valtimo/document';
-import {
-  catchError,
-  map,
-  Observable,
-  of,
-  Subject,
-  takeUntil,
-  tap,
-  throwError,
-} from 'rxjs';
-import { SamenwerkfunctionaliteitDocument } from '../interface/document-content.interface';
-import { SamenwerkingProperties } from '../models/samenwerking-properties.model';
+import { map, Observable, of, Subject, takeUntil, tap } from 'rxjs';
+import { SamenwerkfunctionaliteitDocument } from '../dto/document-content.dto';
+import { SwfCaseProperties } from '../interface/swf-case-properties.interface';
+import { toActieverzoekId } from '../types/actieverzoek-id.type';
 import { BusinessKey } from '../types/business-key.type';
+import { toOpenZaakId } from '../types/open-zaak-id.type';
+import { toSamenwerkingId } from '../types/samenwerking-id.type';
 
 @Injectable({
   providedIn: 'root',
@@ -25,8 +19,10 @@ export class SwfDocumentService implements OnDestroy {
   private valtimoDocumentService: ValtimoDocumentService = inject(
     ValtimoDocumentService,
   );
-  private samenwerkingPropsCache: Map<BusinessKey, SamenwerkingProperties> =
-    new Map<BusinessKey, SamenwerkingProperties>();
+  private samenwerkingPropsCache: Map<BusinessKey, SwfCaseProperties> = new Map<
+    BusinessKey,
+    SwfCaseProperties
+  >();
   destroy$: Subject<void> = new Subject<void>();
 
   ngOnDestroy(): void {
@@ -51,42 +47,45 @@ export class SwfDocumentService implements OnDestroy {
    */
   getSamenwerkingProperties(
     businessKey: BusinessKey,
-  ): Observable<SamenwerkingProperties> {
-    const samenwerkingProperties: SamenwerkingProperties =
+  ): Observable<SwfCaseProperties> {
+    const cachedProperties: SwfCaseProperties | undefined =
       this.samenwerkingPropsCache.get(businessKey);
-    if (samenwerkingProperties) {
-      return of(samenwerkingProperties);
-    }
-    return this.fetchPropsFromDocument(businessKey);
-  }
 
-  private fetchPropsFromDocument(
-    businessKey: BusinessKey,
-  ): Observable<SamenwerkingProperties> {
-    return this.valtimoDocumentService.getDocument(businessKey).pipe(
+    if (cachedProperties) {
+      return of(cachedProperties);
+    }
+
+    return this.valtimoDocumentService.getDocument(businessKey.toString()).pipe(
       takeUntil(this.destroy$),
-      map((document: ValtimoDocument) => {
-        const documentContentWithSamenwerkingProperties =
-          document.content as SamenwerkfunctionaliteitDocument;
-        return documentContentWithSamenwerkingProperties.samenwerkingProperties;
-      }),
-      tap((samenwerkingProperties) => {
-        if (!samenwerkingProperties) {
-          throw new Error(
-            'Document content does not have samenwerking properties.',
-          );
-        }
-        this.loadPropsIntoCache(businessKey, samenwerkingProperties);
-      }),
-      catchError((error: Error) => {
-        return throwError(() => error);
+      map((document) => this.mapValtimoDocumentToSwfCaseProperties(document)),
+      tap((swfCaseProperties: SwfCaseProperties) => {
+        this.loadPropsIntoCache(businessKey, swfCaseProperties);
       }),
     );
   }
 
+  private mapValtimoDocumentToSwfCaseProperties(
+    document: ValtimoDocument,
+  ): SwfCaseProperties {
+    const swfDocument = document.content as SamenwerkfunctionaliteitDocument;
+
+    const swfCaseProps: SwfCaseProperties = {
+      samenwerkingId: toSamenwerkingId(
+        swfDocument.samenwerkingProperties.samenwerkingId,
+      ),
+      actieverzoekId: toActieverzoekId(
+        swfDocument.samenwerkingProperties.actieverzoekDetails.actieverzoekId,
+      ),
+      isSwfCase: swfDocument.isAutomaticallyGenerated,
+      openZaakId: toOpenZaakId(swfDocument.openzaak.identificatie),
+    };
+
+    return swfCaseProps;
+  }
+
   private loadPropsIntoCache(
     businessKey: BusinessKey,
-    samenwerkingProperties: SamenwerkingProperties,
+    samenwerkingProperties: SwfCaseProperties,
   ): void {
     this.samenwerkingPropsCache.set(businessKey, samenwerkingProperties);
   }
