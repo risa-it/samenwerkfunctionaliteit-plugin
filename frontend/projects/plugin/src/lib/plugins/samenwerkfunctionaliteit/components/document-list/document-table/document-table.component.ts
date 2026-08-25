@@ -58,7 +58,7 @@ import { DocumentUploadMetadataModal } from './modal/upload/document-upload-meta
     DocumentDeleteModal,
   ],
   templateUrl: './document-table.component.html',
-  styleUrl: './document-table.component.css',
+  styleUrl: './document-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocumentTableComponent implements OnInit {
