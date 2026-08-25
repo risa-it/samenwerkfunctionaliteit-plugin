@@ -289,12 +289,21 @@ class DefaultSamenwerkfunctionaliteitClient(
         }
     }
 
-    override fun getAllNotificaties(properties: SamenwerkfunctionaliteitProperties): PagedNotificatieGetResponse {
+    override fun getAllNotificaties(
+        properties: SamenwerkfunctionaliteitProperties,
+        page: Int?,
+        amount: Int?,
+    ): PagedNotificatieGetResponse {
         try {
             return restClient(properties = properties)
                 .get()
-                .uri(NOTIFICATIES_ENDPOINT)
-                .retrieve()
+                .uri { uriBuilder ->
+                    uriBuilder
+                        .path(NOTIFICATIES_ENDPOINT)
+                        .queryParamNotNull(NotificatiesQueryParam.PAGINA.paramName, page)
+                        .queryParamNotNull(NotificatiesQueryParam.AANTAL.paramName, amount)
+                        .build()
+                }.retrieve()
                 .body<PagedNotificatieGetResponse>()
                 .also {
                     logger.info {
@@ -365,6 +374,13 @@ class DefaultSamenwerkfunctionaliteitClient(
         ), ;
 
         fun negated(): String = "$paramName[not]"
+    }
+
+    private enum class NotificatiesQueryParam(
+        val paramName: String,
+    ) {
+        AANTAL("aantal"),
+        PAGINA("pagina"),
     }
 
     private fun handleInternalServerError(e: HttpServerErrorException.InternalServerError): Nothing {

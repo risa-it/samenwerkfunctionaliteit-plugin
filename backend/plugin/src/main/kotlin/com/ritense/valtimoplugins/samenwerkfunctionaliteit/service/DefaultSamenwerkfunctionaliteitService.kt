@@ -176,10 +176,16 @@ class DefaultSamenwerkfunctionaliteitService(
         )
     }
 
-    override fun getAllNotificaties(properties: SamenwerkfunctionaliteitProperties): PagedNotificatieGetResponse =
+    override fun getAllNotificaties(
+        properties: SamenwerkfunctionaliteitProperties,
+        page: Int?,
+        amount: Int?,
+    ): PagedNotificatieGetResponse =
         samenwerkfunctionaliteitClient
             .getAllNotificaties(
                 properties = properties,
+                page = page,
+                amount = amount,
             )
 
     override fun getSamenwerking(

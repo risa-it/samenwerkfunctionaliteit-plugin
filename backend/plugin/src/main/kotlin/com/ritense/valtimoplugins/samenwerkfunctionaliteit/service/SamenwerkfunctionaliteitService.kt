@@ -91,7 +91,11 @@ interface SamenwerkfunctionaliteitService {
         pageNumber: Int,
     ): Page<List<Notificatie>>
 
-    fun getAllNotificaties(properties: SamenwerkfunctionaliteitProperties): PagedNotificatieGetResponse
+    fun getAllNotificaties(
+        properties: SamenwerkfunctionaliteitProperties,
+        page: Int?,
+        amount: Int?,
+    ): PagedNotificatieGetResponse
 
     fun getSamenwerking(
         samenwerkingId: String,

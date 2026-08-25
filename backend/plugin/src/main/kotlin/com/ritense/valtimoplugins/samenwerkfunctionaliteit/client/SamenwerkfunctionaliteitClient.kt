@@ -87,7 +87,11 @@ interface SamenwerkfunctionaliteitClient {
         pageNumber: Int,
     ): PagedNotificatieGetResponse
 
-    fun getAllNotificaties(properties: SamenwerkfunctionaliteitProperties): PagedNotificatieGetResponse
+    fun getAllNotificaties(
+        properties: SamenwerkfunctionaliteitProperties,
+        page: Int?,
+        amount: Int?,
+    ): PagedNotificatieGetResponse
 
     fun getSamenwerking(
         samenwerkingId: String,
