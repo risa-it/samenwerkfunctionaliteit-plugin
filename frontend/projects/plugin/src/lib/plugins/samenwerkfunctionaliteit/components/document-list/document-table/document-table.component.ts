@@ -187,7 +187,7 @@ export class DocumentTableComponent implements OnInit {
       .subscribe();
   }
 
-  protected onFileSelected(event: Event): void {
+  protected uploadDocument(event: Event): void {
     const input = event.target as HTMLInputElement;
 
     if (!input.files?.length) {
