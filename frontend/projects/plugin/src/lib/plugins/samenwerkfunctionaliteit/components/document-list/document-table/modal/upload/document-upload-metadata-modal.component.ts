@@ -97,8 +97,6 @@ export class DocumentUploadMetadataModal {
         this.metadataForm.controls.confidentialityType.value || undefined,
       systemId: this.metadataForm.controls.systemId.value || undefined,
     });
-
-    this.modalService.closeModal();
   }
 
   protected cancel(): void {
