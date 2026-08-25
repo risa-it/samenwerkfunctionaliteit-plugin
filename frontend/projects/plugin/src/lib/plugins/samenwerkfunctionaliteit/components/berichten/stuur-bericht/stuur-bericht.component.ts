@@ -70,7 +70,7 @@ export class StuurBerichtComponent {
       this.logger.warn('Unable to post message: No actieverzoekId available.');
       this.notificationService.showError({
         titleKey:
-          'samenwerkfunctionaliteit.feedback.userNotification.messenger.failure.title',
+          'samenwerkfunctionaliteit.feedback.userNotification.messenger.fetchMessages.failure.title',
       });
       return;
     }
@@ -86,9 +86,9 @@ export class StuurBerichtComponent {
         next: () => {
           this.notificationService.showSuccess({
             titleKey:
-              'samenwerkfunctionaliteit.feedback.userNotification.messenger.success.title',
+              'samenwerkfunctionaliteit.feedback.userNotification.messenger.sendMessage.success.title',
             messageKey:
-              'samenwerkfunctionaliteit.feedback.userNotification.messenger.success.message',
+              'samenwerkfunctionaliteit.feedback.userNotification.messenger.sendMessage.success.message',
           });
           this.message = '';
           this.messageSent.emit();
@@ -97,7 +97,7 @@ export class StuurBerichtComponent {
           this.logger.error(response);
           this.notificationService.showError({
             titleKey:
-              'samenwerkfunctionaliteit.feedback.userNotification.messenger.failure.title',
+              'samenwerkfunctionaliteit.feedback.userNotification.messenger.sendMessage.failure.title',
           });
         },
       });
@@ -126,9 +126,9 @@ export class StuurBerichtComponent {
 
           this.notificationService.showError({
             titleKey:
-              'samenwerkfunctionaliteit.feedback.userNotification.messenger.failure.title',
+              'samenwerkfunctionaliteit.feedback.userNotification.messenger.sendMessage.failure.title',
             messageKey:
-              'samenwerkfunctionaliteit.feedback.userNotification.messenger.failure.failureMissingActieverzoekId',
+              'samenwerkfunctionaliteit.feedback.userNotification.messenger.sendMessage.failure.failureMissingActieverzoekId',
           });
         },
       });
