@@ -16,4 +16,10 @@
   [totalItems]="totalNotifications()"
   (pageChange)="onPageChange($event)"
   (pageSizeChange)="onPageSizeChange($event)"
+  [itemSingleTranslateKey]="
+    'samenwerkfunctionaliteit.notifications.pagination.item.single'
+  "
+  [itemPluralTranslateKey]="
+    'samenwerkfunctionaliteit.notifications.pagination.item.plural'
+  "
 ></swf-pagination>

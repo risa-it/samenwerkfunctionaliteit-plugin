@@ -24,6 +24,20 @@ export class PaginationComponent {
   readonly page = input(1);
   readonly pageSize = input(10);
   readonly totalItems = input(0);
+  readonly itemSingleTranslateKey = input(
+    'samenwerkfunctionaliteit.common.pagination.defaults.item.single',
+  );
+
+  readonly itemPluralTranslateKey = input(
+    'samenwerkfunctionaliteit.common.pagination.defaults.item.plural',
+  );
+  readonly pageSingleTranslateKey = input(
+    'samenwerkfunctionaliteit.common.pagination.defaults.page.single',
+  );
+  readonly pagePluralTranslateKey = input(
+    'samenwerkfunctionaliteit.common.pagination.defaults.page.plural',
+  );
+
   readonly itemsPerPageOptions = signal<number[]>([10, 25, 50]);
 
   readonly pageChange = output<number>();
@@ -53,23 +67,6 @@ export class PaginationComponent {
 
   readonly pageEnd = computed(() =>
     Math.min(this.page() * this.pageSize(), this.totalItems()),
-  );
-
-  readonly pluralItem = this.translateService.instant(
-    'samenwerkfunctionaliteit.common.pagination.items',
-    { items: 'notificaties' },
-  );
-  readonly singleItem = this.translateService.instant(
-    'samenwerkfunctionaliteit.common.pagination.item',
-    {
-      item: 'notificatie',
-    },
-  );
-  readonly pluralPages = this.translateService.instant(
-    'samenwerkfunctionaliteit.common.pagination.page.plural',
-  );
-  readonly singlePage = this.translateService.instant(
-    'samenwerkfunctionaliteit.common.pagination.page.single',
   );
 
   previousPage(): void {

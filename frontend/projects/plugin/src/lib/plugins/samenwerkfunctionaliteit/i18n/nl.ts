@@ -10,11 +10,15 @@ export const pluginNlTranslations = {
         upload: 'Uploaden',
       },
       pagination: {
-        items: '{{ items }}',
-        item: '{{ item }}',
-        page: {
-          plural: "pagina's",
-          single: 'pagina',
+        defaults: {
+          item: {
+            single: 'item',
+            plural: 'items',
+          },
+          page: {
+            plural: "pagina's",
+            single: 'pagina',
+          },
         },
       },
     },
@@ -142,6 +146,15 @@ export const pluginNlTranslations = {
         today: 'Vandaag',
         minuteSingular: '{{ minuteCount }} minuut geleden',
         minutePlural: '{{ minuteCount }} minuten geleden',
+      },
+    },
+
+    notifications: {
+      pagination: {
+        item: {
+          single: 'notificatie',
+          plural: 'notificaties',
+        },
       },
     },
 
