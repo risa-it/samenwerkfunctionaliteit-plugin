@@ -43,18 +43,6 @@ export class PaginationComponent {
 
   readonly canGoNext = computed(() => this.page() < this.totalPages());
 
-  readonly pageStart = computed(() => {
-    if (this.totalItems() === 0) {
-      return 0;
-    }
-
-    return (this.page() - 1) * this.pageSize() + 1;
-  });
-
-  readonly pageEnd = computed(() =>
-    Math.min(this.page() * this.pageSize(), this.totalItems()),
-  );
-
   readonly pluralItem = this.translateService.instant(
     'samenwerkfunctionaliteit.common.pagination.items',
     { items: 'notificaties' },
