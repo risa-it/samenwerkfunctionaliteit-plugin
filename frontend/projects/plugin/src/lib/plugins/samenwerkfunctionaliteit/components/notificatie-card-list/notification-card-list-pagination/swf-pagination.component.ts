@@ -21,9 +21,9 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 export class PaginationComponent {
   private readonly translateService: TranslateService =
     inject(TranslateService);
-  readonly page = input(1);
-  readonly pageSize = input(10);
-  readonly totalItems = input(0);
+  readonly page = input.required<number>();
+  readonly pageSize = input.required<number>();
+  readonly totalItems = input.required<number>();
   readonly itemsPerPageOptions = signal<number[]>([10, 25, 50]);
 
   readonly pageChange = output<number>();
