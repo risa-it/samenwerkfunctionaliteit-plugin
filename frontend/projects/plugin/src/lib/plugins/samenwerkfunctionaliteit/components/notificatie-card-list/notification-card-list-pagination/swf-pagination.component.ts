@@ -7,9 +7,9 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { ButtonModule, IconModule } from 'carbon-components-angular';
 import { FormsModule } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
+import { ButtonModule, IconModule } from 'carbon-components-angular';
 
 @Component({
   selector: 'swf-pagination',
@@ -21,9 +21,23 @@ import { TranslateService } from '@ngx-translate/core';
 export class PaginationComponent {
   private readonly translateService: TranslateService =
     inject(TranslateService);
-  readonly page = input.required<number>();
-  readonly pageSize = input.required<number>();
-  readonly totalItems = input.required<number>();
+  readonly page = input(1);
+  readonly pageSize = input(10);
+  readonly totalItems = input(0);
+  readonly itemSingleTranslateKey = input(
+    'samenwerkfunctionaliteit.common.pagination.defaults.item.single',
+  );
+
+  readonly itemPluralTranslateKey = input(
+    'samenwerkfunctionaliteit.common.pagination.defaults.item.plural',
+  );
+  readonly pageSingleTranslateKey = input(
+    'samenwerkfunctionaliteit.common.pagination.defaults.page.single',
+  );
+  readonly pagePluralTranslateKey = input(
+    'samenwerkfunctionaliteit.common.pagination.defaults.page.plural',
+  );
+
   readonly itemsPerPageOptions = signal<number[]>([10, 25, 50]);
 
   readonly pageChange = output<number>();
@@ -43,21 +57,16 @@ export class PaginationComponent {
 
   readonly canGoNext = computed(() => this.page() < this.totalPages());
 
-  readonly pluralItem = this.translateService.instant(
-    'samenwerkfunctionaliteit.common.pagination.items',
-    { items: 'notificaties' },
-  );
-  readonly singleItem = this.translateService.instant(
-    'samenwerkfunctionaliteit.common.pagination.item',
-    {
-      item: 'notificatie',
-    },
-  );
-  readonly pluralPages = this.translateService.instant(
-    'samenwerkfunctionaliteit.common.pagination.page.plural',
-  );
-  readonly singlePage = this.translateService.instant(
-    'samenwerkfunctionaliteit.common.pagination.page.single',
+  readonly pageStart = computed(() => {
+    if (this.totalItems() === 0) {
+      return 0;
+    }
+
+    return (this.page() - 1) * this.pageSize() + 1;
+  });
+
+  readonly pageEnd = computed(() =>
+    Math.min(this.page() * this.pageSize(), this.totalItems()),
   );
 
   previousPage(): void {
