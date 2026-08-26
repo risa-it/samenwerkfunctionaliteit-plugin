@@ -18,15 +18,13 @@ package com.ritense.valtimoplugins.samenwerkfunctionaliteit.autoconfiguration
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ritense.plugin.service.PluginService
-import com.ritense.valtimo.contract.database.QueryDialectHelper
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.client.DefaultSamenwerkfunctionaliteitClient
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.client.SamenwerkfunctionaliteitClient
-import com.ritense.valtimoplugins.samenwerkfunctionaliteit.gateway.GatewayProperties
-import com.ritense.valtimoplugins.samenwerkfunctionaliteit.gateway.specification.GatewaySpecificationFactory
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.plugin.SamenwerkfunctionaliteitPluginFactory
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.service.DefaultOperatonService
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.service.DefaultSamenwerkfunctionaliteitService
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.service.OperatonService
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.service.SamenwerkfunctionaliteitProxyService
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.service.SamenwerkfunctionaliteitService
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.context.annotation.Bean
@@ -49,6 +47,14 @@ class SamenwerkfunctionaliteitConfiguration {
         )
 
     @Bean
+    fun samenwerkfunctionaliteitProxyService(
+        samenwerkfunctionaliteitClient: SamenwerkfunctionaliteitClient,
+    ): SamenwerkfunctionaliteitProxyService =
+        SamenwerkfunctionaliteitProxyService(
+            samenwerkfunctionaliteitClient = samenwerkfunctionaliteitClient,
+        )
+
+    @Bean
     fun operatonService(objectMapper: ObjectMapper): OperatonService =
         DefaultOperatonService(
             objectMapper = objectMapper,
@@ -64,14 +70,5 @@ class SamenwerkfunctionaliteitConfiguration {
             pluginService = pluginService,
             samenwerkfunctionaliteitService = samenwerkfunctionaliteitService,
             operatonService = operatonService,
-        )
-
-    @Bean
-    fun gatewayProperties(): GatewayProperties = GatewayProperties()
-
-    @Bean
-    fun gatewaySpecificationFactory(queryDialectHelper: QueryDialectHelper): GatewaySpecificationFactory =
-        GatewaySpecificationFactory(
-            queryDialectHelper = queryDialectHelper,
         )
 }
