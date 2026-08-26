@@ -1,15 +1,11 @@
 import { PluginSpecification } from '@valtimo/plugin';
 import { SAMENWERKFUNCTIONALITEIT_PLUGIN_LOGO_BASE64 } from './assets/samenwerkfunctionaliteit-plugin-logo';
 import { DeleteBerichtComponent } from './components/delete-bericht/delete-bericht.component';
-import { DownloadDocumentComponent } from './components/download-document/download-document.component';
 import { GetActieverzoekComponent } from './components/get-actieverzoek/get-actieverzoek.component';
 import { GetAllActieverzoekenComponent } from './components/get-all-actieverzoeken/get-all-actieverzoeken.component';
-import { GetBerichtComponent } from './components/get-bericht/get-bericht.component';
 import { GetDocumentenOverzichtComponent } from './components/get-documenten-overzicht/get-documenten-overzicht.component';
 import { GetSamenwerkingNotificatiesComponent } from './components/get-samenwerking-notificaties/get-samenwerking-notificaties.component';
-import { PostBerichtComponent } from './components/post-bericht/post-bericht.component';
 import { SamenwerkfunctionaliteitPluginConfigurationComponent } from './components/samenwerkfunctionaliteit-plugin-configuration/samenwerkfunctionaliteit-plugin-configuration.component';
-import { UploadDocumentComponent } from './components/upload-document/upload-document.component';
 
 const samenwerkfunctionaliteitPluginSpecification: PluginSpecification = {
   pluginId: 'samenwerkfunctionaliteit',
@@ -19,12 +15,8 @@ const samenwerkfunctionaliteitPluginSpecification: PluginSpecification = {
   functionConfigurationComponents: {
     'get-actieverzoek': GetActieverzoekComponent,
     'get-all-actieverzoeken': GetAllActieverzoekenComponent,
-    'get-bericht': GetBerichtComponent,
-    'post-bericht': PostBerichtComponent,
     'delete-bericht': DeleteBerichtComponent,
     'get-documentenoverzicht': GetDocumentenOverzichtComponent,
-    'download-document': DownloadDocumentComponent,
-    'upload-document': UploadDocumentComponent,
     'get-samenwerking-notificaties': GetSamenwerkingNotificatiesComponent,
   },
   pluginTranslations: {
