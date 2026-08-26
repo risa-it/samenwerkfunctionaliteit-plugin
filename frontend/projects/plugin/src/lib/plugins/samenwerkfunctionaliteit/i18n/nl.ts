@@ -12,8 +12,10 @@ export const pluginNlTranslations = {
       pagination: {
         items: '{{ items }}',
         item: '{{ item }}',
-        "pagina's": "pagina's",
-        pagina: 'pagina',
+        page: {
+          plural: "pagina's",
+          single: 'pagina',
+        },
       },
     },
     types: {

@@ -66,10 +66,10 @@ export class PaginationComponent {
     },
   );
   readonly pluralPages = this.translateService.instant(
-    "samenwerkfunctionaliteit.common.pagination.pagina's",
+    'samenwerkfunctionaliteit.common.pagination.page.plural',
   );
   readonly singlePage = this.translateService.instant(
-    'samenwerkfunctionaliteit.common.pagination.pagina',
+    'samenwerkfunctionaliteit.common.pagination.page.single',
   );
 
   previousPage(): void {
