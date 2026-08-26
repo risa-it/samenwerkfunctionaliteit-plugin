@@ -7,9 +7,9 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { ButtonModule, IconModule } from 'carbon-components-angular';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { ButtonModule, IconModule } from 'carbon-components-angular';
 
 @Component({
   selector: 'swf-pagination',
