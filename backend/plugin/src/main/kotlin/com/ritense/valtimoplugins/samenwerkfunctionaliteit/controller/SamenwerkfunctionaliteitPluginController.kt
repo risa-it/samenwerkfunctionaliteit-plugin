@@ -29,7 +29,7 @@ import org.springframework.web.multipart.MultipartFile
 import java.util.UUID
 
 @RestController
-@RequestMapping("samenwerkfunctionaliteit")
+@RequestMapping("api/v1/samenwerkfunctionaliteit")
 class SamenwerkfunctionaliteitPluginController(
     private val pluginService: PluginService,
     private val frontendConfig: FrontendConfig,
