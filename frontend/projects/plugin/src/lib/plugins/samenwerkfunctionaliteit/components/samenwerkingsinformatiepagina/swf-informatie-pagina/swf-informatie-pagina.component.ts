@@ -101,7 +101,7 @@ export class SwfInformatiePaginaComponent implements OnInit {
     this.swfDocumentService
       .getSamenwerkingProperties(businessKey)
       .pipe(
-        takeWhile((samenwerkingProps) => {
+        takeWhile((samenwerkingProps: SwfCaseProperties) => {
           this.isSamenwerkingDossier.set(
             !!samenwerkingProps.actieverzoekId &&
               !!samenwerkingProps.samenwerkingId,
