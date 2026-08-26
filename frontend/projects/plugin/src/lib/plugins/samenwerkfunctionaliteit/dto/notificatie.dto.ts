@@ -47,7 +47,7 @@ export function mapNotificatieResponseToNotificatiePage(
   };
 }
 
-export function mapNotificatieDtosToModels(
+function mapNotificatieDtosToModels(
   response: NotificatieResponse,
 ): NotificatieModel[] {
   return response._embedded.notificaties.map(mapNotificatieDtoToModel);
