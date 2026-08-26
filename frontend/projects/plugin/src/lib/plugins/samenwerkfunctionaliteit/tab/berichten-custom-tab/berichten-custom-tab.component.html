@@ -1,6 +1,8 @@
 @if (!isLoading()) {
   <div class="other-participant">
-    <svg cdsIcon="collaborate" size="32" class="collaborate-icon"></svg>
+    @if (otherParticipant()) {
+      <svg cdsIcon="collaborate" size="32" class="collaborate-icon"></svg>
+    }
     <h3>
       {{ otherParticipant() }}
     </h3>
