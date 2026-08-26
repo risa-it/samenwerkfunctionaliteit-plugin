@@ -14,11 +14,55 @@
  * limitations under the License.
  */
 
+import { CommonModule } from '@angular/common';
+import {
+  HttpBackend,
+  HttpClient,
+  HttpClientModule,
+} from '@angular/common/http';
+import { Injector, NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { AccessControlManagementModule } from '@valtimo/access-control-management';
 import { AccountModule } from '@valtimo/account';
 import { AnalyseModule } from '@valtimo/analyse';
-import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app-routing.module';
+import { BootstrapModule } from '@valtimo/bootstrap';
+import { BuildingBlockManagementModule } from '@valtimo/building-block-management';
+import {
+  CASE_TAB_TOKEN,
+  CaseDetailTabAuditComponent,
+  CaseDetailTabDocumentsComponent,
+  CaseDetailTabProgressComponent,
+  CaseDetailTabSummaryComponent,
+  CaseModule,
+  DefaultTabs,
+} from '@valtimo/case';
+import { CaseManagementModule } from '@valtimo/case-management';
+import { CaseMigrationModule } from '@valtimo/case-migration';
+import { ChoiceFieldModule } from '@valtimo/choice-field';
+import {
+  BpmnJsDiagramModule,
+  enableCustomFormioComponents,
+  MenuModule,
+  registerFormioFileSelectorComponent,
+  registerFormioUploadComponent,
+  registerFormioValueResolverSelectorComponent,
+  ValuePathSelectorComponent,
+  WidgetModule,
+} from '@valtimo/components';
+import { DashboardModule } from '@valtimo/dashboard';
+import { DashboardManagementModule } from '@valtimo/dashboard-management';
+import { DecisionModule } from '@valtimo/decision';
+import { DocumentModule } from '@valtimo/document';
+import { FormModule } from '@valtimo/form';
+import { FormManagementModule } from '@valtimo/form-management';
+import { LayoutModule, TranslationManagementModule } from '@valtimo/layout';
+import { LoggingModule } from '@valtimo/logging';
+import { MigrationModule } from '@valtimo/migration';
+import { MilestoneModule } from '@valtimo/milestone';
+import { ObjectModule } from '@valtimo/object';
+import { ObjectManagementModule } from '@valtimo/object-management';
 import {
   BesluitenApiPluginModule,
   besluitenApiPluginSpecification,
@@ -42,74 +86,30 @@ import {
   ZakenApiPluginModule,
   zakenApiPluginSpecification,
 } from '@valtimo/plugin';
-import { BootstrapModule } from '@valtimo/bootstrap';
-import {
-  BpmnJsDiagramModule,
-  enableCustomFormioComponents,
-  MenuModule,
-  registerFormioFileSelectorComponent,
-  registerFormioUploadComponent,
-  registerFormioValueResolverSelectorComponent,
-  ValuePathSelectorComponent,
-  WidgetModule,
-} from '@valtimo/components';
-import { BrowserModule } from '@angular/platform-browser';
-import { BuildingBlockManagementModule } from '@valtimo/building-block-management';
-import { CaseManagementModule } from '@valtimo/case-management';
-import { CaseMigrationModule } from '@valtimo/case-migration';
-import { ChoiceFieldModule } from '@valtimo/choice-field';
-import { CommonModule } from '@angular/common';
+import { PluginManagementModule } from '@valtimo/plugin-management';
+import { ProcessModule } from '@valtimo/process';
+import { ProcessLinkModule } from '@valtimo/process-link';
+import { ProcessManagementModule } from '@valtimo/process-management';
+import { ResourceModule } from '@valtimo/resource';
+import { SecurityModule } from '@valtimo/security';
 import {
   ConfigModule,
   ConfigService,
   CustomMultiTranslateHttpLoaderFactory,
   LocalizationService,
 } from '@valtimo/shared';
-import { DashboardManagementModule } from '@valtimo/dashboard-management';
-import { DashboardModule } from '@valtimo/dashboard';
-import { DecisionModule } from '@valtimo/decision';
-import {
-  CASE_TAB_TOKEN,
-  CaseDetailTabAuditComponent,
-  CaseDetailTabDocumentsComponent,
-  CaseDetailTabProgressComponent,
-  CaseDetailTabSummaryComponent,
-  CaseModule,
-  DefaultTabs,
-} from '@valtimo/case';
-import { DocumentModule } from '@valtimo/document';
-import { FormManagementModule } from '@valtimo/form-management';
-import { FormModule } from '@valtimo/form';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {
-  HttpBackend,
-  HttpClient,
-  HttpClientModule,
-} from '@angular/common/http';
-import { Injector, NgModule } from '@angular/core';
-import { LayoutModule, TranslationManagementModule } from '@valtimo/layout';
-import { LoggerModule } from 'ngx-logger';
-import { LoggingModule } from '@valtimo/logging';
-import { MigrationModule } from '@valtimo/migration';
-import { MilestoneModule } from '@valtimo/milestone';
-import { ObjectManagementModule } from '@valtimo/object-management';
-import { ObjectModule } from '@valtimo/object';
-import { PluginManagementModule } from '@valtimo/plugin-management';
-import { ProcessLinkModule } from '@valtimo/process-link';
-import { ProcessManagementModule } from '@valtimo/process-management';
-import { ProcessModule } from '@valtimo/process';
-import { ResourceModule } from '@valtimo/resource';
-import { SecurityModule } from '@valtimo/security';
 import { SseModule } from '@valtimo/sse';
 import { SwaggerModule } from '@valtimo/swagger';
 import { TaskModule } from '@valtimo/task';
 import { TeamsModule } from '@valtimo/teams';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { environment } from '../environments/environment';
 import {
   registerDocumentenApiFormioUploadComponent,
   ZgwModule,
 } from '@valtimo/zgw';
+import { LoggerModule } from 'ngx-logger';
+import { environment } from '../environments/environment';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
 
 import {
   BerichtenCustomTabComponent,
