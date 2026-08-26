@@ -69,7 +69,7 @@ export class SwfDocumentService implements OnDestroy {
   ): SwfCaseProperties {
     const swfDocument = document.content as SamenwerkfunctionaliteitDocument;
 
-    const swfCaseProps: SwfCaseProperties = {
+    return {
       samenwerkingId: toSamenwerkingId(
         swfDocument.samenwerkingProperties.samenwerkingId,
       ),
@@ -79,8 +79,6 @@ export class SwfDocumentService implements OnDestroy {
       isSwfCase: swfDocument.isAutomaticallyGenerated,
       openZaakId: toOpenZaakId(swfDocument.openzaak.identificatie),
     };
-
-    return swfCaseProps;
   }
 
   private loadPropsIntoCache(
