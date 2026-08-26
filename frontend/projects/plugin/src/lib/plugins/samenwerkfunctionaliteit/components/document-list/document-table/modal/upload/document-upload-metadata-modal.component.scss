@@ -9,3 +9,15 @@ form {
 ::ng-deep.cds--text-input__field-wrapper {
     display: initial;
 }
+
+::ng-deep.cds--popover--open .cds--popover-content.cds--tooltip-content {
+    max-width: 30rem;
+    display: block;
+}
+
+::ng-deep.cds--tooltip .tooltip-icon {
+    display: inline-block;
+    height: 1rem;
+    alignment-baseline: text-bottom;
+    cursor: pointer;
+}

@@ -25,7 +25,7 @@
         (clear)="searchValue.set('')"
       >
       </cds-table-toolbar-search>
-      <input #fileInput type="file" hidden (change)="onFileSelected($event)" />
+      <input #fileInput type="file" hidden (change)="uploadDocument($event)" />
 
       <button
         cdsButton="primary"
@@ -57,6 +57,7 @@
 </cds-table-container>
 
 <document-upload-metadata-modal
+  [isUploading]="isUploading()"
   #uploadMetadataModal
 ></document-upload-metadata-modal>
 

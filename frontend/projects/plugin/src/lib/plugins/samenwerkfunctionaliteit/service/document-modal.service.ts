@@ -19,7 +19,6 @@ export class DocumentModalService {
     return new Observable((subscriber) => {
       const submittedSubscription = modal.submitted.subscribe((metadata) => {
         subscriber.next(metadata);
-        subscriber.complete();
       });
 
       const closeSubscription = modal.modal().closeEvent.subscribe(() => {
@@ -38,6 +37,10 @@ export class DocumentModalService {
         cancelledSubscription.unsubscribe();
       };
     });
+  }
+
+  closeUploadMetadata(modal: DocumentUploadMetadataModal): void {
+    modal.modal().closeModal();
   }
 
   openDelete(modal: DocumentDeleteModal): Observable<void> {

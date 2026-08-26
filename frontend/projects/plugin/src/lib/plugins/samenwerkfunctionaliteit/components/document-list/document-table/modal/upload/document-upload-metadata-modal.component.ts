@@ -1,12 +1,17 @@
-import { Component, inject, output, viewChild } from '@angular/core';
+import { Component, inject, input, output, viewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   ButtonModule,
   DropdownModule,
+  IconModule,
+  IconService,
   InputModule,
+  LoadingModule,
+  TooltipModule,
 } from 'carbon-components-angular';
 
+import { Information32, Upload32 } from '@carbon/icons';
 import {
   ModalService,
   VModalComponent,
@@ -28,6 +33,9 @@ import {
     ButtonModule,
     TranslatePipe,
     VModalModule,
+    IconModule,
+    TooltipModule,
+    LoadingModule,
   ],
   templateUrl: './document-upload-metadata-modal.component.html',
   styleUrl: './document-upload-metadata-modal.component.scss',
@@ -36,24 +44,30 @@ export class DocumentUploadMetadataModal {
   private readonly modalService = inject(ModalService);
   private readonly formBuilder = inject(FormBuilder);
   private readonly translateService = inject(TranslateService);
+  private readonly iconService = inject(IconService);
 
   readonly modal = viewChild.required<VModalComponent>('uploadModal');
 
+  readonly isUploading = input(false);
   readonly submitted = output<UploadDocumentMetadata>();
   readonly cancelled = output<void>();
 
   protected readonly metadataForm = this.formBuilder.group({
     documentDescription: [''],
     numberWithinSystem: [''],
-    systemId: [''],
     confidentialityType: [
       ConfidentialityTypes.Confidential as ConfidentialityType,
       Validators.required,
     ],
+    systemId: [''],
   });
 
   protected confidentialityOptionsLabel = this.translateService.instant(
     'samenwerkfunctionaliteit.types.document.confidentialityType',
+  );
+
+  protected confidentialityTypeTooltipText = this.translateService.instant(
+    'samenwerkfunctionaliteit.documentTable.documentUploadModal.confidentialityTypeTooltip',
   );
 
   protected confidentialityOptions = [
@@ -73,21 +87,37 @@ export class DocumentUploadMetadataModal {
     },
   ];
 
+  ngOnInit() {
+    this.iconService.registerAll([Information32, Upload32]);
+  }
+
+  resetForm(): void {
+    this.metadataForm.reset({
+      documentDescription: '',
+      numberWithinSystem: '',
+      confidentialityType: ConfidentialityTypes.Confidential,
+      systemId: '',
+    });
+
+    this.metadataForm.markAsPristine();
+    this.metadataForm.markAsUntouched();
+  }
+
   protected submit(): void {
     this.submitted.emit({
       documentDescription:
         this.metadataForm.controls.documentDescription.value || undefined,
       numberWithinSystem:
         this.metadataForm.controls.numberWithinSystem.value || undefined,
-      systemId: this.metadataForm.controls.systemId.value || undefined,
       confidentialityType:
         this.metadataForm.controls.confidentialityType.value || undefined,
+      systemId: this.metadataForm.controls.systemId.value || undefined,
     });
-
-    this.modalService.closeModal();
   }
 
   protected cancel(): void {
+    this.resetForm();
+
     this.modalService.closeModal(() => {
       this.cancelled.emit();
     });

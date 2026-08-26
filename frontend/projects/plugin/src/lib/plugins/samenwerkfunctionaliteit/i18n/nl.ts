@@ -40,6 +40,8 @@ export const pluginNlTranslations = {
       selectedFile: '{{ filename }} geselecteerd',
       documentUploadModal: {
         title: 'Document uploaden',
+        confidentialityTypeTooltip:
+          'Alle documenten binnen een samenwerking dienen als vertrouwelijk te worden behandeld. Documenten die persoonsgegevens en/of bedrijfsgevoelige informatie bevatten hebben een hoger vertrouwelijkheidsniveau, nl. “strikt vertrouwelijk”. Deze documenten mogen alleen worden ingezien en/of aangepast door instanties die bevoegd zijn om dergelijke informatie te verwerken.',
       },
       documentDeleteModal: {
         title: 'Document verwijderen',
@@ -112,6 +114,10 @@ export const pluginNlTranslations = {
           failure: {
             title: 'Uploaden van archiveringskopie naar Documenten-API mislukt',
           },
+          NoLinkedUploadProcessFailure: {
+            message:
+              'Geen gekoppeld uploadproces gevonden. Controleer de configuratie van dit dossiertype. ',
+          },
         },
 
         messenger: {
@@ -129,7 +135,7 @@ export const pluginNlTranslations = {
       },
     },
     messages: {
-      dateTimeStamp: {
+      timestamp: {
         justNow: 'Zojuist',
         today: 'Vandaag',
         minuteSingular: '{{ minuteCount }} minuut geleden',
