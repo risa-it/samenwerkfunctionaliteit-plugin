@@ -1,0 +1,12 @@
+:host {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    max-width: 60em;
+}
+
+:host .notificatie-card-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
