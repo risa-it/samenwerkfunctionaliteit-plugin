@@ -9,7 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Collaborate32 } from '@carbon/icons';
 import { IconModule, IconService } from 'carbon-components-angular';
 import { forkJoin, Observable, switchMap, tap } from 'rxjs';
-import { catchError, finalize, map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { BerichtenListComponent } from '../../components/berichten/berichten-list/berichten-list.component';
 import { StuurBerichtComponent } from '../../components/berichten/stuur-bericht/stuur-bericht.component';
 import { Message } from '../../models/bericht.model';
@@ -104,6 +104,7 @@ export class BerichtenCustomTabComponent implements OnInit {
         ),
         tap(({ messages }) => {
           this.messages.set(messages);
+          this.isLoading.set(false);
         }),
         catchError((error) => {
           this.notificationService.showError({
@@ -111,9 +112,6 @@ export class BerichtenCustomTabComponent implements OnInit {
               'samenwerkfunctionaliteit.feedback.userNotification.messenger.fetchMessages.failure.title',
           });
           return error;
-        }),
-        finalize(() => {
-          this.isLoading.set(false);
         }),
       )
       .subscribe();
