@@ -8,7 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ButtonModule, IconModule } from 'carbon-components-angular';
 
 @Component({
@@ -16,7 +16,7 @@ import { ButtonModule, IconModule } from 'carbon-components-angular';
   templateUrl: './swf-pagination.component.html',
   styleUrl: './swf-pagination.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [IconModule, ButtonModule, FormsModule],
+  imports: [IconModule, ButtonModule, FormsModule, TranslatePipe],
 })
 export class PaginationComponent {
   private readonly translateService: TranslateService =
