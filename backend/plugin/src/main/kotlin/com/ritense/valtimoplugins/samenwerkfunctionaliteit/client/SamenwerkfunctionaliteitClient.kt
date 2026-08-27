@@ -7,9 +7,13 @@ import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.CreateBerichtRequ
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtQuery
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.NotificatieGetResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedBerichtenGetResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedNotificatieGetResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.SamenwerkingResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.UpdateActieverzoekRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.SamenwerkfunctionaliteitProperties
-import org.springframework.core.io.InputStreamResource
+import org.springframework.http.ResponseEntity
+import org.springframework.web.multipart.MultipartFile
 import java.time.ZonedDateTime
 import java.util.UUID
 
@@ -25,11 +29,16 @@ interface SamenwerkfunctionaliteitClient {
         organisatie: String?,
     ): ActieverzoekenGetResponse
 
-    fun getBericht(
+    fun updateActieverzoek(
         properties: SamenwerkfunctionaliteitProperties,
-        actieVerzoekId: UUID,
-        berichtId: UUID,
-    ): BerichtResponse
+        actieverzoekId: UUID,
+        request: UpdateActieverzoekRequest,
+    ): ActieverzoekResponse
+
+    fun getBerichten(
+        properties: SamenwerkfunctionaliteitProperties,
+        actieverzoekId: UUID,
+    ): PagedBerichtenGetResponse
 
     fun postBericht(
         properties: SamenwerkfunctionaliteitProperties,
@@ -49,13 +58,20 @@ interface SamenwerkfunctionaliteitClient {
         query: DocumentenOverzichtQuery,
     ): DocumentenOverzichtResponse
 
+    fun getDocumentenOverzicht(
+        properties: SamenwerkfunctionaliteitProperties,
+        samenwerkingId: String,
+    ): DocumentenOverzichtResponse
+
     fun downloadDocument(
         properties: SamenwerkfunctionaliteitProperties,
         documentId: UUID,
-    ): InputStreamResource
+    ): ResponseEntity<ByteArray>
 
     fun uploadDocument(
         properties: SamenwerkfunctionaliteitProperties,
+        file: MultipartFile,
+        metadata: Map<String, String>?,
         samenwerkingId: String,
     )
 
@@ -70,4 +86,15 @@ interface SamenwerkfunctionaliteitClient {
         properties: SamenwerkfunctionaliteitProperties,
         pageNumber: Int,
     ): PagedNotificatieGetResponse
+
+    fun getAllNotificaties(
+        properties: SamenwerkfunctionaliteitProperties,
+        page: Int?,
+        amount: Int?,
+    ): PagedNotificatieGetResponse
+
+    fun getSamenwerking(
+        samenwerkingId: String,
+        properties: SamenwerkfunctionaliteitProperties,
+    ): SamenwerkingResponse
 }

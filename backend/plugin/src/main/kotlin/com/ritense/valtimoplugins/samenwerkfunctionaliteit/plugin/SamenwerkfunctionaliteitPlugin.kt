@@ -161,7 +161,7 @@ class SamenwerkfunctionaliteitPlugin(
                 pagina = pagina,
             )
         val documentenOverzicht =
-            samenwerkfunctionaliteitService.getDocumentenOverzicht(
+            samenwerkfunctionaliteitService.getDocumenten(
                 properties,
                 samenwerkingId,
                 query,

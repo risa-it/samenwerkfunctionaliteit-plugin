@@ -2,12 +2,12 @@ import { Links } from './links.dto';
 import { Page } from './page.dto';
 
 export interface BerichtenOverzichtResponse {
-  _embedded: BerichtenResponse | null;
-  _links: Links | null;
+  _embedded: BerichtenResponse ;
+  _links: Links;
   page: Page;
 }
 
-interface BerichtenResponse {
+interface BerichtenResponse  {
   berichten: BerichtResponse[];
 }
 

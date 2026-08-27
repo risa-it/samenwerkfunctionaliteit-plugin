@@ -1,104 +1,105 @@
 package com.ritense.valtimoplugins.samenwerkfunctionaliteit.service
 
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.client.SamenwerkfunctionaliteitClient
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.ActieverzoekResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.BerichtResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.CreateBerichtRequest
-import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtQuery
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedBerichtenGetResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedNotificatieGetResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.SamenwerkingResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.UpdateActieverzoekRequest
-import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Actieverzoek
-import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Bericht
-import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Document
-import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Notificatie
-import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Page
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.SamenwerkfunctionaliteitProperties
-import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Samenwerking
 import org.springframework.http.ResponseEntity
 import org.springframework.web.multipart.MultipartFile
-import java.time.ZonedDateTime
 import java.util.UUID
 
-interface SamenwerkfunctionaliteitService {
+class ProxySamenwerkfunctionaliteitService(
+    private val samenwerkfunctionaliteitClient: SamenwerkfunctionaliteitClient,
+) {
     fun getActieverzoek(
         properties: SamenwerkfunctionaliteitProperties,
         actieverzoekId: UUID,
-    ): ActieverzoekResponse
-
-    fun getAllActieverzoeken(
-        properties: SamenwerkfunctionaliteitProperties,
-        samenwerkingId: String,
-        isOrganisationTheReceiver: Boolean,
-    ): List<Actieverzoek>
+    ): ActieverzoekResponse =
+        samenwerkfunctionaliteitClient
+            .getActieverzoek(
+                properties = properties,
+                actieverzoekId = actieverzoekId,
+            )
 
     fun updateActieverzoek(
         properties: SamenwerkfunctionaliteitProperties,
         actieverzoekId: UUID,
         request: UpdateActieverzoekRequest,
-    ): ActieverzoekResponse
+    ): ActieverzoekResponse =
+        samenwerkfunctionaliteitClient
+            .updateActieverzoek(
+                properties = properties,
+                actieverzoekId = actieverzoekId,
+                request = request,
+            )
 
     fun getBerichten(
         properties: SamenwerkfunctionaliteitProperties,
         actieverzoekId: UUID,
-    ): PagedBerichtenGetResponse
+    ): PagedBerichtenGetResponse =
+        samenwerkfunctionaliteitClient.getBerichten(
+            properties = properties,
+            actieverzoekId = actieverzoekId,
+        )
 
     fun postBericht(
         properties: SamenwerkfunctionaliteitProperties,
         actieverzoekId: UUID,
         requestBody: CreateBerichtRequest,
-    ): BerichtResponse
-
-    fun deleteBericht(
-        properties: SamenwerkfunctionaliteitProperties,
-        actieVerzoekId: UUID,
-        berichtId: UUID,
-    )
-
-    fun getDocumenten(
-        properties: SamenwerkfunctionaliteitProperties,
-        samenwerkingId: String,
-        query: DocumentenOverzichtQuery,
-    ): List<Document>
+    ): BerichtResponse =
+        samenwerkfunctionaliteitClient.postBericht(
+            properties = properties,
+            actieverzoekId = actieverzoekId,
+            requestBody = requestBody,
+        )
 
     fun getDocumentenOverzicht(
         properties: SamenwerkfunctionaliteitProperties,
         samenwerkingId: String,
-    ): DocumentenOverzichtResponse
+    ): DocumentenOverzichtResponse =
+        samenwerkfunctionaliteitClient
+            .getDocumentenOverzicht(
+                properties,
+                samenwerkingId,
+            )
 
     fun downloadDocument(
         properties: SamenwerkfunctionaliteitProperties,
         documentId: UUID,
-    ): ResponseEntity<ByteArray>
+    ): ResponseEntity<ByteArray> = samenwerkfunctionaliteitClient.downloadDocument(properties, documentId)
 
     fun uploadDocument(
         properties: SamenwerkfunctionaliteitProperties,
         file: MultipartFile,
         metadata: Map<String, String>?,
         samenwerkingId: String,
+    ) = samenwerkfunctionaliteitClient.uploadDocument(
+        properties = properties,
+        file = file,
+        metadata = metadata,
+        samenwerkingId = samenwerkingId,
     )
-
-    fun getSamenwerkingNotificaties(
-        properties: SamenwerkfunctionaliteitProperties,
-        samenwerkingId: String,
-    ): List<Notificatie>
-
-    fun getNotificaties(
-        from: ZonedDateTime,
-        until: ZonedDateTime,
-        properties: SamenwerkfunctionaliteitProperties,
-        pageNumber: Int,
-    ): Page<List<Notificatie>>
 
     fun getAllNotificaties(
         properties: SamenwerkfunctionaliteitProperties,
         page: Int?,
         amount: Int?,
-    ): PagedNotificatieGetResponse
+    ): PagedNotificatieGetResponse =
+        samenwerkfunctionaliteitClient
+            .getAllNotificaties(
+                properties = properties,
+                page = page,
+                amount = amount,
+            )
 
     fun getSamenwerking(
         samenwerkingId: String,
         properties: SamenwerkfunctionaliteitProperties,
-    ): SamenwerkingResponse
+    ): SamenwerkingResponse = samenwerkfunctionaliteitClient.getSamenwerking(samenwerkingId, properties)
 }
