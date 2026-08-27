@@ -2,3 +2,7 @@ label#pagination-left-override-important,
 label#pagination-right-override-important {
     margin: 0 !important;
 }
+
+.cds--pagination__right label.cds--pagination__text {
+    padding-right: 1rem;
+}
