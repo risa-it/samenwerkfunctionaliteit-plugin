@@ -90,12 +90,14 @@ class ProxySamenwerkfunctionaliteitService(
         properties: SamenwerkfunctionaliteitProperties,
         page: Int?,
         amount: Int?,
+        samenwerkingId: String,
     ): PagedNotificatieGetResponse =
         samenwerkfunctionaliteitClient
             .getAllNotificaties(
                 properties = properties,
                 page = page,
                 amount = amount,
+                samenwerkingId = samenwerkingId,
             )
 
     fun getSamenwerking(
