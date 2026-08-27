@@ -31,6 +31,7 @@ import { toBusinessKey } from '../../types/business-key.type';
 
 @Component({
   templateUrl: `notificaties-custom-tab.component.html`,
+  templateUrl: `notificaties-custom-tab.component.html`,
   styleUrl: './notificaties-custom-tab.component.scss',
   imports: [
     NotificatieCardComponent,

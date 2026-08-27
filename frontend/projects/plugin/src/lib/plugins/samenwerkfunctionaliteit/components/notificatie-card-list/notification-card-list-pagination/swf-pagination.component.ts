@@ -38,6 +38,20 @@ export class PaginationComponent {
     'samenwerkfunctionaliteit.common.pagination.defaults.page.plural',
   );
 
+  readonly itemSingleTranslateKey = input(
+    'samenwerkfunctionaliteit.common.pagination.defaults.item.single',
+  );
+
+  readonly itemPluralTranslateKey = input(
+    'samenwerkfunctionaliteit.common.pagination.defaults.item.plural',
+  );
+  readonly pageSingleTranslateKey = input(
+    'samenwerkfunctionaliteit.common.pagination.defaults.page.single',
+  );
+  readonly pagePluralTranslateKey = input(
+    'samenwerkfunctionaliteit.common.pagination.defaults.page.plural',
+  );
+
   readonly itemsPerPageOptions = signal<number[]>([10, 25, 50]);
 
   readonly pageChange = output<number>();
