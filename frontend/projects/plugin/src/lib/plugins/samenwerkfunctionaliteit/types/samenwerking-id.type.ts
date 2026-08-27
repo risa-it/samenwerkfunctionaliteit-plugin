@@ -1,11 +1,15 @@
 export type SamenwerkingId = string & {
   readonly __brand: unique symbol;
 };
+
 export function toSamenwerkingId(value: string): SamenwerkingId {
-  // For now, just check whether the input value is a valid string
-  if (typeof value !== 'string') {
+  if (!isValidSamenwerkingId(value)) {
     throw new Error(`${value} is not a valid Samenwerking ID.`);
   }
 
   return value as SamenwerkingId;
+}
+
+function isValidSamenwerkingId(value: string): boolean {
+  return typeof value !== 'string'
 }
