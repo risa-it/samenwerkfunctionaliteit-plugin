@@ -9,21 +9,21 @@ import {
 } from '@angular/core';
 import { ButtonModule, IconModule } from 'carbon-components-angular';
 import { FormsModule } from '@angular/forms';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'swf-pagination',
   templateUrl: './swf-pagination.component.html',
   styleUrl: './swf-pagination.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [IconModule, ButtonModule, FormsModule, TranslatePipe],
+  imports: [IconModule, ButtonModule, FormsModule],
 })
 export class PaginationComponent {
   private readonly translateService: TranslateService =
     inject(TranslateService);
-  readonly page = input(1);
-  readonly pageSize = input(10);
-  readonly totalItems = input(0);
+  readonly page = input.required<number>();
+  readonly pageSize = input.required<number>();
+  readonly totalItems = input.required<number>();
   readonly itemsPerPageOptions = signal<number[]>([10, 25, 50]);
 
   readonly pageChange = output<number>();
@@ -42,18 +42,6 @@ export class PaginationComponent {
   readonly canGoPrevious = computed(() => this.page() > 1);
 
   readonly canGoNext = computed(() => this.page() < this.totalPages());
-
-  readonly pageStart = computed(() => {
-    if (this.totalItems() === 0) {
-      return 0;
-    }
-
-    return (this.page() - 1) * this.pageSize() + 1;
-  });
-
-  readonly pageEnd = computed(() =>
-    Math.min(this.page() * this.pageSize(), this.totalItems()),
-  );
 
   readonly pluralItem = this.translateService.instant(
     'samenwerkfunctionaliteit.common.pagination.items',

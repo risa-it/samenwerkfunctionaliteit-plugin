@@ -56,7 +56,7 @@ export class NotificatieCardListComponent implements OnInit {
   FIRST_PAGE: number = 1;
 
   readonly page = signal(this.FIRST_PAGE);
-  readonly pageSize = signal(10);
+  readonly pageSize = signal(this.itemsPerPage);
   readonly totalNotifications = signal(0);
 
   onPageChange(page: number): void {
@@ -126,8 +126,7 @@ export class NotificatieCardListComponent implements OnInit {
     page: number,
     size: number,
   ): Observable<NotificatiePage> {
-    return this.notificatieService
-      .getNotificaties(samenwerkingId, page, size);
+    return this.notificatieService.getNotificaties(samenwerkingId, page, size);
   }
 
   private loadInputs(notificaties: Notificatie[]): void {
