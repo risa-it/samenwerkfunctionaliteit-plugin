@@ -178,12 +178,14 @@ class DefaultSamenwerkfunctionaliteitService(
         properties: SamenwerkfunctionaliteitProperties,
         page: Int?,
         amount: Int?,
+        samenwerkingId: String,
     ): PagedNotificatieGetResponse =
         samenwerkfunctionaliteitClient
             .getAllNotificaties(
                 properties = properties,
                 page = page,
                 amount = amount,
+                samenwerkingId = samenwerkingId,
             )
 
     override fun getSamenwerking(

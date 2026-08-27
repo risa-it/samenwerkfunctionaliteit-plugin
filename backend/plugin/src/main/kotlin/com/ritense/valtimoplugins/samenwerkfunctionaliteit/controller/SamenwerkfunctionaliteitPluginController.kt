@@ -92,13 +92,21 @@ class SamenwerkfunctionaliteitPluginController(
         )
     }
 
-    @GetMapping("v5/notificaties")
+    @GetMapping("v5/samenwerkingen/{samenwerkingId}/notificaties")
     fun getAllNotificatiesProxy(
         @RequestParam page: Int?,
         @RequestParam amount: Int?,
+        @PathVariable samenwerkingId: String,
     ): ResponseEntity<PagedNotificatieGetResponse> {
         val properties = getProperties().toSamenwerkingProperties()
-        return ResponseEntity.ok(proxySamenwerkfunctionaliteitService.getAllNotificaties(properties, page, amount))
+        return ResponseEntity.ok(
+            proxySamenwerkfunctionaliteitService.getAllNotificaties(
+                properties,
+                page,
+                amount,
+                samenwerkingId,
+            ),
+        )
     }
 
     @GetMapping("v5/samenwerkingen/{samenwerkingId}/documenten")

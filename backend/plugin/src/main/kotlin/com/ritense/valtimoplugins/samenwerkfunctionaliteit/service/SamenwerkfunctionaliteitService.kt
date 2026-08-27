@@ -95,6 +95,7 @@ interface SamenwerkfunctionaliteitService {
         properties: SamenwerkfunctionaliteitProperties,
         page: Int?,
         amount: Int?,
+        samenwerkingId: String,
     ): PagedNotificatieGetResponse
 
     fun getSamenwerking(
