@@ -1,5 +1,10 @@
 <div class="cds--pagination">
   <div class="cds--pagination__left">
+    <label
+      id="pagination-left-override-important"
+      class="cds--pagination__text"
+      for="itemsPerPage"
+    >
       Aantal {{ itemPluralTranslateKey() | translate }} per
       {{ pageSingleTranslateKey() | translate }}:
     </label>
@@ -46,9 +51,13 @@
         aria-hidden="true"
       ></svg>
       <label class="cds--pagination__text" for="currentPageSelect"
-      >van {{ totalPages() }} {{ pluralPages }}</label
+        >van {{ totalPages() }} {{ pluralPages }}</label
       >
     </div>
+    <label
+      id="pagination-right-override-important"
+      class="cds--pagination__text"
+      for="currentPageSelect"
       >van {{ totalPages() }} {{ pagePluralTranslateKey() | translate }}</label
     >
 
