@@ -1,5 +1,5 @@
-import { NotificatieType } from "../components/notificatie-card-list/type/notificatie.type";
-import { Links } from "./links.model";
+import { NotificatieType } from '../components/notificatie-card-list/type/notificatie.type';
+import { Links } from './links.model';
 
 export interface Notificatie {
   notificatieId: string;
