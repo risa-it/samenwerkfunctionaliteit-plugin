@@ -50,16 +50,7 @@ export class DocumentenlijstWidgetTabComponent implements OnInit {
 
     this.getOpenZaakInfoAndSetHelperText(documentId);
 
-    this.swfDocumentService
-      .getSamenwerkingProperties(toBusinessKey(documentId))
-      .pipe(
-        take(1),
-        tap((samenwerkingProperties: SwfCaseProperties) => {
-          console.log(samenwerkingProperties);
-          this.isSamenwerkingDossier.set(samenwerkingProperties.isSwfCase);
-        }),
-      )
-      .subscribe();
+    this.setIsSamenwerkingDossier(documentId)
   }
 
   private getOpenZaakInfoAndSetHelperText(documentId: string) {
@@ -87,6 +78,18 @@ export class DocumentenlijstWidgetTabComponent implements OnInit {
           console.error(error);
         },
       });
+  }
+
+  private setIsSamenwerkingDossier(documentId: string) {
+    this.swfDocumentService
+      .getSamenwerkingProperties(toBusinessKey(documentId))
+      .pipe(
+        take(1),
+        tap((samenwerkingProperties: SwfCaseProperties) => {
+          this.isSamenwerkingDossier.set(samenwerkingProperties.isSwfCase);
+        }),
+      )
+      .subscribe();
   }
 
   private setHelperText() {
