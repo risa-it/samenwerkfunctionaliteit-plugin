@@ -24,7 +24,7 @@ import com.ritense.valtimoplugins.samenwerkfunctionaliteit.plugin.Samenwerkfunct
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.service.DefaultOperatonService
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.service.DefaultSamenwerkfunctionaliteitService
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.service.OperatonService
-import com.ritense.valtimoplugins.samenwerkfunctionaliteit.service.SamenwerkfunctionaliteitProxyService
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.service.ProxySamenwerkfunctionaliteitService
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.service.SamenwerkfunctionaliteitService
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.context.annotation.Bean
@@ -47,10 +47,10 @@ class SamenwerkfunctionaliteitConfiguration {
         )
 
     @Bean
-    fun samenwerkfunctionaliteitProxyService(
+    fun proxySamenwerkfunctionaliteitService(
         samenwerkfunctionaliteitClient: SamenwerkfunctionaliteitClient,
-    ): SamenwerkfunctionaliteitProxyService =
-        SamenwerkfunctionaliteitProxyService(
+    ): ProxySamenwerkfunctionaliteitService =
+        ProxySamenwerkfunctionaliteitService(
             samenwerkfunctionaliteitClient = samenwerkfunctionaliteitClient,
         )
 

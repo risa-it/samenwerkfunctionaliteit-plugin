@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.multipart.MultipartFile
 import java.util.UUID
 
-class SamenwerkfunctionaliteitProxyService(
+class ProxySamenwerkfunctionaliteitService(
     private val samenwerkfunctionaliteitClient: SamenwerkfunctionaliteitClient,
 ) {
     fun getActieverzoek(
