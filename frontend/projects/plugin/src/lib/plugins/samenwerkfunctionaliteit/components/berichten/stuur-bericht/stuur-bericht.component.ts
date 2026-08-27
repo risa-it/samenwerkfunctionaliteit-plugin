@@ -44,7 +44,7 @@ export class StuurBerichtComponent {
   isSubmitting = signal(false);
 
   isLoading = input<boolean>(false);
-  otherParticipant = input<string>('');
+  otherParticipant = input.required<string>();
   messageSent = output<void>();
 
   rows = 1;
