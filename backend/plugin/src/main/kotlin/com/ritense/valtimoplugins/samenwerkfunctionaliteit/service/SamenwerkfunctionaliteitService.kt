@@ -1,14 +1,23 @@
 package com.ritense.valtimoplugins.samenwerkfunctionaliteit.service
 
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.ActieverzoekResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.BerichtResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.CreateBerichtRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtQuery
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedBerichtenGetResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedNotificatieGetResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.SamenwerkingResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.UpdateActieverzoekRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Actieverzoek
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Bericht
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Document
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Notificatie
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Page
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.SamenwerkfunctionaliteitProperties
-import org.springframework.core.io.InputStreamResource
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Samenwerking
+import org.springframework.http.ResponseEntity
+import org.springframework.web.multipart.MultipartFile
 import java.time.ZonedDateTime
 import java.util.UUID
 
@@ -16,7 +25,7 @@ interface SamenwerkfunctionaliteitService {
     fun getActieverzoek(
         properties: SamenwerkfunctionaliteitProperties,
         actieverzoekId: UUID,
-    ): Actieverzoek
+    ): ActieverzoekResponse
 
     fun getAllActieverzoeken(
         properties: SamenwerkfunctionaliteitProperties,
@@ -24,17 +33,22 @@ interface SamenwerkfunctionaliteitService {
         isOrganisationTheReceiver: Boolean,
     ): List<Actieverzoek>
 
-    fun getBericht(
+    fun updateActieverzoek(
         properties: SamenwerkfunctionaliteitProperties,
-        actieVerzoekId: UUID,
-        berichtId: UUID,
-    ): Bericht
+        actieverzoekId: UUID,
+        request: UpdateActieverzoekRequest,
+    ): ActieverzoekResponse
+
+    fun getBerichten(
+        properties: SamenwerkfunctionaliteitProperties,
+        actieverzoekId: UUID,
+    ): PagedBerichtenGetResponse
 
     fun postBericht(
         properties: SamenwerkfunctionaliteitProperties,
         actieverzoekId: UUID,
         requestBody: CreateBerichtRequest,
-    ): Bericht
+    ): BerichtResponse
 
     fun deleteBericht(
         properties: SamenwerkfunctionaliteitProperties,
@@ -42,19 +56,26 @@ interface SamenwerkfunctionaliteitService {
         berichtId: UUID,
     )
 
-    fun getDocumentenOverzicht(
+    fun getDocumenten(
         properties: SamenwerkfunctionaliteitProperties,
         samenwerkingId: String,
         query: DocumentenOverzichtQuery,
     ): List<Document>
 
+    fun getDocumentenOverzicht(
+        properties: SamenwerkfunctionaliteitProperties,
+        samenwerkingId: String,
+    ): DocumentenOverzichtResponse
+
     fun downloadDocument(
         properties: SamenwerkfunctionaliteitProperties,
         documentId: UUID,
-    ): InputStreamResource
+    ): ResponseEntity<ByteArray>
 
     fun uploadDocument(
         properties: SamenwerkfunctionaliteitProperties,
+        file: MultipartFile,
+        metadata: Map<String, String>?,
         samenwerkingId: String,
     )
 
@@ -69,4 +90,16 @@ interface SamenwerkfunctionaliteitService {
         properties: SamenwerkfunctionaliteitProperties,
         pageNumber: Int,
     ): Page<List<Notificatie>>
+
+    fun getAllNotificaties(
+        properties: SamenwerkfunctionaliteitProperties,
+        page: Int?,
+        amount: Int?,
+        samenwerkingId: String,
+    ): PagedNotificatieGetResponse
+
+    fun getSamenwerking(
+        samenwerkingId: String,
+        properties: SamenwerkfunctionaliteitProperties,
+    ): SamenwerkingResponse
 }

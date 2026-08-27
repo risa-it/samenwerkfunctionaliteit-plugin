@@ -5,6 +5,7 @@ import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.Document
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.Documenten
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtQuery
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.Page
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.SamenwerkfunctionaliteitProperties
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.service.DefaultSamenwerkfunctionaliteitService
 import org.junit.jupiter.api.DisplayName
@@ -70,6 +71,13 @@ class SamenwerkfunctionaliteitServiceTest {
                     Documenten(
                         documenten = listOf(documentResponse),
                     ),
+                page =
+                    Page(
+                        number = 1,
+                        size = 1,
+                        totalElements = 1,
+                        totalPages = 1,
+                    ),
             )
 
         whenever(
@@ -82,7 +90,7 @@ class SamenwerkfunctionaliteitServiceTest {
 
         // Act
         val result =
-            service.getDocumentenOverzicht(
+            service.getDocumenten(
                 properties,
                 samenwerkingId,
                 query,
@@ -132,7 +140,17 @@ class SamenwerkfunctionaliteitServiceTest {
                 aantal = "10",
                 pagina = "1",
             )
-        val response = DocumentenOverzichtResponse(embedded = null)
+        val response =
+            DocumentenOverzichtResponse(
+                embedded = null,
+                page =
+                    Page(
+                        number = 1,
+                        size = 1,
+                        totalElements = 1,
+                        totalPages = 1,
+                    ),
+            )
 
         whenever(
             client.getDocumentenOverzicht(
@@ -144,7 +162,7 @@ class SamenwerkfunctionaliteitServiceTest {
 
         // Act
         val result =
-            service.getDocumentenOverzicht(
+            service.getDocumenten(
                 properties,
                 samenwerkingId,
                 query,

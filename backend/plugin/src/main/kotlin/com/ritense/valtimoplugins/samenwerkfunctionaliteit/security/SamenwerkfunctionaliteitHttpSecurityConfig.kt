@@ -11,17 +11,15 @@ import org.springframework.stereotype.Component
 
 @Order(1)
 @Component
-@ConditionalOnProperty(prefix = "valtimo.samenwerkfunctionaliteit.gateway", name = ["enabled"], havingValue = "true")
 class SamenwerkfunctionaliteitHttpSecurityConfig : HttpSecurityConfigurer {
     override fun configure(http: HttpSecurity) {
         try {
-            http.authorizeHttpRequests { requests ->
-                requests
-                    .requestMatchers("samenwerkfunctionaliteit/**")
-                    .hasAnyAuthority(ADMIN, USER)
-                    .requestMatchers("plugin/samenwerkfunctionaliteit/api/**")
-                    .hasAnyAuthority(ADMIN, USER)
-            }
+            http
+                .authorizeHttpRequests { requests ->
+                    requests
+                        .requestMatchers("api/v1/samenwerkfunctionaliteit/**")
+                        .hasAnyAuthority(ADMIN, USER)
+                }
         } catch (e: Exception) {
             throw HttpConfigurerConfigurationException(e)
         }

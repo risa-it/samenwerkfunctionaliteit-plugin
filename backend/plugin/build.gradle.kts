@@ -39,8 +39,6 @@ dependencies {
     compileOnly("org.springframework.boot:spring-boot-starter-security")
     compileOnly("org.springframework.boot:spring-boot-starter-data-jpa")
 
-    implementation("org.springframework.cloud:spring-cloud-starter-gateway-server-webmvc")
-
     compileOnly("io.github.oshai:kotlin-logging:$kotlinLoggingVersion")
 
     // Testing

@@ -1,17 +1,6 @@
 {
-    "changesetId": "allow-all-v12",
+    "changesetId": "allow-all-v13",
     "permissions": [
-        {
-            "resourceType": "com.ritense.valtimoplugins.samenwerkfunctionaliteit.gateway.GatewayProperties",
-            "actions": [
-                "view",
-                "create",
-                "modify",
-                "delete"
-            ],
-            "roleKey": "ROLE_USER",
-            "conditions": []
-        },
         {
             "resourceType": "com.ritense.case_.domain.definition.CaseDefinition",
             "actions": [

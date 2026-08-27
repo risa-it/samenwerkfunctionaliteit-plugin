@@ -2,7 +2,10 @@ import {
   NotificatieType,
   NotificatieTypes,
 } from '../components/notificatie-card-list/type/notificatie.type';
-import { Notificatie as NotificatieModel } from '../models/notificatie.model';
+import {
+  Notificatie as NotificatieModel,
+  NotificatiePage,
+} from '../models/notificatie.model';
 import { Links } from './links.dto';
 import { Page } from './page.dto';
 
@@ -30,7 +33,21 @@ export interface NotificatieDto {
   _links: Links;
 }
 
-export function mapNotificatieDtosToModels(
+export function mapNotificatieResponseToNotificatiePage(
+  notificatieResponse: NotificatieResponse,
+): NotificatiePage {
+  return {
+    page: {
+      item: mapNotificatieDtosToModels(notificatieResponse),
+      number: notificatieResponse.page.number,
+      size: notificatieResponse.page.size,
+      totalElements: notificatieResponse.page.totalElements,
+      totalPages: notificatieResponse.page.totalPages,
+    },
+  };
+}
+
+function mapNotificatieDtosToModels(
   response: NotificatieResponse,
 ): NotificatieModel[] {
   return response._embedded.notificaties.map(mapNotificatieDtoToModel);
