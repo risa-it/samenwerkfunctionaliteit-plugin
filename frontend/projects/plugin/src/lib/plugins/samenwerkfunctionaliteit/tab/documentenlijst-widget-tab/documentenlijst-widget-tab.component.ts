@@ -1,4 +1,3 @@
-import { NgTemplateOutlet } from '@angular/common';
 import {
   Component,
   inject,
@@ -22,7 +21,6 @@ import { toBusinessKey } from '../../types/business-key.type';
   selector: 'swf-documentenlijst-widget-tab',
   imports: [
     DocumentListComponent,
-    NgTemplateOutlet,
     InputModule,
     TranslateModule,
     NotificationModule,
