@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { NotificatieClient } from '../client/notificatie-client.service';
 import { map, Observable } from 'rxjs';
+import { NotificatieClient } from '../client/notificatie-client.service';
 import {
   mapNotificatieResponseToNotificatiePage,
   NotificatieResponse,

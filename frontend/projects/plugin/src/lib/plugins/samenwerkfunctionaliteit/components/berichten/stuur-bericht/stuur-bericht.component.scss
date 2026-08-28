@@ -14,9 +14,19 @@
   gap: 1rem;
 }
 
+::ng-deep .cds--form-item .cds--text-area__label-wrapper,
+::ng-deep .cds--form-item .cds--label.cds--skeleton {
+  height: 0;
+  margin: 0;
+}
+
+::ng-deep .cds--text-area.cds--skeleton {
+  height: 3rem;
+}
+
 textarea.textarea-field.message-body.cds--text-area {
   width: 100%;
-  padding: .8rem 1rem;
+  padding: .9rem 1rem;
 }
 
 ::ng-deep .stuur-bericht cds-icon-button .cds--btn--icon-only {

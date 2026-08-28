@@ -293,13 +293,14 @@ class DefaultSamenwerkfunctionaliteitClient(
         properties: SamenwerkfunctionaliteitProperties,
         page: Int?,
         amount: Int?,
+        samenwerkingId: String,
     ): PagedNotificatieGetResponse {
         try {
             return restClient(properties = properties)
                 .get()
                 .uri { uriBuilder ->
                     uriBuilder
-                        .path(NOTIFICATIES_ENDPOINT)
+                        .path("${SWF_SAMENWERKING_PATH}/$samenwerkingId/notificaties")
                         .queryParamNotNull(NotificatiesQueryParam.PAGINA.paramName, page)
                         .queryParamNotNull(NotificatiesQueryParam.AANTAL.paramName, amount)
                         .build()
