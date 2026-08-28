@@ -60,6 +60,12 @@ class SamenwerkfunctionaliteitClientTest {
                     {
                         "_embedded": {
                             "documenten": []
+                        },
+                        "page": {
+                            "number": 1,
+                            "size": 100,
+                            "totalElements": 8,
+                            "totalPages": 1
                         }
                     }
                     """.trimIndent(),
@@ -109,6 +115,12 @@ class SamenwerkfunctionaliteitClientTest {
                     {
                         "_embedded": {
                             "documenten": []
+                        },
+                        "page": {
+                            "number": 1,
+                            "size": 100,
+                            "totalElements": 8,
+                            "totalPages": 1
                         }
                     }
                     """.trimIndent(),

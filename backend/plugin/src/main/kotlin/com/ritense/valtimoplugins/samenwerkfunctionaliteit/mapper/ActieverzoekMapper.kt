@@ -7,11 +7,11 @@ import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.Actieverzoek as A
 
 fun ActieverzoekDTO.toModel() =
     Actieverzoek(
-        links = links?.toModel(),
+        links = links.mapValues { (_, link) -> link.toModel() },
         aantalBerichten = aantalBerichten,
         actieverzoekId = actieverzoekId,
         creatieDatumTijd = creatieDatumTijd,
-        documenten = documenten,
+        documenten = documenten?.map { it.toModel() },
         laatstAangepastDatumTijd = laatstAangepastDatumTijd,
         laatstAangepastDoor = laatstAangepastDoor,
         laatstAangepastDoorNaam = laatstAangepastDoorNaam,
@@ -29,11 +29,11 @@ fun ActieverzoekDTO.toModel() =
 
 fun ActieverzoekResponse.toModel(): Actieverzoek =
     Actieverzoek(
-        links = links?.toModel(),
+        links = links.mapValues { (_, link) -> link.toModel() },
         aantalBerichten = aantalBerichten,
         actieverzoekId = actieverzoekId,
         creatieDatumTijd = creatieDatumTijd,
-        documenten = documenten,
+        documenten = documenten?.map { it.toModel() },
         laatstAangepastDatumTijd = laatstAangepastDatumTijd,
         laatstAangepastDoor = laatstAangepastDoor,
         laatstAangepastDoorNaam = laatstAangepastDoorNaam,

@@ -1,10 +1,12 @@
 package com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.OffsetDateTime
 import java.util.UUID
 
 data class Actieverzoek(
-    val links: Links? = null,
+    @JsonProperty("_links")
+    val links: Map<String, Link> = mutableMapOf(),
     val aantalBerichten: Int? = null,
     val actieverzoekId: UUID? = null,
     val creatieDatumTijd: OffsetDateTime? = null,

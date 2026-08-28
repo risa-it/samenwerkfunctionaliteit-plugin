@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, output, signal } from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Send32 } from '@carbon/icons';
@@ -42,6 +42,9 @@ export class StuurBerichtComponent {
 
   notification = signal<BerichtNotification | null>(null);
   isSubmitting = signal(false);
+
+  isLoading = input<boolean>(false);
+  otherParticipant = input.required<string>();
   messageSent = output<void>();
 
   rows = 1;
@@ -68,7 +71,7 @@ export class StuurBerichtComponent {
       this.logger.warn('Unable to post message: No actieverzoekId available.');
       this.notificationService.showError({
         titleKey:
-          'samenwerkfunctionaliteit.feedback.userNotification.messenger.failure.title',
+          'samenwerkfunctionaliteit.feedback.userNotification.messenger.fetchMessages.failure.title',
       });
       return;
     }
@@ -84,9 +87,10 @@ export class StuurBerichtComponent {
         next: () => {
           this.notificationService.showSuccess({
             titleKey:
-              'samenwerkfunctionaliteit.feedback.userNotification.messenger.success.title',
+              'samenwerkfunctionaliteit.feedback.userNotification.messenger.sendMessage.success.title',
             messageKey:
-              'samenwerkfunctionaliteit.feedback.userNotification.messenger.success.message',
+              'samenwerkfunctionaliteit.feedback.userNotification.messenger.sendMessage.success.message',
+            messageParam: { otherParticipant: this.otherParticipant() },
           });
           this.message = '';
           this.messageSent.emit();
@@ -95,7 +99,7 @@ export class StuurBerichtComponent {
           this.logger.error(response);
           this.notificationService.showError({
             titleKey:
-              'samenwerkfunctionaliteit.feedback.userNotification.messenger.failure.title',
+              'samenwerkfunctionaliteit.feedback.userNotification.messenger.sendMessage.failure.title',
           });
         },
       });
@@ -124,9 +128,9 @@ export class StuurBerichtComponent {
 
           this.notificationService.showError({
             titleKey:
-              'samenwerkfunctionaliteit.feedback.userNotification.messenger.failure.title',
+              'samenwerkfunctionaliteit.feedback.userNotification.messenger.sendMessage.failure.title',
             messageKey:
-              'samenwerkfunctionaliteit.feedback.userNotification.messenger.failure.failureMissingActieverzoekId',
+              'samenwerkfunctionaliteit.feedback.userNotification.messenger.sendMessage.failure.failureMissingActieverzoekId',
           });
         },
       });
