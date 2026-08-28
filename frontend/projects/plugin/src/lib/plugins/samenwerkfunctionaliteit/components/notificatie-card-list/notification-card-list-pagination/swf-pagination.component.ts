@@ -7,16 +7,16 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { ButtonModule, IconModule } from 'carbon-components-angular';
 import { FormsModule } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { ButtonModule, IconModule } from 'carbon-components-angular';
 
 @Component({
   selector: 'swf-pagination',
   templateUrl: './swf-pagination.component.html',
   styleUrl: './swf-pagination.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [IconModule, ButtonModule, FormsModule],
+  imports: [IconModule, ButtonModule, FormsModule, TranslatePipe],
 })
 export class PaginationComponent {
   private readonly translateService: TranslateService =
@@ -24,6 +24,20 @@ export class PaginationComponent {
   readonly page = input.required<number>();
   readonly pageSize = input.required<number>();
   readonly totalItems = input.required<number>();
+
+  readonly itemSingleTranslateKey = input(
+    'samenwerkfunctionaliteit.common.pagination.defaults.item.single',
+  );
+  readonly itemPluralTranslateKey = input(
+    'samenwerkfunctionaliteit.common.pagination.defaults.item.plural',
+  );
+  readonly pageSingleTranslateKey = input(
+    'samenwerkfunctionaliteit.common.pagination.defaults.page.single',
+  );
+  readonly pagePluralTranslateKey = input(
+    'samenwerkfunctionaliteit.common.pagination.defaults.page.plural',
+  );
+
   readonly itemsPerPageOptions = signal<number[]>([10, 25, 50]);
 
   readonly pageChange = output<number>();
@@ -42,23 +56,6 @@ export class PaginationComponent {
   readonly canGoPrevious = computed(() => this.page() > 1);
 
   readonly canGoNext = computed(() => this.page() < this.totalPages());
-
-  readonly pluralItem = this.translateService.instant(
-    'samenwerkfunctionaliteit.common.pagination.items',
-    { items: 'notificaties' },
-  );
-  readonly singleItem = this.translateService.instant(
-    'samenwerkfunctionaliteit.common.pagination.item',
-    {
-      item: 'notificatie',
-    },
-  );
-  readonly pluralPages = this.translateService.instant(
-    'samenwerkfunctionaliteit.common.pagination.page.plural',
-  );
-  readonly singlePage = this.translateService.instant(
-    'samenwerkfunctionaliteit.common.pagination.page.single',
-  );
 
   previousPage(): void {
     if (this.canGoPrevious()) {

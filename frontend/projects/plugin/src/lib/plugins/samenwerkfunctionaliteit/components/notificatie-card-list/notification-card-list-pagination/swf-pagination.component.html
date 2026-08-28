@@ -1,7 +1,12 @@
 <div class="cds--pagination">
   <div class="cds--pagination__left">
-    <label class="cds--pagination__text" for="itemsPerPage">
-      Aantal {{ pluralItem }} per {{ singlePage }}:
+    <label
+      id="pagination-left-override-important"
+      class="cds--pagination__text"
+      for="itemsPerPage"
+    >
+      Aantal {{ itemPluralTranslateKey() | translate }} per
+      {{ pageSingleTranslateKey() | translate }}:
     </label>
     <div class="cds--select cds--select--inline cds--select__item-count">
       <select
@@ -45,10 +50,13 @@
         class="cds--select__arrow"
         aria-hidden="true"
       ></svg>
-      <label class="cds--pagination__text" for="currentPageSelect"
-      >van {{ totalPages() }} {{ pluralPages }}</label
-      >
     </div>
+    <label
+      id="pagination-right-override-important"
+      class="cds--pagination__text"
+      for="currentPageSelect"
+      >van {{ totalPages() }} {{ pagePluralTranslateKey() | translate }}</label
+    >
 
     <div class="cds--pagination__control-buttons">
       <button
