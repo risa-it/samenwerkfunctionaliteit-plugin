@@ -75,6 +75,11 @@ interface SamenwerkfunctionaliteitClient {
         samenwerkingId: String,
     )
 
+    fun deleteDocument(
+        properties: SamenwerkfunctionaliteitProperties,
+        documentId: String,
+    )
+
     fun getSamenwerkingNotificaties(
         properties: SamenwerkfunctionaliteitProperties,
         samenwerkingId: String,
