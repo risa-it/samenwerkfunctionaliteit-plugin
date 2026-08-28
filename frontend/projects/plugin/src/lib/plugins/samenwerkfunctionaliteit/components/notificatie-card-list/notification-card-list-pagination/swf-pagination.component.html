@@ -36,6 +36,7 @@
       <select
         id="currentPageSelect"
         class="cds--select-input"
+        [value]="this.page()"
         (change)="selectPage(+$any($event.target).value)"
       >
         @for (page of totalPagesOptions(); track $index) {
