@@ -86,6 +86,14 @@ class ProxySamenwerkfunctionaliteitService(
         samenwerkingId = samenwerkingId,
     )
 
+    fun deleteDocument(
+        properties: SamenwerkfunctionaliteitProperties,
+        documentId: String,
+    ) = samenwerkfunctionaliteitClient.deleteDocument(
+        properties = properties,
+        documentId = documentId,
+    )
+
     fun getAllNotificaties(
         properties: SamenwerkfunctionaliteitProperties,
         page: Int?,

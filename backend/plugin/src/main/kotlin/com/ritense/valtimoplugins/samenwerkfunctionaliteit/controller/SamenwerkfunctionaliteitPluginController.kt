@@ -17,6 +17,7 @@ import com.ritense.valtimoplugins.samenwerkfunctionaliteit.service.ProxySamenwer
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -138,6 +139,15 @@ class SamenwerkfunctionaliteitPluginController(
     ): ResponseEntity<Void> {
         val properties = getProperties().toSamenwerkingProperties()
         proxySamenwerkfunctionaliteitService.uploadDocument(properties, file, metadata, samenwerkingId)
+        return ResponseEntity.ok().build()
+    }
+
+    @DeleteMapping("v5/documenten/{documentId}")
+    fun deleteDocumentProxy(
+        @PathVariable documentId: String,
+    ): ResponseEntity<Void> {
+        val properties = getProperties().toSamenwerkingProperties()
+        proxySamenwerkfunctionaliteitService.deleteDocument(properties, documentId)
         return ResponseEntity.ok().build()
     }
 

@@ -237,6 +237,20 @@ class DefaultSamenwerkfunctionaliteitClient(
             .toBodilessEntity()
     }
 
+    override fun deleteDocument(
+        properties: SamenwerkfunctionaliteitProperties,
+        documentId: String,
+    ) {
+        restClient(properties)
+            .delete()
+            .uri { builder ->
+                builder
+                    .path("${SWF_DOCUMENTEN_PATH}/{$documentId}")
+                    .build(documentId)
+            }.retrieve()
+            .toBodilessEntity()
+    }
+
     override fun getSamenwerkingNotificaties(
         properties: SamenwerkfunctionaliteitProperties,
         samenwerkingId: String,
