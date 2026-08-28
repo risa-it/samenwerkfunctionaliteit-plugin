@@ -11,5 +11,5 @@ export function toSamenwerkingId(value: string): SamenwerkingId {
 }
 
 function isValidSamenwerkingId(value: string): boolean {
-  return typeof value !== 'string'
+  return typeof value === 'string';
 }

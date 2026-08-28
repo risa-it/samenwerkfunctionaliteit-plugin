@@ -11,5 +11,5 @@ export function toOpenZaakId(value: string): OpenZaakId {
 }
 
 function isValidOpenZaakId(value: string): boolean {
-  return typeof value !== 'string'
+  return typeof value === 'string';
 }
