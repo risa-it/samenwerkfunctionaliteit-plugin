@@ -123,12 +123,19 @@ export const pluginNlTranslations = {
         },
 
         messenger: {
-          success: {
-            title: 'Verzonden',
-            message: 'Het bericht is succesvol verstuurd.',
+          sendMessage: {
+            success: {
+              title: 'Verzonden',
+              message: 'Het bericht is verstuurd aan {{ otherParticipant }}.',
+            },
+            failure: {
+              title: 'Het bericht kon niet verstuurd worden',
+            },
           },
-          failure: {
-            title: 'Het bericht kon niet verstuurd worden',
+          fetchMessages: {
+            failure: {
+              title: 'Berichten konden niet opgehaald worden',
+            },
           },
           failureMissingActieverzoekId: {
             message: 'Het actieverzoek kon niet gevonden worden.',

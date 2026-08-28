@@ -9,7 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Collaborate32 } from '@carbon/icons';
 import { IconModule, IconService } from 'carbon-components-angular';
 import { forkJoin, Observable, switchMap, tap } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { BerichtenListComponent } from '../../components/berichten/berichten-list/berichten-list.component';
 import { StuurBerichtComponent } from '../../components/berichten/stuur-bericht/stuur-bericht.component';
 import { Message } from '../../models/bericht.model';
@@ -18,6 +18,7 @@ import { ActieverzoekService } from '../../service/actieverzoek.service';
 import { BerichtenService } from '../../service/berichten.service';
 import { SwfDocumentService } from '../../service/swf-document.service';
 import { SwfPluginService } from '../../service/swf-plugin.service';
+import { UserNotificationService } from '../../service/user-notification.service';
 import { BusinessKey, toBusinessKey } from '../../types/business-key.type';
 import { capitalize } from '../../utils/capitalize';
 
@@ -38,11 +39,12 @@ export class BerichtenCustomTabComponent implements OnInit {
     inject(SwfPluginService);
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
   private readonly iconService: IconService = inject(IconService);
+  private readonly notificationService: UserNotificationService = inject(
+    UserNotificationService,
+  );
 
   messages: WritableSignal<Message[]> = signal<Message[]>([]);
   oinNumber: WritableSignal<string> = signal<string>('');
-  hasError: WritableSignal<boolean> = signal<boolean>(false);
-  errorMessage: WritableSignal<string> = signal<string>('');
   isLoading: WritableSignal<boolean> = signal<boolean>(true);
   otherParticipant: WritableSignal<string> = signal<string>('');
 
@@ -51,8 +53,6 @@ export class BerichtenCustomTabComponent implements OnInit {
   ngOnInit(): void {
     this.iconService.registerAll([Collaborate32]);
     this.fetchChat(this.getBusinessKey());
-
-    this.isLoading.set(false);
   }
 
   protected refreshMessages(): void {
@@ -88,6 +88,7 @@ export class BerichtenCustomTabComponent implements OnInit {
   }
 
   private fetchChat(businessKey: BusinessKey): void {
+    this.isLoading.set(true);
     this.fetchSamenwerkingProperties()
       .pipe(
         switchMap((samenwerkingProperties: SamenwerkingProperties) =>
@@ -103,17 +104,17 @@ export class BerichtenCustomTabComponent implements OnInit {
         ),
         tap(({ messages }) => {
           this.messages.set(messages);
+          this.isLoading.set(false);
+        }),
+        catchError((error) => {
+          this.notificationService.showError({
+            titleKey:
+              'samenwerkfunctionaliteit.feedback.userNotification.messenger.fetchMessages.failure.title',
+          });
+          return error;
         }),
       )
-      .subscribe({
-        next: () => {
-          this.hasError.set(false);
-        },
-        error: (error: Error) => {
-          this.hasError.set(true);
-          this.errorMessage.set(error.message);
-        },
-      });
+      .subscribe();
   }
 
   private fetchOtherParticipant(

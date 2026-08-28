@@ -1,11 +1,11 @@
-import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { NotificatieResponse } from '../dto/notificatie.dto';
 import {
   NOTIFICATIES_PATH,
   SAMENWERKINGEN_URL,
 } from '../config/swf-plugin-config';
+import { NotificatieResponse } from '../dto/notificatie.dto';
 
 @Injectable({
   providedIn: 'root',

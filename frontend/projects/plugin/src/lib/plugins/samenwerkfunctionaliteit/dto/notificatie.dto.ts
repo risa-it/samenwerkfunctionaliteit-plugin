@@ -1,13 +1,13 @@
-import { Links } from './links.dto';
-import { Page } from './page.dto';
-import {
-  Notificatie as NotificatieModel,
-  NotificatiePage,
-} from '../models/notificatie.model';
 import {
   NotificatieType,
   NotificatieTypes,
 } from '../components/notificatie-card-list/type/notificatie.type';
+import {
+  Notificatie as NotificatieModel,
+  NotificatiePage,
+} from '../models/notificatie.model';
+import { Links } from './links.dto';
+import { Page } from './page.dto';
 
 export interface NotificatieResponse {
   page: Page;

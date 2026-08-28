@@ -5,26 +5,26 @@ import {
   signal,
   WritableSignal,
 } from '@angular/core';
-import { NotificatieService } from '../../service/notificatie.service';
-import { Observable, switchMap, take } from 'rxjs';
-import { Notificatie, NotificatiePage } from '../../models/notificatie.model';
+import { ActivatedRoute } from '@angular/router';
 import {
   LoadingModule,
   PaginationModule,
   SkeletonModule,
 } from 'carbon-components-angular';
+import { Observable, switchMap, take } from 'rxjs';
+import { Notificatie, NotificatiePage } from '../../models/notificatie.model';
+import { NotificatieService } from '../../service/notificatie.service';
 import { SwfDocumentService } from '../../service/swf-document.service';
-import { ActivatedRoute } from '@angular/router';
-import { NotificatieCardInput } from './model/notificatie-card-input.model';
+import { toBusinessKey } from '../../types/business-key.type';
 import { CardInput } from './interface/card-input.interface';
-import { NotificatieType, NotificatieTypes } from './type/notificatie.type';
+import { NotificatieCardInput } from './model/notificatie-card-input.model';
+import { NotificatieCardComponent } from './notificatie-card/notificatie-card.component';
+import { PaginationComponent } from './notification-card-list-pagination/swf-pagination.component';
 import {
   NotificatieCardType,
   NotificatieCardTypes,
 } from './type/notificatie-card.type';
-import { NotificatieCardComponent } from './notificatie-card/notificatie-card.component';
-import { toBusinessKey } from '../../types/business-key.type';
-import { PaginationComponent } from './notification-card-list-pagination/swf-pagination.component';
+import { NotificatieType, NotificatieTypes } from './type/notificatie.type';
 
 @Component({
   templateUrl: `notificatie-card-list.component.html`,

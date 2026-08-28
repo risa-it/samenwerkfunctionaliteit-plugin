@@ -1,18 +1,20 @@
 <div class="stuur-bericht">
-  <textarea
-    cdsTextArea
-    class="textarea-field message-body"
-    [placeholder]="
-      'samenwerkfunctionaliteit.messenger.messagePlaceholder' | translate
-    "
-    [rows]="rows"
-    [maxLength]="maxLength"
-    [(ngModel)]="message"
-  ></textarea>
+  <cds-textarea-label [skeleton]="isLoading()">
+    <textarea
+      cdsTextArea
+      class="textarea-field message-body"
+      [placeholder]="
+        'samenwerkfunctionaliteit.messenger.messagePlaceholder' | translate
+      "
+      [rows]="rows"
+      [maxLength]="maxLength"
+      [(ngModel)]="message"
+    ></textarea>
+  </cds-textarea-label>
 
   <cds-icon-button
     [description]="'samenwerkfunctionaliteit.messenger.sendMessage' | translate"
-    [disabled]="isSubmitting() || !message.trim()"
+    [disabled]="isSubmitting() || isLoading() || !message.trim()"
     (click)="onSend()"
     [showTooltipWhenDisabled]="true"
     [autoAlign]="true"
