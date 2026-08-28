@@ -9,19 +9,19 @@ import {
 import { IconDescriptor, IconService } from 'carbon-components-angular';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
-import { SamenwerkingProperties } from '../../../models/samenwerking-properties.model';
+import { SwfCaseProperties } from '../../../interface/swf-case-properties.interface';
 import { BerichtenService } from '../../../service/berichten.service';
 import { SwfDocumentService } from '../../../service/swf-document.service';
+import { toActieverzoekId } from '../../../types/actieverzoek-id.type';
+import { toOpenZaakId } from '../../../types/open-zaak-id.type';
+import { toSamenwerkingId } from '../../../types/samenwerking-id.type';
 import { StuurBerichtComponent } from './stuur-bericht.component';
 
-const mockSamenwerkingProperties: Observable<SamenwerkingProperties> = of({
-  samenwerkingId: 'SAM-12345',
-  actieverzoekDetails: {
-    actieverzoekId: 'a5bb80ec-baf5-4eb6-b20c-de94a269a09a',
-    deelnemer: '',
-    eventDatumTijd: '',
-    eventInitiator: '',
-  },
+const mockSwfCaseProperties: Observable<SwfCaseProperties> = of({
+  samenwerkingId: toSamenwerkingId('SAM-12345'),
+  actieverzoekId: toActieverzoekId('a5bb80ec-baf5-4eb6-b20c-de94a269a09a'),
+  openZaakId: toOpenZaakId(''),
+  isSwfCase: true,
 });
 
 const mockIconDescriptor: IconDescriptor = {
@@ -67,7 +67,7 @@ describe('StuurBerichtComponent', () => {
       '6bccaaae-0695-4a56-9696-32d12e627f04',
     );
     swfDocumentService.getSamenwerkingProperties.and.returnValue(
-      mockSamenwerkingProperties,
+      mockSwfCaseProperties,
     );
 
     await TestBed.configureTestingModule({

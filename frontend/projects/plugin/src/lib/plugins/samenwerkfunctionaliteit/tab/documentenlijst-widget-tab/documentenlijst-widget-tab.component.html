@@ -1,14 +1,32 @@
-<document-list></document-list>
-<ng-container [ngTemplateOutlet]="documentenApiText"></ng-container>
+@if (isSamenwerkingDossier()) {
+  <document-list></document-list>
 
-<ng-template #documentenApiText>
-  <div
-    class="documenten-api-text-container">
-    <cds-text-label
-      class="documenten-api-text"
-      [skeleton]="isLoading()"
-      [helperText]="helperText">
-    </cds-text-label>
-    <a [href]="this.openZaakUrl" target="_blank">Link naar de zaak in Open Zaak.</a>
-  </div>
-</ng-template>
+  <cds-text-label class="documenten-api-text" [skeleton]="isLoading()">
+    {{
+      'samenwerkfunctionaliteit.documentTable.documentenApiHelperText.before'
+        | translate
+    }}<a [href]="this.openZaakUrl" target="_blank">{{
+      'samenwerkfunctionaliteit.documentTable.documentenApiHelperText.link'
+        | translate
+    }}</a
+    >{{
+      'samenwerkfunctionaliteit.documentTable.documentenApiHelperText.after'
+        | translate
+    }}
+  </cds-text-label>
+}
+
+@if (!isSamenwerkingDossier() && !isLoading()) {
+  <cds-notification
+    [notificationObj]="{
+      type: 'info',
+      title:
+        'samenwerkfunctionaliteit.feedback.notAnSwfCaseMessage.documentListTabTitle'
+        | translate,
+      message:
+        'samenwerkfunctionaliteit.feedback.notAnSwfCaseMessage.genericMessage'
+        | translate,
+      showClose: false,
+    }"
+  ></cds-notification>
+}

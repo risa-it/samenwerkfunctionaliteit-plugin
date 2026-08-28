@@ -9,11 +9,15 @@
   >
     <cds-table-toolbar-actions>
       <button cdsButton="primary" (click)="deleteDocument()">
-        {{ 'samenwerkfunctionaliteit.common.actions.delete' | translate }}
+        <span>{{
+          'samenwerkfunctionaliteit.common.actions.delete' | translate
+        }}</span>
         <svg size="16" class="cds--btn__icon"></svg>
       </button>
       <button cdsButton="primary" (click)="downloadDocument()">
-        {{ 'samenwerkfunctionaliteit.common.actions.download' | translate }}
+        <span>{{
+          'samenwerkfunctionaliteit.common.actions.download' | translate
+        }}</span>
         <svg size="16" class="cds--btn__icon"></svg>
       </button>
     </cds-table-toolbar-actions>
@@ -28,12 +32,15 @@
       <input #fileInput type="file" hidden (change)="uploadDocument($event)" />
 
       <button
+        class="upload-button"
         cdsButton="primary"
         size="sm"
         (click)="fileInput.click()"
         [disabled]="isUploading()"
       >
-        {{ 'samenwerkfunctionaliteit.common.actions.upload' | translate }}
+        <span>{{
+          'samenwerkfunctionaliteit.common.actions.upload' | translate
+        }}</span>
         <svg cdsIcon="add" size="20" class="cds--btn__icon"></svg>
       </button>
     </cds-table-toolbar-content>
@@ -53,6 +60,7 @@
     (selectPage)="selectPage($event)"
     [translations]="paginationTranslations"
     [skeleton]="isSkeleton()"
+    id="pagination-override-important"
   ></cds-pagination>
 </cds-table-container>
 

@@ -12,13 +12,14 @@ import { forkJoin, Observable, switchMap, tap } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { BerichtenListComponent } from '../../components/berichten/berichten-list/berichten-list.component';
 import { StuurBerichtComponent } from '../../components/berichten/stuur-bericht/stuur-bericht.component';
+import { SwfCaseProperties } from '../../interface/swf-case-properties.interface';
 import { Message } from '../../models/bericht.model';
-import { SamenwerkingProperties } from '../../models/samenwerking-properties.model';
 import { ActieverzoekService } from '../../service/actieverzoek.service';
 import { BerichtenService } from '../../service/berichten.service';
 import { SwfDocumentService } from '../../service/swf-document.service';
 import { SwfPluginService } from '../../service/swf-plugin.service';
 import { UserNotificationService } from '../../service/user-notification.service';
+import { ActieverzoekId } from '../../types/actieverzoek-id.type';
 import { BusinessKey, toBusinessKey } from '../../types/business-key.type';
 import { capitalize } from '../../utils/capitalize';
 
@@ -48,16 +49,18 @@ export class BerichtenCustomTabComponent implements OnInit {
   isLoading: WritableSignal<boolean> = signal<boolean>(true);
   otherParticipant: WritableSignal<string> = signal<string>('');
 
-  samenwerkingProperties: SamenwerkingProperties;
+  swfCaseProperties: SwfCaseProperties;
 
   ngOnInit(): void {
     this.iconService.registerAll([Collaborate32]);
-    this.fetchChat(this.getBusinessKey());
+    this.fetchChat();
+
+    this.isLoading.set(false);
   }
 
   protected refreshMessages(): void {
     this.isLoading.set(true);
-    this.fetchChat(this.getBusinessKey());
+    this.fetchChat();
     this.isLoading.set(false);
   }
 
@@ -74,31 +77,29 @@ export class BerichtenCustomTabComponent implements OnInit {
     return toBusinessKey(documentId);
   }
 
-  private fetchSamenwerkingProperties(): Observable<SamenwerkingProperties> {
+  private fetchSamenwerkingProperties(): Observable<SwfCaseProperties> {
     return this.swfDocumentService
       .getSamenwerkingProperties(this.getBusinessKey())
       .pipe(
-        tap((samenwerkingProperties: SamenwerkingProperties) => {
-          if (!samenwerkingProperties.actieverzoekDetails.actieverzoekId) {
+        tap((samenwerkingProperties: SwfCaseProperties) => {
+          if (!samenwerkingProperties.actieverzoekId) {
             throw Error("Case doesn't have an actieverzoekId");
           }
-          this.samenwerkingProperties = samenwerkingProperties;
+          this.swfCaseProperties = samenwerkingProperties;
         }),
       );
   }
 
-  private fetchChat(businessKey: BusinessKey): void {
-    this.isLoading.set(true);
+  private fetchChat(): void {
     this.fetchSamenwerkingProperties()
       .pipe(
-        switchMap((samenwerkingProperties: SamenwerkingProperties) =>
+        switchMap((swfCaseProperties: SwfCaseProperties) =>
           forkJoin({
             messages: this.berichtenService.getBerichten(
-              samenwerkingProperties.actieverzoekDetails.actieverzoekId,
+              swfCaseProperties.actieverzoekId,
             ),
             otherParticipant: this.fetchOtherParticipant(
-              samenwerkingProperties,
-              businessKey,
+              swfCaseProperties.actieverzoekId,
             ),
           }),
         ),
@@ -118,15 +119,11 @@ export class BerichtenCustomTabComponent implements OnInit {
   }
 
   private fetchOtherParticipant(
-    samenwerkingProperties: SamenwerkingProperties,
-    businessKey: BusinessKey,
+    actieverzoekId: ActieverzoekId,
   ): Observable<string> {
     return forkJoin({
       swfPluginProperties: this.swfPluginService.getSwfPluginProperties(),
-      actieverzoek: this.actieverzoekService.getActieverzoek(
-        samenwerkingProperties.actieverzoekDetails.actieverzoekId,
-        businessKey,
-      ),
+      actieverzoek: this.actieverzoekService.getActieverzoek(actieverzoekId),
     }).pipe(
       tap(({ swfPluginProperties }) => {
         this.oinNumber.set(swfPluginProperties.oinNummer);

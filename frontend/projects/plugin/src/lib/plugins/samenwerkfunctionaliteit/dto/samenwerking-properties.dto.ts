@@ -1,6 +1,7 @@
 export interface SamenwerkingProperties {
   samenwerkingId: string;
   actieverzoekDetails: ActieverzoekDetails;
+  isAutomaticallyGenerated: boolean;
 }
 
 interface ActieverzoekDetails {

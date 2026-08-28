@@ -43,6 +43,10 @@
                 }
             }
         },
+        "isAutomaticallyGenerated": {
+            "type": "boolean",
+            "default": true
+        },
         "openzaak": {
             "type": "object",
             "properties": {
