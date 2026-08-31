@@ -80,12 +80,12 @@ export class DocumentTableLightComponent {
     return [
       new TableHeaderItem({
         data: this.translateService.instant(
-          'samenwerkfunctionaliteit.documentTable.fileName',
+          'samenwerkfunctionaliteit.types.document.fileName',
         ),
       }),
       new TableHeaderItem({
         data: this.translateService.instant(
-          'samenwerkfunctionaliteit.documentTable.dateCreated',
+          'samenwerkfunctionaliteit.types.document.dateCreated',
         ),
       }),
     ];
