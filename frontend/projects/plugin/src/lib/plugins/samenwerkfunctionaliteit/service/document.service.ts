@@ -7,7 +7,7 @@ import {
   UploadProviderService,
 } from '@valtimo/resource';
 import { NGXLogger } from 'ngx-logger';
-import { DocumentClient } from '../client/document-client.service';
+import { DocumentClient } from '../client/document.client';
 import {
   DocumentenOverzichtResponse,
   mapDocumentenResponseToModels,

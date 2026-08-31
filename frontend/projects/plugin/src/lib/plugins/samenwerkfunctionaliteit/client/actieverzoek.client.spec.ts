@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { ActieverzoekClient } from './actieverzoek-client.service';
+import { ActieverzoekClient } from './actieverzoek.client';
 
 describe('ActieverzoekClientService', () => {
   let service: ActieverzoekClient;

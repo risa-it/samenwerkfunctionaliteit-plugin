@@ -58,12 +58,14 @@ export class DocumentTableLightComponent {
 
     const pageDocuments: Document[] = documents.slice(startIndex, endIndex);
 
-    return pageDocuments.map((document: Document): TableItem[] => [
-      new TableItem({ data: document.filename }),
-      new TableItem({
-        data: new Date(document.creationDate).toLocaleDateString(),
-      }),
-    ]);
+    return pageDocuments
+      .map((document: Document): TableItem[] => [
+        new TableItem({ data: document.filename }),
+        new TableItem({
+          data: new Date(document.creationDate).toLocaleDateString(),
+        }),
+      ])
+      .slice(0, 10);
   }
 
   private setTableModelHeaders(): void {
@@ -80,12 +82,12 @@ export class DocumentTableLightComponent {
     return [
       new TableHeaderItem({
         data: this.translateService.instant(
-          'samenwerkfunctionaliteit.documentTable.fileName',
+          'samenwerkfunctionaliteit.types.document.fileName',
         ),
       }),
       new TableHeaderItem({
         data: this.translateService.instant(
-          'samenwerkfunctionaliteit.documentTable.dateCreated',
+          'samenwerkfunctionaliteit.types.document.dateCreated',
         ),
       }),
     ];
