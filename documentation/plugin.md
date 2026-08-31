@@ -12,7 +12,7 @@ This is a sample plugin demonstrating an API call action. It fetches data from a
 
 ```kotlin
 dependencies {
-    implementation("com.ritense.valtimoplugins:samenwerkfunctionaliteit-plugin:0.1.0")
+    implementation("com.ritense.valtimoplugins:samenwerkfunctionaliteit-plugin:0.2.0")
 }
 ```
 
