@@ -7,7 +7,7 @@ import { TestBed } from '@angular/core/testing';
 import { SAMENWERKINGEN_URL } from '../config/swf-plugin-config';
 import { UploadDocumentMetadata } from '../interface/upload-document-metadata.interface';
 import { ConfidentialityTypes } from '../types/confidentiality.type';
-import { DocumentClient } from './document-client.service';
+import { DocumentClient } from './document.client';
 
 describe('DocumentClient', () => {
   let service: DocumentClient;

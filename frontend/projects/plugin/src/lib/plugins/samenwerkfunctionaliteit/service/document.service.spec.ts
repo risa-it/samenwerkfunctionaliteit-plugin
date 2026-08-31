@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { UploadProviderService } from '@valtimo/resource';
 import { DocumentenApiLinkProcessService } from '@valtimo/zgw';
 import { NGXLogger } from 'ngx-logger';
-import { DocumentClient } from '../client/document-client.service';
+import { DocumentClient } from '../client/document.client';
 import { DocumentService } from './document.service';
 import { FileDownloadService } from './file-download.service';
 

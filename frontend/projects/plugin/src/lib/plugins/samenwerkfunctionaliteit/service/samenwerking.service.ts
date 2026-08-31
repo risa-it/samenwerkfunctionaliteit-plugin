@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { SamenwerkingClient } from '../client/samenwerking-client.service';
+import { SamenwerkingClient } from '../client/samenwerking.client';
 import { Observable } from 'rxjs';
 import { Samenwerking } from '../models/samenwerking.model';
 

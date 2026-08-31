@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { SwfPluginClient } from '../client/swf-plugin-client.service';
+import { SwfPluginClient } from '../client/swf-plugin.client';
 import { SwfPluginService } from './swf-plugin.service';
 
 describe('SwfPluginService', () => {

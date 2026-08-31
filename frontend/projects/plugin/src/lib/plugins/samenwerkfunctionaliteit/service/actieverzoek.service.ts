@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { catchError, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ActieverzoekClient } from '../client/actieverzoek-client.service';
+import { ActieverzoekClient } from '../client/actieverzoek.client';
 import {
   ActieverzoekResponse,
   createUpdateActieverzoekRequestFrom,

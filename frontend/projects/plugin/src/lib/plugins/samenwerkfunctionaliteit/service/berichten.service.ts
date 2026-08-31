@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { BerichtenClient } from '../client/berichten-client.service';
+import { BerichtenClient } from '../client/berichten.client';
 import { PostBerichtRequestDto } from '../dto/post-bericht-request.dto';
 import {
   mapBerichtenOverzichtResponseToMessages,
