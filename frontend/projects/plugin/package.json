@@ -1,7 +1,7 @@
 {
   "name": "@valtimo-plugins/samenwerkfunctionaliteit-plugin",
   "license": "EUPL-1.2",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "scripts": {
     "build": "ng build @valtimo-plugins/samenwerkfunctionaliteit-plugin",
     "watch": "ng build @valtimo-plugins/samenwerkfunctionaliteit-plugin --watch"
