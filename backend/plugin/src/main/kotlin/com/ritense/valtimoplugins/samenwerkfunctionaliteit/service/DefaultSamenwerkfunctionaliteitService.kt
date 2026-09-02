@@ -1,16 +1,23 @@
 package com.ritense.valtimoplugins.samenwerkfunctionaliteit.service
 
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.client.SamenwerkfunctionaliteitClient
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.ActieverzoekResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.BerichtResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.CreateBerichtRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtQuery
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedBerichtenGetResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedNotificatieGetResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.SamenwerkingResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.UpdateActieverzoekRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.mapper.toModel
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Actieverzoek
-import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Bericht
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Document
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Notificatie
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.Page
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.SamenwerkfunctionaliteitProperties
-import org.springframework.core.io.InputStreamResource
+import org.springframework.http.ResponseEntity
+import org.springframework.web.multipart.MultipartFile
 import java.time.ZonedDateTime
 import java.util.UUID
 
@@ -20,12 +27,12 @@ class DefaultSamenwerkfunctionaliteitService(
     override fun getActieverzoek(
         properties: SamenwerkfunctionaliteitProperties,
         actieverzoekId: UUID,
-    ): Actieverzoek =
+    ): ActieverzoekResponse =
         samenwerkfunctionaliteitClient
             .getActieverzoek(
                 properties = properties,
                 actieverzoekId = actieverzoekId,
-            ).toModel()
+            )
 
     override fun getAllActieverzoeken(
         properties: SamenwerkfunctionaliteitProperties,
@@ -41,21 +48,37 @@ class DefaultSamenwerkfunctionaliteitService(
             ).toModel()
     }
 
-    override fun getBericht(
+    override fun updateActieverzoek(
         properties: SamenwerkfunctionaliteitProperties,
-        actieVerzoekId: UUID,
-        berichtId: UUID,
-    ): Bericht {
-        TODO("Not yet implemented")
-    }
+        actieverzoekId: UUID,
+        request: UpdateActieverzoekRequest,
+    ): ActieverzoekResponse =
+        samenwerkfunctionaliteitClient
+            .updateActieverzoek(
+                properties = properties,
+                actieverzoekId = actieverzoekId,
+                request = request,
+            )
+
+    override fun getBerichten(
+        properties: SamenwerkfunctionaliteitProperties,
+        actieverzoekId: UUID,
+    ): PagedBerichtenGetResponse =
+        samenwerkfunctionaliteitClient.getBerichten(
+            properties = properties,
+            actieverzoekId = actieverzoekId,
+        )
 
     override fun postBericht(
         properties: SamenwerkfunctionaliteitProperties,
         actieverzoekId: UUID,
         requestBody: CreateBerichtRequest,
-    ): Bericht {
-        TODO("Not yet implemented")
-    }
+    ): BerichtResponse =
+        samenwerkfunctionaliteitClient.postBericht(
+            properties = properties,
+            actieverzoekId = actieverzoekId,
+            requestBody = requestBody,
+        )
 
     override fun deleteBericht(
         properties: SamenwerkfunctionaliteitProperties,
@@ -65,7 +88,7 @@ class DefaultSamenwerkfunctionaliteitService(
         TODO("Not yet implemented")
     }
 
-    override fun getDocumentenOverzicht(
+    override fun getDocumenten(
         properties: SamenwerkfunctionaliteitProperties,
         samenwerkingId: String,
         query: DocumentenOverzichtQuery,
@@ -80,19 +103,32 @@ class DefaultSamenwerkfunctionaliteitService(
             ?.map { it.toModel() }
             ?: emptyList()
 
+    override fun getDocumentenOverzicht(
+        properties: SamenwerkfunctionaliteitProperties,
+        samenwerkingId: String,
+    ): DocumentenOverzichtResponse =
+        samenwerkfunctionaliteitClient
+            .getDocumentenOverzicht(
+                properties,
+                samenwerkingId,
+            )
+
     override fun downloadDocument(
         properties: SamenwerkfunctionaliteitProperties,
         documentId: UUID,
-    ): InputStreamResource {
-        TODO("Not yet implemented")
-    }
+    ): ResponseEntity<ByteArray> = samenwerkfunctionaliteitClient.downloadDocument(properties, documentId)
 
     override fun uploadDocument(
         properties: SamenwerkfunctionaliteitProperties,
+        file: MultipartFile,
+        metadata: Map<String, String>?,
         samenwerkingId: String,
-    ) {
-        TODO("Not yet implemented")
-    }
+    ) = samenwerkfunctionaliteitClient.uploadDocument(
+        properties = properties,
+        file = file,
+        metadata = metadata,
+        samenwerkingId = samenwerkingId,
+    )
 
     override fun getSamenwerkingNotificaties(
         properties: SamenwerkfunctionaliteitProperties,
@@ -132,9 +168,28 @@ class DefaultSamenwerkfunctionaliteitService(
         return Page(
             item = notificaties,
             number = response.page.number,
-            size = response.page.number,
-            totalElements = response.page.number,
-            totalPages = response.page.number,
+            size = response.page.size,
+            totalElements = response.page.totalElements,
+            totalPages = response.page.totalPages,
         )
     }
+
+    override fun getAllNotificaties(
+        properties: SamenwerkfunctionaliteitProperties,
+        page: Int?,
+        amount: Int?,
+        samenwerkingId: String,
+    ): PagedNotificatieGetResponse =
+        samenwerkfunctionaliteitClient
+            .getAllNotificaties(
+                properties = properties,
+                page = page,
+                amount = amount,
+                samenwerkingId = samenwerkingId,
+            )
+
+    override fun getSamenwerking(
+        samenwerkingId: String,
+        properties: SamenwerkfunctionaliteitProperties,
+    ): SamenwerkingResponse = samenwerkfunctionaliteitClient.getSamenwerking(samenwerkingId, properties)
 }

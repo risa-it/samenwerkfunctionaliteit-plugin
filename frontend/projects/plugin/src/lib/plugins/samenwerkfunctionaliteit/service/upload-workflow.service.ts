@@ -1,4 +1,5 @@
 import { inject, Injectable } from '@angular/core';
+import { DocumentService as ValtimoDocumentService } from '@valtimo/document';
 import { NGXLogger } from 'ngx-logger';
 import {
   catchError,
@@ -7,14 +8,18 @@ import {
   Observable,
   of,
   switchMap,
+  take,
   tap,
+  throwError,
 } from 'rxjs';
 import { NoLinkedUploadProcessError } from '../errors/no-link-upload-process.error';
 import { UploadContext } from '../interface/upload-context.interface';
 import { UploadDocumentMetadata } from '../interface/upload-document-metadata.interface';
 import { UserNotification } from '../interface/user-notification.interface';
+import { BusinessKey } from '../types/business-key.type';
 import { ConfidentialityTypes } from '../types/confidentiality.type';
 import { DocumentService } from './document.service';
+import { SwfDocumentService } from './swf-document.service';
 import { SwfPluginService } from './swf-plugin.service';
 import { UserNotificationService } from './user-notification.service';
 
@@ -28,25 +33,53 @@ export class UploadWorkFlowService {
   private readonly notificationService: UserNotificationService = inject(
     UserNotificationService,
   );
+  private readonly swfDocumentService: SwfDocumentService =
+    inject(SwfDocumentService);
+  private readonly valtimoDocumentService: ValtimoDocumentService = inject(
+    ValtimoDocumentService,
+  );
   private readonly logger: NGXLogger = inject(NGXLogger);
 
-  startUpload(context: UploadContext): Observable<void> {
-    // TODO: replace with call to modal service to collect data from user. For now: return some mock data to test;
+  private caseDefinitionVersionTag?: string;
+
+  upload(
+    file: File,
+    businessKey: BusinessKey,
+    caseDefinitionKey: string,
+    metadata: UploadDocumentMetadata,
+  ): Observable<void> {
     return forkJoin({
-      metadata: of<UploadDocumentMetadata>(this.mockModalData),
+      versionTag: this.getVersionTag(businessKey),
+      samenwerkingProps:
+        this.swfDocumentService.getSamenwerkingProperties(businessKey),
+      metadata: of<UploadDocumentMetadata>(metadata),
       config: this.swfPluginService.getSwfPluginProperties(),
     }).pipe(
-      tap(({ metadata, config }) => {
+      map(({ versionTag, samenwerkingProps, metadata, config }) => {
+        const context: UploadContext = {
+          file,
+          samenwerkingId: samenwerkingProps.samenwerkingId,
+          businessKey,
+          caseDefinitionKey,
+          caseDefinitionVersionTag: versionTag,
+        };
+
+        return {
+          context,
+          metadata,
+          config,
+        };
+      }),
+
+      switchMap(({ context, metadata, config }) => {
         if (!config.backupUploadsToDocumentenApi) {
           this.logger.debug(
             'Skipping backup upload to Documenten API as per configuration',
           );
-          return of(metadata);
+          return of({ context, metadata });
         }
         this.logger.debug('Uploading with mock metadata:', metadata);
-      }),
 
-      switchMap(({ metadata }) => {
         return this.documentService
           .uploadDocumentToDocumentenAPI(context, metadata)
           .pipe(
@@ -63,15 +96,20 @@ export class UploadWorkFlowService {
             }),
 
             map((reference) => ({
-              ...metadata,
-              systemId: reference.id,
+              context,
+              metadata: {
+                ...metadata,
+                systemId: reference.id,
+              },
             })),
 
             catchError((error: Error) => {
               if (error instanceof NoLinkedUploadProcessError) {
                 this.notificationService.showError({
                   titleKey:
-                    'samenwerkfunctionaliteit.feedback.userNotification.uploadDocumentToSWF.failure.title',
+                    'samenwerkfunctionaliteit.feedback.userNotification.uploadDocumentToDocumentenApi.failure.title',
+                  messageKey:
+                    'samenwerkfunctionaliteit.feedback.userNotification.uploadDocumentToSWF.NoLinkedUploadProcessFailure.message',
                 });
               } else {
                 this.notificationService.showError({
@@ -79,12 +117,12 @@ export class UploadWorkFlowService {
                     'samenwerkfunctionaliteit.feedback.userNotification.uploadDocumentToDocumentenApi.failure.title',
                 });
               }
-              return of(metadata);
+              return of({ context, metadata });
             }),
           );
       }),
 
-      switchMap((metadata) =>
+      switchMap(({ context, metadata }) =>
         this.documentService.uploadDocumentToSWF(context, metadata).pipe(
           tap(() => {
             const notification: UserNotification = {
@@ -98,15 +136,49 @@ export class UploadWorkFlowService {
             this.notificationService.showSuccess(notification);
           }),
 
-          catchError(() => {
+          catchError((error) => {
             this.notificationService.showError({
               titleKey:
                 'samenwerkfunctionaliteit.feedback.userNotification.uploadDocumentToSWF.failure.title',
             });
-            return of(undefined);
+            return throwError(() => error);
           }),
         ),
       ),
+    );
+  }
+
+  private getVersionTag(businessKey: BusinessKey): Observable<string> {
+    if (this.caseDefinitionVersionTag) {
+      return of(this.caseDefinitionVersionTag);
+    }
+
+    if (!businessKey) {
+      throw new Error(
+        'Cannot get case definition version tag because the business key is not available.',
+      );
+    }
+
+    return this.getCaseDefinitionVersionTag(businessKey);
+  }
+
+  private getCaseDefinitionVersionTag(
+    businessKey: BusinessKey,
+  ): Observable<string> {
+    return this.valtimoDocumentService.getDocument(businessKey.toString()).pipe(
+      take(1),
+      map((document) => {
+        const versionTag =
+          document.definitionId?.blueprintId.blueprintVersionTag;
+
+        if (!versionTag) {
+          throw new Error(
+            `No version tag was found for ${document.definitionName}`,
+          );
+        }
+
+        return versionTag;
+      }),
     );
   }
 

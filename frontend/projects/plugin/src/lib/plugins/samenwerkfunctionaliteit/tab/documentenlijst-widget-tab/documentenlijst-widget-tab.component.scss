@@ -1,6 +1,7 @@
-
-.documenten-api-text-container {
-  container-type: inline-size;
+:host {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
 }
 
 ::ng-deep .cds--text-input__field-outer-wrapper {

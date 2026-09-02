@@ -1,25 +1,29 @@
-import { inject, Injectable } from "@angular/core";
-import { NotificatieClient } from "../client/notificatie-client.service";
-import { map, Observable } from "rxjs";
-import { mapNotificatieDtosToModels, NotificatieResponse } from "../dto/notificatie.dto";
-import { Notificatie } from "../models/notificatie.model";
+import { inject, Injectable } from '@angular/core';
+import { map, Observable } from 'rxjs';
+import { NotificatieClient } from '../client/notificatie.client';
+import {
+  mapNotificatieResponseToNotificatiePage,
+  NotificatieResponse,
+} from '../dto/notificatie.dto';
+import { NotificatiePage } from '../models/notificatie.model';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class NotificatieService {
   notificatieClient = inject(NotificatieClient);
 
-  getNotificaties(samenwerkingId: string): Observable<Notificatie[]> {
-    return this.notificatieClient.getNotificaties().pipe(
-      map((response: NotificatieResponse) => {
-        return mapNotificatieDtosToModels(response);
-      }),
-      map((notificaties: Notificatie[]) => {
-        return notificaties.filter((notificatie) => {
-          return notificatie.samenwerkingId === samenwerkingId;
-        });
-      }),
-    );
+  getNotificaties(
+    samenwerkingId: string,
+    page: number,
+    size: number,
+  ): Observable<NotificatiePage> {
+    return this.notificatieClient
+      .getNotificaties(samenwerkingId, page, size)
+      .pipe(
+        map((response: NotificatieResponse) => {
+          return mapNotificatieResponseToNotificatiePage(response);
+        }),
+      );
   }
 }

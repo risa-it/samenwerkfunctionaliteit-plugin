@@ -7,15 +7,22 @@ import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.CreateBerichtRequ
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtQuery
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.DocumentenOverzichtResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.NotificatieGetResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedBerichtenGetResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.PagedNotificatieGetResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.SamenwerkingResponse
+import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.UpdateActieverzoekRequest
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.SamenwerkfunctionaliteitProperties
 import io.github.oshai.kotlinlogging.KotlinLogging
-import org.springframework.core.io.InputStreamResource
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
+import org.springframework.http.client.MultipartBodyBuilder
 import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.RestClient
 import org.springframework.web.client.RestClientResponseException
 import org.springframework.web.client.body
+import org.springframework.web.client.toEntity
+import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.server.ResponseStatusException
 import org.springframework.web.util.UriBuilder
 import org.springframework.web.util.UriComponentsBuilder
@@ -77,12 +84,44 @@ class DefaultSamenwerkfunctionaliteitClient(
         }
     }
 
-    override fun getBericht(
+    override fun updateActieverzoek(
         properties: SamenwerkfunctionaliteitProperties,
-        actieVerzoekId: UUID,
-        berichtId: UUID,
-    ): BerichtResponse {
-        TODO("Not yet implemented")
+        actieverzoekId: UUID,
+        request: UpdateActieverzoekRequest,
+    ): ActieverzoekResponse {
+        try {
+            return restClient(properties = properties)
+                .patch()
+                .uri("${SWF_ACTIEVERZOEK_PATH}/$actieverzoekId")
+                .header("Content-Type", UPDATE_ACTIEVERZOEK_HEADER)
+                .body(request)
+                .retrieve()
+                .body<ActieverzoekResponse>()
+                ?: throw IllegalStateException("Error updating Actieverzoek: response body was null")
+        } catch (e: HttpServerErrorException.InternalServerError) {
+            handleInternalServerError(e)
+        } catch (e: RestClientResponseException) {
+            handleResponseException(e, "Error updating Actieverzoek.")
+        }
+    }
+
+    override fun getBerichten(
+        properties: SamenwerkfunctionaliteitProperties,
+        actieverzoekId: UUID,
+    ): PagedBerichtenGetResponse {
+        try {
+            return restClient(properties = properties)
+                .get()
+                .uri { uriBuilder ->
+                    uriBuilder.path("$SWF_ACTIEVERZOEK_PATH/$actieverzoekId/berichten").build()
+                }.retrieve()
+                .body<PagedBerichtenGetResponse>()
+                ?: throw IllegalStateException("Error fetching berichten: response body was null")
+        } catch (e: HttpServerErrorException.InternalServerError) {
+            handleInternalServerError(e)
+        } catch (e: RestClientResponseException) {
+            handleResponseException(e, "Error getting all berichten.")
+        }
     }
 
     override fun postBericht(
@@ -90,7 +129,20 @@ class DefaultSamenwerkfunctionaliteitClient(
         actieverzoekId: UUID,
         requestBody: CreateBerichtRequest,
     ): BerichtResponse {
-        TODO("Not yet implemented")
+        try {
+            return restClient(properties = properties)
+                .post()
+                .uri { uriBuilder ->
+                    uriBuilder.path("$SWF_ACTIEVERZOEK_PATH/$actieverzoekId/berichten").build()
+                }.body(requestBody)
+                .retrieve()
+                .body<BerichtResponse>()
+                ?: throw IllegalStateException("Error sending bericht: response body was null")
+        } catch (e: HttpServerErrorException.InternalServerError) {
+            handleInternalServerError(e)
+        } catch (e: RestClientResponseException) {
+            handleResponseException(e, "Error sending bericht.")
+        }
     }
 
     override fun deleteBericht(
@@ -126,18 +178,77 @@ class DefaultSamenwerkfunctionaliteitClient(
             }.retrieve()
             .body(DocumentenOverzichtResponse::class.java) ?: error("No list of Documents received.")
 
+    override fun getDocumentenOverzicht(
+        properties: SamenwerkfunctionaliteitProperties,
+        samenwerkingId: String,
+    ): DocumentenOverzichtResponse =
+        restClient(properties)
+            .get()
+            .uri { uriBuilder ->
+                uriBuilder
+                    .path("$SWF_SAMENWERKING_PATH/$samenwerkingId/documenten")
+                    .build()
+            }.retrieve()
+            .body(DocumentenOverzichtResponse::class.java) ?: error("No list of Documents received.")
+
     override fun downloadDocument(
         properties: SamenwerkfunctionaliteitProperties,
         documentId: UUID,
-    ): InputStreamResource {
-        TODO("Not yet implemented")
+    ): ResponseEntity<ByteArray> {
+        try {
+            return restClient(properties = properties)
+                .get()
+                .uri("${SWF_DOCUMENTEN_PATH}/$documentId/content")
+                .retrieve()
+                .toEntity<ByteArray>()
+        } catch (e: HttpServerErrorException.InternalServerError) {
+            handleInternalServerError(e)
+        } catch (e: RestClientResponseException) {
+            handleResponseException(e, "Error getting all notificaties.")
+        }
     }
 
     override fun uploadDocument(
         properties: SamenwerkfunctionaliteitProperties,
+        file: MultipartFile,
+        metadata: Map<String, String>?,
         samenwerkingId: String,
     ) {
-        TODO("Not yet implemented")
+        val multipartBody =
+            MultipartBodyBuilder()
+                .apply {
+                    part("file", file.resource)
+                        .filename(file.originalFilename ?: "document")
+
+                    metadata.orEmpty().forEach { (key, value) ->
+                        part(key, value)
+                    }
+                }.build()
+
+        restClient(properties)
+            .post()
+            .uri { builder ->
+                builder
+                    .path("${SWF_SAMENWERKING_PATH}/{samenwerkingId}/documenten")
+                    .build(samenwerkingId)
+            }.contentType(MediaType.MULTIPART_FORM_DATA)
+            .body(multipartBody)
+            .retrieve()
+            .toBodilessEntity()
+    }
+
+    override fun deleteDocument(
+        properties: SamenwerkfunctionaliteitProperties,
+        documentId: String,
+    ) {
+        restClient(properties)
+            .delete()
+            .uri { builder ->
+                builder
+                    .path("${SWF_DOCUMENTEN_PATH}/{$documentId}")
+                    .build(documentId)
+            }.retrieve()
+            .toBodilessEntity()
     }
 
     override fun getSamenwerkingNotificaties(
@@ -192,6 +303,54 @@ class DefaultSamenwerkfunctionaliteitClient(
         }
     }
 
+    override fun getAllNotificaties(
+        properties: SamenwerkfunctionaliteitProperties,
+        page: Int?,
+        amount: Int?,
+        samenwerkingId: String,
+    ): PagedNotificatieGetResponse {
+        try {
+            return restClient(properties = properties)
+                .get()
+                .uri { uriBuilder ->
+                    uriBuilder
+                        .path("${SWF_SAMENWERKING_PATH}/$samenwerkingId/notificaties")
+                        .queryParamNotNull(NotificatiesQueryParam.PAGINA.paramName, page)
+                        .queryParamNotNull(NotificatiesQueryParam.AANTAL.paramName, amount)
+                        .build()
+                }.retrieve()
+                .body<PagedNotificatieGetResponse>()
+                .also {
+                    logger.info {
+                        it?.page
+                    }
+                }
+                ?: throw IllegalStateException("Error fetching notificaties: response body was null")
+        } catch (e: HttpServerErrorException.InternalServerError) {
+            handleInternalServerError(e)
+        } catch (e: RestClientResponseException) {
+            handleResponseException(e, "Error getting notificaties.")
+        }
+    }
+
+    override fun getSamenwerking(
+        samenwerkingId: String,
+        properties: SamenwerkfunctionaliteitProperties,
+    ): SamenwerkingResponse {
+        try {
+            return restClient(properties = properties)
+                .get()
+                .uri("${SWF_SAMENWERKING_PATH}/$samenwerkingId")
+                .retrieve()
+                .body<SamenwerkingResponse>()
+                ?: throw IllegalStateException("Error fetching Samenwerking: response body was null")
+        } catch (e: HttpServerErrorException.InternalServerError) {
+            handleInternalServerError(e)
+        } catch (e: RestClientResponseException) {
+            handleResponseException(e, "Error getting Samenwerking.")
+        }
+    }
+
     private fun encodeQueryParam(source: String): String = UriUtils.encode(source, StandardCharsets.UTF_8)
 
     private fun <T> UriBuilder.queryParamIfNotNull(
@@ -232,6 +391,13 @@ class DefaultSamenwerkfunctionaliteitClient(
         fun negated(): String = "$paramName[not]"
     }
 
+    private enum class NotificatiesQueryParam(
+        val paramName: String,
+    ) {
+        AANTAL("aantal"),
+        PAGINA("pagina"),
+    }
+
     private fun handleInternalServerError(e: HttpServerErrorException.InternalServerError): Nothing {
         logger.warn { "Response body:  ${e.responseBodyAsString}" }
         logger.error(e) { "Internal Server Error calling SWF-API" }
@@ -263,6 +429,8 @@ class DefaultSamenwerkfunctionaliteitClient(
         private const val NOTIFICATIES_PAGE_PARAM = "page"
         private const val SWF_SAMENWERKING_PATH = "v5/samenwerkingen"
         private const val SWF_ACTIEVERZOEK_PATH = "v5/actieverzoeken"
+        private const val SWF_DOCUMENTEN_PATH = "v5/documenten"
+        private const val UPDATE_ACTIEVERZOEK_HEADER = "application/merge-patch+json"
         private const val SAMENWERKING_ID = "samenwerkingId"
         private const val ORGANISATIE = "organisatie"
         private val logger = KotlinLogging.logger { }

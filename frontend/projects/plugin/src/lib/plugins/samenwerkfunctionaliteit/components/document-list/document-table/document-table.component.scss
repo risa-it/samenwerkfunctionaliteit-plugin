@@ -1,0 +1,35 @@
+::ng-deep .cds--table-toolbar .upload-button {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+    padding: 0 1rem;
+    gap: 2rem;
+
+    svg {
+        position: initial;
+    }
+}
+
+::ng-deep #pagination-override-important .cds--pagination__text {
+    /* Note: this override is only set on this very element of the document table component */
+    margin: 0 !important;
+}
+
+::ng-deep .cds--pagination {
+    border-top: none;
+
+    .cds--pagination__left,
+    .cds--pagination__right {
+        padding: 0;
+    }
+
+
+    .cds--pagination__left .cds--pagination__text {
+        padding-left: 1rem;
+    }
+
+    .cds--pagination__right .cds--pagination__text {
+        padding-right: 1rem;
+    }
+}

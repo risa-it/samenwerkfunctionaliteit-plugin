@@ -1,10 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import { forkJoin, Observable, of, tap } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { OpenZaakInfo } from '../interface/open-zaak-info.interface';
 import { DocumentService as ValtimoDocumentService } from '@valtimo/document';
 import { OpenZaakService } from '@valtimo/resource';
-import { SamenwerkfunctionaliteitDocument } from '../interface/document-content.interface';
+import { forkJoin, Observable, of, tap } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { SamenwerkfunctionaliteitDocument } from '../dto/document-content.dto';
+import { OpenZaakInfo } from '../interface/open-zaak-info.interface';
 import { BusinessKey } from '../types/business-key.type';
 
 @Injectable({

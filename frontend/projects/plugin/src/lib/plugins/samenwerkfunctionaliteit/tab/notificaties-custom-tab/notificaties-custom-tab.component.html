@@ -1,1 +1,25 @@
-<swf-notificatie-card-list/>
+<div class="notificatie-card-list">
+  @if (isLoading()) {
+    @for (item of itemsPerPageArray; track $index) {
+      <swf-notificatie-card [inputs]="skeletonInput"></swf-notificatie-card>
+    }
+  }
+  @if (!this.isLoading()) {
+    @for (input of this.inputs(); track input.notificatieId) {
+      <swf-notificatie-card [inputs]="input"></swf-notificatie-card>
+    }
+  }
+</div>
+<swf-pagination
+  [page]="page()"
+  [pageSize]="pageSize()"
+  [totalItems]="totalNotifications()"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+  [itemSingleTranslateKey]="
+    'samenwerkfunctionaliteit.notifications.pagination.item.single'
+  "
+  [itemPluralTranslateKey]="
+    'samenwerkfunctionaliteit.notifications.pagination.item.plural'
+  "
+></swf-pagination>

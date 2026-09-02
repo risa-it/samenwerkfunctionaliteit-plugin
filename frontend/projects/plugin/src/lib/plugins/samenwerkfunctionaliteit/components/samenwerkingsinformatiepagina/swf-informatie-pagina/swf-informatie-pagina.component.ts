@@ -1,3 +1,4 @@
+import { NgClass } from '@angular/common';
 import {
   Component,
   computed,
@@ -7,8 +8,14 @@ import {
   signal,
   WritableSignal,
 } from '@angular/core';
-import { SamenwerkingsStatusComponent } from '../samenwerkingsstatus/samenwerkingsstatus.component';
-import { SamenwerkingService } from '../../../service/samenwerking.service';
+import { ActivatedRoute } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { PluginTranslatePipeModule } from '@valtimo/plugin';
+import {
+  ListItem,
+  LoadingModule,
+  NotificationModule,
+} from 'carbon-components-angular';
 import {
   finalize,
   forkJoin,
@@ -18,33 +25,28 @@ import {
   takeWhile,
   tap,
 } from 'rxjs';
-import { Samenwerking } from '../../../models/samenwerking.model';
-import { SamenwerkingComponent } from '../samenwerking/samenwerking.component';
-import {
-  ListItem,
-  LoadingModule,
-  NotificationModule,
-} from 'carbon-components-angular';
-import { NgClass } from '@angular/common';
-import { DocumentListComponent } from '../../document-list/document-list.component';
-import { SwfDocumentService } from '../../../service/swf-document.service';
-import { ActivatedRoute } from '@angular/router';
-import { BusinessKey, toBusinessKey } from '../../../types/business-key.type';
-import { Actieverzoek } from '../../../models/actieverzoek.model';
-import { ActieverzoekService } from '../../../service/actieverzoek.service';
-import {
-  ActieverzoekStatusList,
-  ActieverzoekStatusType,
-} from '../../../types/actieverzoek-status.type';
-import { SamenwerkingProperties } from '../../../models/samenwerking-properties.model';
-import { ActieverzoekCardComponent } from '../actieverzoek-card/actieverzoek-card.component';
-import { UpdateStatusModalComponent } from '../update-status-modal/update-status-modal.component';
 import {
   mapActieverzoekStatusToActieverzoekStatusType,
   mapLinkActionToActieverzoekStatus,
 } from '../../../dto/actieverzoek.dto';
-import { PluginTranslatePipeModule } from '@valtimo/plugin';
-import { TranslatePipe } from '@ngx-translate/core';
+import { SwfCaseProperties } from '../../../interface/swf-case-properties.interface';
+import { Actieverzoek } from '../../../models/actieverzoek.model';
+import { Samenwerking } from '../../../models/samenwerking.model';
+import { ActieverzoekService } from '../../../service/actieverzoek.service';
+import { SamenwerkingService } from '../../../service/samenwerking.service';
+import { SwfDocumentService } from '../../../service/swf-document.service';
+import { ActieverzoekId } from '../../../types/actieverzoek-id.type';
+import {
+  ActieverzoekStatusList,
+  ActieverzoekStatusType,
+  getActieverzoekTypeText,
+} from '../../../types/actieverzoek-status.type';
+import { BusinessKey, toBusinessKey } from '../../../types/business-key.type';
+import { DocumentListComponent } from '../../document-list/document-list.component';
+import { ActieverzoekCardComponent } from '../actieverzoek-card/actieverzoek-card.component';
+import { SamenwerkingComponent } from '../samenwerking/samenwerking.component';
+import { SamenwerkingsStatusComponent } from '../samenwerkingsstatus/samenwerkingsstatus.component';
+import { UpdateStatusModalComponent } from '../update-status-modal/update-status-modal.component';
 
 @Component({
   selector: 'swf-informatie-pagina',
@@ -68,6 +70,7 @@ export class SwfInformatiePaginaComponent implements OnInit {
   samenwerkingService = inject(SamenwerkingService);
   swfDocumentService = inject(SwfDocumentService);
   actieverzoekService = inject(ActieverzoekService);
+  translateService = inject(TranslateService);
   route = inject(ActivatedRoute);
 
   samenwerking: WritableSignal<Samenwerking> = signal(null);
@@ -98,22 +101,21 @@ export class SwfInformatiePaginaComponent implements OnInit {
     this.swfDocumentService
       .getSamenwerkingProperties(businessKey)
       .pipe(
-        takeWhile((samenwerkingProps: SamenwerkingProperties) => {
+        takeWhile((samenwerkingProps: SwfCaseProperties) => {
           this.isSamenwerkingDossier.set(
-            !!samenwerkingProps.actieverzoekDetails.actieverzoekId &&
+            !!samenwerkingProps.actieverzoekId &&
               !!samenwerkingProps.samenwerkingId,
           );
           return this.isSamenwerkingDossier();
         }),
-        switchMap((samenwerkingProps: SamenwerkingProperties) => {
-          if (samenwerkingProps.actieverzoekDetails.actieverzoekId)
+        switchMap((samenwerkingProps: SwfCaseProperties) => {
+          if (samenwerkingProps.actieverzoekId)
             return forkJoin({
               samenwerking: this.fetchSamenwerking(
                 samenwerkingProps.samenwerkingId,
               ),
               actieverzoek: this.fetchActieverzoek(
-                samenwerkingProps.actieverzoekDetails.actieverzoekId,
-                businessKey,
+                samenwerkingProps.actieverzoekId,
               ),
             });
         }),
@@ -157,11 +159,10 @@ export class SwfInformatiePaginaComponent implements OnInit {
   }
 
   private fetchActieverzoek(
-    actieverzoekId: string,
-    businessKey: BusinessKey,
+    actieverzoekId: ActieverzoekId,
   ): Observable<Actieverzoek> {
     return this.actieverzoekService
-      .getActieverzoek(actieverzoekId, businessKey)
+      .getActieverzoek(actieverzoekId)
       .pipe(take(1));
   }
 
@@ -170,8 +171,12 @@ export class SwfInformatiePaginaComponent implements OnInit {
   ): ListItem[] {
     return actieverzoekStatusTypes.map(
       (actieverzoekStatusType: ActieverzoekStatusType): ListItem => {
+        const translatedType = this.translateService.instant(
+          getActieverzoekTypeText(actieverzoekStatusType),
+        );
         return {
-          content: actieverzoekStatusType,
+          content: translatedType,
+          value: actieverzoekStatusType,
           selected: false,
         };
       },

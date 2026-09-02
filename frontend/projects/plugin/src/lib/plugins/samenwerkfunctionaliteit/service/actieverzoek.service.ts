@@ -1,17 +1,17 @@
 import { inject, Injectable } from '@angular/core';
 import { catchError, Observable } from 'rxjs';
-import {
-  Actieverzoek,
-  ActieverzoekUpdateData,
-} from '../models/actieverzoek.model';
 import { map } from 'rxjs/operators';
+import { ActieverzoekClient } from '../client/actieverzoek.client';
 import {
   ActieverzoekResponse,
   createUpdateActieverzoekRequestFrom,
   mapActieverzoekResponseToActieverzoek,
 } from '../dto/actieverzoek.dto';
-import { ActieverzoekClient } from '../client/actieverzoek-client.service';
-import { BusinessKey } from '../types/business-key.type';
+import {
+  Actieverzoek,
+  ActieverzoekUpdateData,
+} from '../models/actieverzoek.model';
+import { ActieverzoekId } from '../types/actieverzoek-id.type';
 
 @Injectable({
   providedIn: 'root',
@@ -20,10 +20,7 @@ export class ActieverzoekService {
   private readonly actieverzoekClient: ActieverzoekClient =
     inject(ActieverzoekClient);
 
-  getActieverzoek(
-    actieverzoekId: string,
-    businessKey: BusinessKey,
-  ): Observable<Actieverzoek> {
+  getActieverzoek(actieverzoekId: ActieverzoekId): Observable<Actieverzoek> {
     return this.actieverzoekClient.getActieverzoek(actieverzoekId).pipe(
       map((actieverzoekResponse: ActieverzoekResponse) => {
         return mapActieverzoekResponseToActieverzoek(actieverzoekResponse);

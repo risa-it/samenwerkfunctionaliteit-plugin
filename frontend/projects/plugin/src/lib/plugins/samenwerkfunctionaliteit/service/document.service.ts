@@ -7,7 +7,7 @@ import {
   UploadProviderService,
 } from '@valtimo/resource';
 import { NGXLogger } from 'ngx-logger';
-import { DocumentClient } from '../client/document-client.service';
+import { DocumentClient } from '../client/document.client';
 import {
   DocumentenOverzichtResponse,
   mapDocumentenResponseToModels,
@@ -40,11 +40,6 @@ export class DocumentService {
     return this.documentClient.getDocumenten(samenwerkingId).pipe(
       map((documentenOverzichtResponse: DocumentenOverzichtResponse) => {
         return mapDocumentenResponseToModels(documentenOverzichtResponse);
-      }),
-      map((documenten: DocumentInterface[]) => {
-        return documenten.filter((document) => {
-          return document.samenwerkingId === samenwerkingId;
-        });
       }),
       catchError((error: Error) => {
         return throwError(() => error);
@@ -104,6 +99,10 @@ export class DocumentService {
           ),
         ),
       );
+  }
+
+  deleteDocument(documentId: UUID): Observable<void> {
+    return this.documentClient.deleteDocument(documentId);
   }
 
   downloadDocument(documentId: UUID): Observable<FileDownload> {

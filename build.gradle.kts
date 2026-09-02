@@ -73,12 +73,6 @@ subprojects {
             }
         }
 
-        dependencyManagement {
-            imports {
-                mavenBom("org.springframework.cloud:spring-cloud-dependencies:2025.0.2")
-            }
-        }
-
         dependencies {
             compileOnly(platform("com.ritense.valtimo:valtimo-dependency-versions:$valtimoVersion"))
             testImplementation(platform("com.ritense.valtimo:valtimo-dependency-versions:$valtimoVersion"))
@@ -97,7 +91,7 @@ subprojects {
         if (Os.isFamily(FAMILY_MAC)) {
             println("Configure docker compose for macOs")
             dockerCompose {
-                projectNamePrefix = "samenwerkfunctionaliteit-plugin-"
+                projectNamePrefix = "swf-"
                 setProjectName("${rootProject.name}-${project.name}")
                 executable = "/usr/local/bin/docker-compose"
                 dockerExecutable = "/usr/local/bin/docker"

@@ -27,10 +27,18 @@ import {
 import { finalize, take } from 'rxjs';
 import { UserNotificationService } from '../../../service/user-notification.service';
 import { UserNotification } from '../../../interface/user-notification.interface';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'update-status-modal',
-  imports: [FormsModule, DropdownModule, InputModule, ButtonModule, IconModule],
+  imports: [
+    FormsModule,
+    DropdownModule,
+    InputModule,
+    ButtonModule,
+    IconModule,
+    TranslatePipe,
+  ],
   templateUrl: './update-status-modal.component.html',
   styleUrl: './update-status-modal.component.scss',
 })
@@ -71,7 +79,7 @@ export class UpdateStatusModalComponent {
       description: actieverzoek.description,
       productId: actieverzoek.productId,
       status: this.mapUpdateStatusToActieverzoekStatusType(
-        this.updateStatus.content,
+        this.updateStatus.value,
       ),
       title: actieverzoek.title,
     };

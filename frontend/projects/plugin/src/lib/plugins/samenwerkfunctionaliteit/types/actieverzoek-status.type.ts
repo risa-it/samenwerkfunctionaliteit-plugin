@@ -19,3 +19,24 @@ export const ActieverzoekStatusValueToKey = Object.fromEntries(
 export const ActieverzoekStatusList = Object.values(
   ActieverzoekStatusTypes,
 ) as ActieverzoekStatusType[];
+
+export function getActieverzoekTypeText(
+  actieverzoekStatusType: ActieverzoekStatusType,
+): string {
+  switch (actieverzoekStatusType) {
+    case ActieverzoekStatusTypes.Open:
+      return 'samenwerkfunctionaliteit.actieverzoekStatusTypes.open';
+    case ActieverzoekStatusTypes.InProgress:
+      return 'samenwerkfunctionaliteit.actieverzoekStatusTypes.inProgress';
+    case ActieverzoekStatusTypes.Rejected:
+      return 'samenwerkfunctionaliteit.actieverzoekStatusTypes.rejected';
+    case ActieverzoekStatusTypes.Withdrawn:
+      return 'samenwerkfunctionaliteit.actieverzoekStatusTypes.withdrawn';
+    case ActieverzoekStatusTypes.ReportedReady:
+      return 'samenwerkfunctionaliteit.actieverzoekStatusTypes.reportedReady';
+    case ActieverzoekStatusTypes.Ready:
+      return 'samenwerkfunctionaliteit.actieverzoekStatusTypes.ready';
+    default:
+      throw Error('Unknown actieverzoek status type');
+  }
+}

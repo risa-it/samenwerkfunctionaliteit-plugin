@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { SwfPluginClient } from '../client/swf-plugin-client.service';
+import { SwfPluginClient } from '../client/swf-plugin.client';
 import { SwfPluginProperties } from '../interface/sfw-properties.interface';
 import { mapPluginPropertiesResponseDtoToModel } from '../mapper/plugin-properties.mapper';
 

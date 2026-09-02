@@ -2,15 +2,19 @@ import { NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
+  effect,
   inject,
   input,
   InputSignal,
   OnInit,
+  output,
   signal,
   viewChild,
   WritableSignal,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   AlertModalData,
@@ -23,9 +27,21 @@ import {
   TableModel,
   TableModule,
 } from 'carbon-components-angular';
+import { catchError, EMPTY, finalize, of, switchMap, tap } from 'rxjs';
+import { UploadDocumentMetadata } from '../../../interface/upload-document-metadata.interface';
+import { UserNotification } from '../../../interface/user-notification.interface';
 import { Document } from '../../../models/document.model';
+import { DocumentModalService } from '../../../service/document-modal.service';
+import { DocumentService } from '../../../service/document.service';
+import { SwfDocumentService } from '../../../service/swf-document.service';
+import { UploadWorkFlowService } from '../../../service/upload-workflow.service';
+import { UserNotificationService } from '../../../service/user-notification.service';
+import { getPaginationTranslations } from '../../../shared/carbon/pagination-translations';
+import { BusinessKey, toBusinessKey } from '../../../types/business-key.type';
+import { confidentialityTypeToTranslationKey } from '../../../types/confidentiality.type';
 import { documentTableDeleteModalConfig } from '../config/document-table-modal-config';
-import { DocumentTableModal } from '../modal/document-table-modal';
+import { DocumentDeleteModal } from './modal/delete/document-delete-modal.component';
+import { DocumentUploadMetadataModal } from './modal/upload/document-upload-metadata-modal.component';
 
 @Component({
   selector: 'document-table',
@@ -38,99 +54,265 @@ import { DocumentTableModal } from '../modal/document-table-modal';
     IconModule,
     PlaceholderModule,
     TranslatePipe,
-    DocumentTableModal,
+    DocumentUploadMetadataModal,
+    DocumentDeleteModal,
   ],
   templateUrl: './document-table.component.html',
-  styleUrl: './document-table.component.css',
+  styleUrl: './document-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocumentTableComponent implements OnInit {
   private readonly translateService: TranslateService =
     inject(TranslateService);
+  private readonly documentService: DocumentService = inject(DocumentService);
+  private readonly uploadWorkFlowService: UploadWorkFlowService = inject(
+    UploadWorkFlowService,
+  );
+  private readonly notificationService: UserNotificationService = inject(
+    UserNotificationService,
+  );
+  private readonly swfDocumentService: SwfDocumentService =
+    inject(SwfDocumentService);
+  readonly route: ActivatedRoute = inject(ActivatedRoute);
+  private readonly documentModalService: DocumentModalService =
+    inject(DocumentModalService);
+
+  private readonly uploadMetadataModal =
+    viewChild.required<DocumentUploadMetadataModal>('uploadMetadataModal');
+  private readonly deleteDocumentModal =
+    viewChild.required<DocumentDeleteModal>('deleteModal');
 
   documents: InputSignal<Document[]> = input<Document[]>([]);
   isSkeleton: InputSignal<boolean> = input<boolean>(true);
-  model: WritableSignal<TableModel> = signal(new TableModel());
-  isUploading: WritableSignal<boolean> = signal(false);
+
+  deleted = output<string>();
+  uploaded = output<void>();
+
   searchValue: WritableSignal<string> = signal('');
 
-  private readonly documentTableModal =
-    viewChild.required<DocumentTableModal>('documentTableModal');
+  readonly filteredDocuments = computed(() => {
+    const search = this.searchValue().trim().toLowerCase();
+
+    if (!search) {
+      return this.documents();
+    }
+
+    return this.documents().filter((document) =>
+      document.filename.toLowerCase().includes(search),
+    );
+  });
+
+  displayedDocuments: WritableSignal<Document[]> = signal([]);
+
+  selectedDocument: WritableSignal<Document | undefined> = signal(undefined);
+  model: WritableSignal<TableModel> = signal(new TableModel());
+  isUploading: WritableSignal<boolean> = signal(false);
+
+  private businessKey?: BusinessKey;
+  private caseDefinitionKey?: string;
+
   protected readonly deleteConfig: AlertModalData =
     documentTableDeleteModalConfig;
 
-  showSelectionColumn: boolean = true;
+  protected readonly paginationTranslations = getPaginationTranslations(
+    this.translateService,
+    'document',
+    'documenten',
+  );
+
+  protected searchFieldPlaceholder: string = this.translateService.instant(
+    'samenwerkfunctionaliteit.common.actions.search',
+  );
+
   striped: boolean = false;
   enableSingleSelect: boolean = true;
+  showSelectionColumn: boolean = false;
+
+  private readonly documentsEffect = effect(() => {
+    const documents = this.filteredDocuments();
+
+    this.setTableModel(documents);
+    this.selectPage(1);
+  });
 
   ngOnInit(): void {
-    this.setTableModelFilterAndHeader(this.documents());
-    this.selectPage(1);
+    this.businessKey = toBusinessKey(
+      this.swfDocumentService.getParam(this.route, 'documentId') ?? '',
+    );
+
+    this.caseDefinitionKey =
+      this.swfDocumentService.getParam(this.route, 'caseDefinitionKey') ?? '';
   }
 
   protected selectPage(page: number): void {
+    const documentsPage = this.getDocumentsForPage(page);
+
+    this.displayedDocuments.set(documentsPage);
+
     this.model.update((model: TableModel): TableModel => {
-      model.data = this.getTableItemsForPage(page);
+      model.data = this.getTableItems(documentsPage);
       model.currentPage = page;
       return model;
     });
   }
 
-  protected onRowSelected(event: {
-    model: TableModel;
-    selectedRowIndex: number;
-  }): void {
-    const selectedRow = event.model.data[event.selectedRowIndex];
+  protected onRowSelected(event: Object): void {
+    const { selectedRowIndex } = event as {
+      model: TableModel;
+      selectedRowIndex: number;
+    };
+    this.selectedDocument.set(this.displayedDocuments()[selectedRowIndex]);
   }
 
-  protected deleteDocument() {
-    this.documentTableModal().openModal();
+  protected downloadDocument(): void {
+    const documentId = this.selectedDocument()?.documentId;
+    if (!documentId) {
+      return;
+    }
+
+    this.documentService
+      .downloadDocument(documentId)
+      .pipe(
+        tap(() => {
+          this.hideToolbar();
+        }),
+        catchError(() => {
+          this.notificationService.showError({
+            titleKey:
+              'samenwerkfunctionaliteit.feedback.userNotification.downloadDocument.failure.title',
+          });
+          return of(undefined);
+        }),
+      )
+      .subscribe();
   }
 
-  protected downloadDocument() {}
+  protected uploadDocument(event: Event): void {
+    const input = event.target as HTMLInputElement;
 
-  protected uploadDocument() {
-    this.isUploading.set(true);
-    setTimeout(() => {
-      this.isUploading.set(false);
-    }, 1500);
+    if (!input.files?.length) {
+      return;
+    }
+
+    const file = input.files[0];
+
+    const businessKey = this.businessKey;
+    const caseDefinitionKey = this.caseDefinitionKey;
+
+    if (!businessKey || !caseDefinitionKey) {
+      return;
+    }
+
+    this.documentModalService
+      .openUploadMetadata(this.uploadMetadataModal())
+      .pipe(
+        switchMap((metadata: UploadDocumentMetadata) => {
+          this.isUploading.set(true);
+
+          return this.uploadWorkFlowService
+            .upload(file, businessKey, caseDefinitionKey, metadata)
+            .pipe(
+              tap(() => {
+                this.documentModalService.closeUploadMetadata(
+                  this.uploadMetadataModal(),
+                );
+                this.uploaded.emit();
+                this.uploadMetadataModal().resetForm();
+              }),
+
+              catchError(() => EMPTY),
+              finalize(() => {
+                this.isUploading.set(false);
+              }),
+            );
+        }),
+      )
+      .subscribe();
   }
 
-  protected filterFileNames(fileName: string) {
-    this.searchValue.update(() => {
-      return fileName;
-    });
+  protected deleteDocument(): void {
+    const document = this.selectedDocument();
+    if (!document?.documentId) {
+      return;
+    }
+
+    this.documentModalService
+      .openDelete(this.deleteDocumentModal())
+      .pipe(
+        switchMap(() => {
+          return this.documentService.deleteDocument(document.documentId).pipe(
+            tap(() => {
+              this.sendDocumentDeletionSuccessMessage(document);
+
+              this.hideToolbar();
+
+              this.deleted.emit(document.documentId);
+            }),
+            catchError(() => {
+              this.notificationService.showError({
+                titleKey:
+                  'samenwerkfunctionaliteit.feedback.userNotification.deleteDocument.failure.title',
+              });
+              return of(undefined);
+            }),
+          );
+        }),
+      )
+      .subscribe();
   }
 
-  private getTableItemsForPage(page: number): TableItem[][] {
-    const documents: Document[] = this.documents();
-    const startIndex: number = (page - 1) * this.model().pageLength;
-    const endIndex: number = Math.min(
-      page * this.model().pageLength,
-      this.model().totalDataLength,
+  protected get batchText(): {
+    SINGLE: string;
+    MULTIPLE: string;
+  } {
+    return {
+      SINGLE: this.translateService.instant(
+        'samenwerkfunctionaliteit.documentTable.selectedFile',
+        this.selectedDocument()?.filename
+          ? { filename: this.selectedDocument()?.filename }
+          : undefined,
+      ),
+      MULTIPLE: '',
+    };
+  }
+
+  private hideToolbar(): void {
+    this.selectedDocument.set(undefined);
+    this.model().selectAll(false);
+  }
+
+  private getDocumentsForPage(page: number): Document[] {
+    const documents = this.filteredDocuments();
+
+    const startIndex = (page - 1) * this.model().pageLength;
+    const endIndex = Math.min(
+      startIndex + this.model().pageLength,
+      documents.length,
     );
 
-    const pageDocuments: Document[] = documents.slice(startIndex, endIndex);
+    return documents.slice(startIndex, endIndex);
+  }
 
-    return pageDocuments.map((document: Document) => [
-      new TableItem({ data: document.fileName }),
-      new TableItem({ data: document.confidentialityLevel }),
+  private getTableItems(documents: Document[]): TableItem[][] {
+    return documents.map((document) => [
+      new TableItem({ data: document.filename }),
       new TableItem({
-        data: new Date(document.creationDate).toLocaleDateString(),
+        data: this.translateService.instant(
+          confidentialityTypeToTranslationKey(document.confidentialityType),
+        ),
+      }),
+      new TableItem({
+        data: new Date(document.creationDate).toLocaleDateString(
+          this.translateService.currentLang,
+        ),
       }),
     ]);
   }
 
-  private setTableModelFilterAndHeader(documents: Document[]): void {
+  private setTableModel(documents: Document[]): void {
     this.model.update((model: TableModel): TableModel => {
       model.totalDataLength = documents.length;
       model.header = this.createTableHeadersForTableModel();
-      model.isRowFiltered = (index: number) => {
-        const fileName = model.row(index)[0].data;
-        return !fileName
-          .toLowerCase()
-          .includes(this.searchValue().toLowerCase());
-      };
 
       return model;
     });
@@ -140,19 +322,31 @@ export class DocumentTableComponent implements OnInit {
     return [
       new TableHeaderItem({
         data: this.translateService.instant(
-          'samenwerkfunctionaliteit.documenttable.fileName',
+          'samenwerkfunctionaliteit.types.document.fileName',
         ),
       }),
       new TableHeaderItem({
         data: this.translateService.instant(
-          'samenwerkfunctionaliteit.documenttable.confidentialityType',
+          'samenwerkfunctionaliteit.types.document.confidentialityType',
         ),
       }),
       new TableHeaderItem({
         data: this.translateService.instant(
-          'samenwerkfunctionaliteit.documenttable.dateCreated',
+          'samenwerkfunctionaliteit.types.document.dateCreated',
         ),
       }),
     ];
+  }
+
+  private sendDocumentDeletionSuccessMessage(document: Document): void {
+    const notification: UserNotification = {
+      titleKey:
+        'samenwerkfunctionaliteit.feedback.userNotification.deleteDocument.success.title',
+      messageKey:
+        'samenwerkfunctionaliteit.feedback.userNotification.deleteDocument.success.message',
+      messageParam: { filename: document.filename },
+    };
+
+    this.notificationService.showSuccess(notification);
   }
 }

@@ -1,15 +1,11 @@
 import { PluginSpecification } from '@valtimo/plugin';
-import { SamenwerkfunctionaliteitPluginConfigurationComponent } from './components/samenwerkfunctionaliteit-plugin-configuration/samenwerkfunctionaliteit-plugin-configuration.component';
 import { SAMENWERKFUNCTIONALITEIT_PLUGIN_LOGO_BASE64 } from './assets/samenwerkfunctionaliteit-plugin-logo';
+import { DeleteBerichtComponent } from './components/delete-bericht/delete-bericht.component';
 import { GetActieverzoekComponent } from './components/get-actieverzoek/get-actieverzoek.component';
 import { GetAllActieverzoekenComponent } from './components/get-all-actieverzoeken/get-all-actieverzoeken.component';
-import { GetBerichtComponent } from './components/get-bericht/get-bericht.component';
-import { PostBerichtComponent } from './components/post-bericht/post-bericht.component';
-import { DeleteBerichtComponent } from './components/delete-bericht/delete-bericht.component';
 import { GetDocumentenOverzichtComponent } from './components/get-documenten-overzicht/get-documenten-overzicht.component';
-import { DownloadDocumentComponent } from './components/download-document/download-document.component';
-import { UploadDocumentComponent } from './components/upload-document/upload-document.component';
 import { GetSamenwerkingNotificatiesComponent } from './components/get-samenwerking-notificaties/get-samenwerking-notificaties.component';
+import { SamenwerkfunctionaliteitPluginConfigurationComponent } from './components/samenwerkfunctionaliteit-plugin-configuration/samenwerkfunctionaliteit-plugin-configuration.component';
 
 const samenwerkfunctionaliteitPluginSpecification: PluginSpecification = {
   pluginId: 'samenwerkfunctionaliteit',
@@ -19,12 +15,8 @@ const samenwerkfunctionaliteitPluginSpecification: PluginSpecification = {
   functionConfigurationComponents: {
     'get-actieverzoek': GetActieverzoekComponent,
     'get-all-actieverzoeken': GetAllActieverzoekenComponent,
-    'get-bericht': GetBerichtComponent,
-    'post-bericht': PostBerichtComponent,
     'delete-bericht': DeleteBerichtComponent,
     'get-documentenoverzicht': GetDocumentenOverzichtComponent,
-    'download-document': DownloadDocumentComponent,
-    'upload-document': UploadDocumentComponent,
     'get-samenwerking-notificaties': GetSamenwerkingNotificatiesComponent,
   },
   pluginTranslations: {
@@ -67,19 +59,6 @@ const samenwerkfunctionaliteitPluginSpecification: PluginSpecification = {
         'Filtert op actieverzoeken waarvan de huidige organisatie (zie OIN in de instellingen van de plugin) de ontvanger is.',
       isOrganisationTheReceiver:
         'De actieverzoeken filteren op organisatie, die gedefinieerd is in the plugin configuratie.',
-      //Berichten:
-      stuurBerichtTitle: 'Stuur bericht:',
-      stuurBerichtPlaceholder: 'Typ hier uw bericht',
-      stuurBerichtSendButtonDescription: 'Bericht versturen',
-      stuurBerichtMissingActieverzoekIdTitle:
-        'Er kan geen bericht verstuurd worden',
-      stuurBerichtMissingActieverzoekIdMessage:
-        'De benodigde samenwerkinggegevens zijn niet beschikbaar.',
-      stuurBerichtSuccessTitle: 'Verzonden:',
-      stuurBerichtSuccessMessage: 'Het bericht is succesvol verzonden.',
-      stuurBerichtErrorTitle: 'Bericht kon niet worden verstuurd:',
-      stuurBerichtErrorMessage:
-        'Er ging iets mis tijdens het verzenden van het bericht. Neem contact op met uw beheerder als dit probleem zich vaker voordoet.',
 
       // Haal alle notificaties op van de samenwerking
       'get-samenwerking-notificaties':
@@ -111,19 +90,6 @@ const samenwerkfunctionaliteitPluginSpecification: PluginSpecification = {
 
       variableFieldTooltip:
         "This field accepts either a literal value or a path to a (process) variable containing the value (e.g. 'pv:/result')",
-
-      // Berichten:
-      stuurBerichtTitle: 'Send message:',
-      stuurBerichtPlaceholder: 'Type your message here',
-      stuurBerichtSendButtonDescription: 'Send message',
-      stuurBerichtMissingActieverzoekIdTitle: 'A message cannot be sent',
-      stuurBerichtMissingActieverzoekIdMessage:
-        'The required collaboration details are not available.',
-      stuurBerichtSuccessTitle: 'Sent:',
-      stuurBerichtSuccessMessage: 'The message has been successfully sent.',
-      stuurBerichtErrorTitle: 'Unable to send message:',
-      stuurBerichtErrorMessage:
-        'Something went wrong while sending the message. Contact your administrator if this problem occurs frequently.',
 
       // Pluginacties
       // Actieverzoeken

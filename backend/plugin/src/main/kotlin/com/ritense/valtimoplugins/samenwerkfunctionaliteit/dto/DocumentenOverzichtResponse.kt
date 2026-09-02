@@ -7,6 +7,7 @@ data class DocumentenOverzichtResponse(
     val embedded: Documenten? = null,
     @JsonProperty("_links")
     val links: Links? = null,
+    val page: Page,
 )
 
 data class Documenten(

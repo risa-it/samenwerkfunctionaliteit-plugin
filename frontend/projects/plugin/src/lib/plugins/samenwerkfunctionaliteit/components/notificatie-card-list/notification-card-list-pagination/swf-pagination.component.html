@@ -1,0 +1,86 @@
+<div class="cds--pagination">
+  <div class="cds--pagination__left">
+    <label
+      id="pagination-left-override-important"
+      class="cds--pagination__text"
+      for="itemsPerPage"
+    >
+      Aantal {{ itemPluralTranslateKey() | translate }} per
+      {{ pageSingleTranslateKey() | translate }}:
+    </label>
+    <div class="cds--select cds--select--inline cds--select__item-count">
+      <select
+        id="itemsPerPage"
+        [value]="pageSize()"
+        (change)="selectPageSize(+$any($event.target).value)"
+        class="cds--select-input"
+      >
+        @for (option of itemsPerPageOptions(); track $index) {
+          <option class="cds--select-option" [value]="option">
+            {{ option }}
+          </option>
+        }
+      </select>
+      <svg
+        cdsIcon="chevron--down"
+        size="16"
+        style="display: inherit"
+        class="cds--select__arrow"
+        aria-hidden="true"
+      ></svg>
+    </div>
+  </div>
+
+  <div class="cds--pagination__right">
+    <div class="cds--select cds--select--inline cds--select__page-number">
+      <select
+        id="currentPageSelect"
+        class="cds--select-input"
+        [value]="this.page()"
+        (change)="selectPage(+$any($event.target).value)"
+      >
+        @for (page of totalPagesOptions(); track $index) {
+          <option class="cds--select-option" [value]="page">
+            {{ page }}
+          </option>
+        }
+      </select>
+      <svg
+        cdsIcon="chevron--down"
+        size="16"
+        class="cds--select__arrow"
+        aria-hidden="true"
+      ></svg>
+    </div>
+    <label
+      id="pagination-right-override-important"
+      class="cds--pagination__text"
+      for="currentPageSelect"
+      >van {{ totalPages() }} {{ pagePluralTranslateKey() | translate }}</label
+    >
+
+    <div class="cds--pagination__control-buttons">
+      <button
+        cdsButton="ghost"
+        [iconOnly]="true"
+        class="cds--pagination__button cds--pagination__button--backward"
+        type="button"
+        [disabled]="!canGoPrevious()"
+        (click)="previousPage()"
+      >
+        <svg cdsIcon="caret--left" size="16" class="cds--btn__icon"></svg>
+      </button>
+
+      <button
+        cdsButton="ghost"
+        [iconOnly]="true"
+        class="cds--pagination__button cds--pagination__button--forward"
+        type="button"
+        [disabled]="!canGoNext()"
+        (click)="nextPage()"
+      >
+        <svg cdsIcon="caret--right" size="16" class="cds--btn__icon"></svg>
+      </button>
+    </div>
+  </div>
+</div>

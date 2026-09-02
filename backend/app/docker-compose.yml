@@ -1,8 +1,8 @@
-name: plugin-docker-compose
+name: samenwerkfunctionaliteit-plugin-docker-compose
 
 services:
   plugin-keycloak:
-    container_name: swf-plugin-docker-compose-plugin-keycloak
+    container_name: swf-keycloak
     depends_on:
       - plugin-keycloak-database
     image: quay.io/keycloak/keycloak:26.2.2
@@ -27,7 +27,11 @@ services:
       - --http-enabled=true
       - --hostname-strict=false
     healthcheck:
-      test: [ 'CMD-SHELL', '[ -f /tmp/HealthCheck.java ] || echo "public class HealthCheck { public static void main(String[] args) throws java.lang.Throwable { System.exit(((java.net.HttpURLConnection)new java.net.URL(args[0]).openConnection()).getResponseCode() == 200 ? 0 : 1); } }" > /tmp/HealthCheck.java && java /tmp/HealthCheck.java http://localhost:8080/auth' ]
+      test:
+        [
+          "CMD-SHELL",
+          '[ -f /tmp/HealthCheck.java ] || echo "public class HealthCheck { public static void main(String[] args) throws java.lang.Throwable { System.exit(((java.net.HttpURLConnection)new java.net.URL(args[0]).openConnection()).getResponseCode() == 200 ? 0 : 1); } }" > /tmp/HealthCheck.java && java /tmp/HealthCheck.java http://localhost:8080/auth',
+        ]
       interval: 10s
       timeout: 5s
       retries: 60
@@ -35,7 +39,7 @@ services:
 
   plugin-keycloak-database:
     image: postgres:17.4
-    container_name: swf-plugin-docker-compose-plugin-keycloak-database
+    container_name: swf-keycloak-database
     ports:
       - "54329:5432"
     environment:
@@ -43,7 +47,7 @@ services:
       POSTGRES_PASSWORD: keycloak
 
   plugin-database:
-    container_name: swf-plugin-docker-compose-plugin-database
+    container_name: swf-database
     image: postgres:17.4
     ports:
       - "54320:5432"
@@ -56,7 +60,7 @@ services:
 
   plugin-rabbitmq:
     image: rabbitmq:4.1.0-management
-    container_name: swf-plugin-docker-compose-plugin-rabbitmq
+    container_name: swf-rabbitmq
     volumes:
       - ./imports/plugin-rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
       - ./imports/plugin-rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
@@ -75,7 +79,7 @@ services:
 
   openzaak:
     image: openzaak/open-zaak:1.20.0
-    container_name: swf-plugin-docker-compose-openzaak
+    container_name: swf-openzaak
     platform: linux/amd64
     profiles:
       - zgw
@@ -105,7 +109,7 @@ services:
 
   openzaak-database:
     image: postgis/postgis:17-3.4
-    container_name: swf-plugin-docker-compose-openzaak-database
+    container_name: swf-openzaak-database
     platform: linux/amd64
     profiles:
       - zgw
@@ -121,14 +125,14 @@ services:
 
   openzaak-redis:
     image: redis:7.4.3
-    container_name: swf-plugin-docker-compose-openzaak-redis
+    container_name: swf-openzaak-redis
     profiles:
       - zgw
       - openzaak
 
   objecten-api:
     image: maykinmedia/objects-api:2.4.4
-    container_name: swf-plugin-docker-compose-objecten-api
+    container_name: swf-objecten-api
     platform: linux/amd64
     profiles:
       - zgw
@@ -157,7 +161,13 @@ services:
       - objecten-api-database
       - objecten-api-redis
     healthcheck:
-      test: [ "CMD", "python", "-c", "import requests; exit(requests.head('http://localhost:8000/admin/').status_code not in [200, 302])" ]
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import requests; exit(requests.head('http://localhost:8000/admin/').status_code not in [200, 302])",
+        ]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -168,7 +178,7 @@ services:
 
   objecten-api-database:
     image: postgis/postgis:17-3.4
-    container_name: swf-plugin-docker-compose-objecten-api-database
+    container_name: swf-objecten-api-database
     platform: linux/amd64
     profiles:
       - zgw
@@ -182,7 +192,7 @@ services:
 
   objecten-api-import:
     image: maykinmedia/objects-api:2.4.4
-    container_name: swf-plugin-docker-compose-objects-api-import
+    container_name: swf-objects-api-import
     platform: linux/amd64
     profiles:
       - zgw
@@ -199,8 +209,8 @@ services:
 
   objecten-api-redis:
     image: redis:7.4.3
-    command: [ "redis-server", "--appendonly", "yes" ]
-    container_name: swf-plugin-docker-compose-objecten-api-redis
+    command: ["redis-server", "--appendonly", "yes"]
+    container_name: swf-objecten-api-redis
     profiles:
       - zgw
       - objecten
@@ -210,7 +220,7 @@ services:
     environment: *objects-env
     command: /celery_worker.sh
     healthcheck:
-      test: [ "CMD", "python", "/app/bin/check_celery_worker_liveness.py" ]
+      test: ["CMD", "python", "/app/bin/check_celery_worker_liveness.py"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -222,10 +232,9 @@ services:
       - zgw
       - objecten
 
-
   objecttypen-api:
     image: maykinmedia/objecttypes-api:3.0.2
-    container_name: swf-plugin-docker-compose-objecttypen-api
+    container_name: swf-objecttypen-api
     platform: linux/amd64
     profiles:
       - zgw
@@ -252,7 +261,13 @@ services:
     depends_on:
       - objecttypen-api-database
     healthcheck:
-      test: [ "CMD", "python", "-c", "import requests; exit(requests.head('http://localhost:8000/admin/').status_code not in [200, 302])" ]
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import requests; exit(requests.head('http://localhost:8000/admin/').status_code not in [200, 302])",
+        ]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -263,7 +278,7 @@ services:
 
   objecttypen-api-database:
     image: postgres:17.4
-    container_name: swf-plugin-docker-compose-objecttypen-api-database
+    container_name: swf-objecttypen-api-database
     profiles:
       - zgw
       - objecten
@@ -276,7 +291,7 @@ services:
 
   objecttypen-api-import:
     image: maykinmedia/objecttypes-api:3.0.2
-    container_name: swf-plugin-docker-compose-objecttypen-api-import
+    container_name: swf-objecttypen-api-import
     platform: linux/amd64
     profiles:
       - zgw
@@ -292,7 +307,7 @@ services:
 
   open-notificaties-rabbitmq:
     image: rabbitmq:4.1.0-management
-    container_name: swf-plugin-docker-compose-open-notificaties-rabbitmq
+    container_name: swf-open-notificaties-rabbitmq
     profiles:
       - zgw
     ports:
@@ -301,7 +316,7 @@ services:
 
   open-notificaties-celery:
     image: openzaak/open-notificaties:1.8.2
-    container_name: swf-plugin-docker-compose-open-notificaties
+    container_name: swf-open-notificaties
     platform: linux/amd64
     profiles:
       - zgw
@@ -333,7 +348,7 @@ services:
 
   open-notificaties:
     image: openzaak/open-notificaties:1.8.1
-    container_name: swf-plugin-docker-compose-open-notificaties-celery
+    container_name: swf-open-notificaties-celery
     platform: linux/amd64
     profiles:
       - zgw
@@ -347,7 +362,7 @@ services:
 
   open-notificaties-database:
     image: postgres:17.4
-    container_name: swf-plugin-docker-compose-open-notificaties-database
+    container_name: swf-open-notificaties-database
     profiles:
       - zgw
     ports:
@@ -361,13 +376,13 @@ services:
 
   open-notificaties-redis:
     image: redis:7.4.3
-    container_name: swf-plugin-docker-compose-open-notificaties-redis
+    container_name: swf-open-notificaties-redis
     profiles:
       - zgw
 
   open-forms-database:
     image: postgres:17.4
-    container_name: swf-plugin-docker-compose-open-forms-database
+    container_name: swf-open-forms-database
     profiles:
       - openformulieren
     ports:
@@ -380,14 +395,14 @@ services:
 
   open-forms-redis:
     image: redis:7.4.3
-    container_name: swf-plugin-docker-compose-open-forms-redis
-    command: [ "redis-server", "--appendonly", "yes" ]
+    container_name: swf-open-forms-redis
+    command: ["redis-server", "--appendonly", "yes"]
     profiles:
       - openformulieren
 
   open-forms-web:
     image: openformulieren/open-forms:3.1.6
-    container_name: swf-plugin-docker-compose-open-forms-web
+    container_name: swf-open-forms-web
     platform: linux/amd64
     profiles:
       - openformulieren
@@ -424,14 +439,14 @@ services:
 
   open-forms-celery:
     image: openformulieren/open-forms:3.1.6
-    container_name: swf-plugin-docker-compose-open-forms-celery
+    container_name: swf-open-forms-celery
     platform: linux/amd64
     profiles:
       - openformulieren
     environment: *web_env
     command: /celery_worker.sh
     healthcheck:
-      test: [ "CMD", "python", "/app/bin/check_celery_worker_liveness.py" ]
+      test: ["CMD", "python", "/app/bin/check_celery_worker_liveness.py"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -444,7 +459,7 @@ services:
 
   open-forms-celery-beat:
     image: openformulieren/open-forms:3.1.6
-    container_name: swf-plugin-docker-compose-open-forms-celery-beat
+    container_name: swf-open-forms-celery-beat
     platform: linux/amd64
     profiles:
       - openformulieren
@@ -456,7 +471,7 @@ services:
 
   open-forms-celery-flower:
     image: openformulieren/open-forms:3.1.6
-    container_name: swf-plugin-docker-compose-open-forms-celery-flower
+    container_name: swf-open-forms-celery-flower
     platform: linux/amd64
     profiles:
       - openformulieren
@@ -470,7 +485,7 @@ services:
 
   open-forms-busybox:
     image: busybox:1.37.0
-    container_name: swf-plugin-docker-compose-open-forms-busybox
+    container_name: swf-open-forms-busybox
     profiles:
       - openformulieren
     command: /bin/chown -R 1000 /private_media
@@ -479,7 +494,7 @@ services:
 
   open-klant:
     image: maykinmedia/open-klant:2.10.0
-    container_name: swf-plugin-docker-compose-open-klant
+    container_name: swf-open-klant
     platform: linux/amd64
     profiles:
       - openklant
@@ -501,7 +516,7 @@ services:
 
   open-klant-database:
     image: postgres:17.4
-    container_name: swf-plugin-docker-compose-open-klant-database
+    container_name: swf-open-klant-database
     profiles:
       - openklant
     ports:
@@ -514,7 +529,7 @@ services:
 
   open-klant-redis:
     image: redis:7.4.3
-    container_name: swf-plugin-docker-compose-open-klant-redis
+    container_name: swf-open-klant-redis
     profiles:
       - openklant
 

@@ -75,7 +75,7 @@ class SamenwerkfunctionaliteitPluginTest {
             )
 
         whenever(
-            samenwerkfunctionaliteitService.getDocumentenOverzicht(
+            samenwerkfunctionaliteitService.getDocumenten(
                 any(),
                 eq(samenwerkingId),
                 eq(query),
@@ -97,7 +97,7 @@ class SamenwerkfunctionaliteitPluginTest {
         )
 
         // Assert
-        verify(samenwerkfunctionaliteitService).getDocumentenOverzicht(
+        verify(samenwerkfunctionaliteitService).getDocumenten(
             any(),
             eq(samenwerkingId),
             eq(query),
@@ -128,7 +128,7 @@ class SamenwerkfunctionaliteitPluginTest {
         val documents = emptyList<Document>()
 
         whenever(
-            samenwerkfunctionaliteitService.getDocumentenOverzicht(
+            samenwerkfunctionaliteitService.getDocumenten(
                 any(),
                 eq(samenwerkingId),
                 eq(expectedQuery),
@@ -150,7 +150,7 @@ class SamenwerkfunctionaliteitPluginTest {
         )
 
         // Assert
-        verify(samenwerkfunctionaliteitService).getDocumentenOverzicht(
+        verify(samenwerkfunctionaliteitService).getDocumenten(
             any(),
             eq(samenwerkingId),
             eq(expectedQuery),

@@ -29,7 +29,6 @@ class SamenwerkfunctionaliteitServiceTest {
         val properties = SamenwerkfunctionaliteitProperties(URI("http://example.com"), "cert", "oin")
         val actieverzoekId = UUID.randomUUID()
         val response = ActieverzoekResponse()
-        val expectedModel = Actieverzoek()
 
         every { mockClient.getActieverzoek(properties, actieverzoekId) } returns response
 
@@ -37,7 +36,7 @@ class SamenwerkfunctionaliteitServiceTest {
         val result = service.getActieverzoek(properties, actieverzoekId)
 
         // Then
-        assert(result == expectedModel)
+        assert(result == response)
         verify(exactly = 1) { mockClient.getActieverzoek(properties, actieverzoekId) }
     }
 

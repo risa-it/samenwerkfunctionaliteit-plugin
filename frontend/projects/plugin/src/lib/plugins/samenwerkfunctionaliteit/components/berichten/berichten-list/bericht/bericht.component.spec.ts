@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TranslateService } from '@ngx-translate/core';
 import { IconDescriptor, IconService } from 'carbon-components-angular';
-import { ChatBericht } from '../../../../models/bericht.model';
+import { Message } from '../../../../models/bericht.model';
 import { BerichtComponent } from './bericht.component';
 
 const mockIconDescriptor: IconDescriptor = {
@@ -20,7 +20,7 @@ const mockIconDescriptor: IconDescriptor = {
   svg: '<svg></svg>',
 };
 
-const mockMessage: ChatBericht = {
+const mockMessage: Message = {
   messageId: '1',
   createdOn: new Date(),
   content: 'content',

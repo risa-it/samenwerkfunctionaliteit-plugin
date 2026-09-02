@@ -1,8 +1,8 @@
 @if (isLoading()) {
   <div
     [ngClass]="{
-    'refresh-container': true,
-  }"
+      'refresh-container': true,
+    }"
   >
     <cds-loading
       [size]="'sm'"
@@ -15,8 +15,14 @@
 @if (isSamenwerkingDossier() && !isLoading()) {
   <div class="content-wrapper">
     <div class="column">
-      <samenwerkingsstatus class="samenwerkingsstatus" [samenwerking]="this.samenwerking()"></samenwerkingsstatus>
-      <samenwerking class="samenwerking" [samenwerking]="this.samenwerking()"></samenwerking>
+      <samenwerkingsstatus
+        class="samenwerkingsstatus"
+        [samenwerking]="this.samenwerking()"
+      ></samenwerkingsstatus>
+      <samenwerking
+        class="samenwerking"
+        [samenwerking]="this.samenwerking()"
+      ></samenwerking>
     </div>
     <div class="column">
       <actieverzoek-card [actieverzoek]="actieverzoek()"></actieverzoek-card>
@@ -31,15 +37,18 @@
     <div class="column">
       <document-list class="document-list" [isLightMode]="true"></document-list>
     </div>
-
   </div>
 } @else if (!isSamenwerkingDossier() && !isLoading()) {
   <cds-notification
     [notificationObj]="{
-          type: 'info',
-          title: 'samenwerkfunctionaliteit.feedback.notAnSwfCaseMessage.samenwerkingTitle' | translate,
-          message: 'samenwerkfunctionaliteit.feedback.notAnSwfCaseMessage.genericMessage' | translate,
-          showClose: true
-        }"
+      type: 'info',
+      title:
+        'samenwerkfunctionaliteit.feedback.notAnSwfCaseMessage.samenwerkingTitle'
+        | translate,
+      message:
+        'samenwerkfunctionaliteit.feedback.notAnSwfCaseMessage.genericMessage'
+        | translate,
+      showClose: false,
+    }"
   ></cds-notification>
 }
