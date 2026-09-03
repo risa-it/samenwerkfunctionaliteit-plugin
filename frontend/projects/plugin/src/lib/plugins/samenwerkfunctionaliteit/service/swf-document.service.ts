@@ -42,8 +42,8 @@ export class SwfDocumentService implements OnDestroy {
   /**
    * Gets the samenwerkingIds for a given documentId.
    * If the documentId is not in the cache, it fetches from source.
-   * @param businessKey The document ID to look up.
-   * @returns The samenwerkingId, or null if not found.
+   * @param businessKey The document ID, converted to BusinessKey, to look up.
+   * @returns An observable of SwfCaseProperties.
    */
   getSamenwerkingProperties(
     businessKey: BusinessKey,
