@@ -150,7 +150,7 @@ class DefaultSamenwerkfunctionaliteitClient(
         actieVerzoekId: UUID,
         berichtId: UUID,
     ) {
-        TODO("Not yet implemented")
+        TODO("Not implemented yet")
     }
 
     override fun getDocumentenOverzicht(
