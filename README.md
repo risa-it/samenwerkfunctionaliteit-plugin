@@ -13,3 +13,4 @@ A Gzac plugin to connect with the DSO-Samenwerkfunctionaliteit API.
 - [Getting Started](documentation/getting-started.md) — setup and development instructions
 - [Example Application](documentation/example-application.md) — running the example app locally
 - [Sample Plugin](documentation/plugin.md) — reference implementation included in this template
+- [Release notes](documentation/release-notes.md) — versiegeschiedenis en wijzigingen
