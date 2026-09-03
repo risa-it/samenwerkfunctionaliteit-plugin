@@ -176,7 +176,7 @@ export class NotificatiesCustomTabComponent implements OnInit {
         return NotificatieCardTypes.Skeleton;
 
       default:
-        throw new Error(`Unknown notificatie type: ${notificatieType}`);
+        throw new Error(`Notificatie type unknown: ${notificatieType}`);
     }
   }
 }
