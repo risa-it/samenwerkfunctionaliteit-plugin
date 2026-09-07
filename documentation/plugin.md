@@ -128,7 +128,152 @@ valtimo:
 
 ## Configuration
 
+### Actieverzoek polling service
+This plugin supplies a service that polls for new actieverzoeken in the Samenwerkfunctionaliteit API. When a new actieverzoek is created, the plugin automatically generates a new 'Actieverzoek Samenwerkfunctionaliteit' object in the Objecten API.
 
+To enable this feature, the following steps should be taken:
+
+1. Create an object type in the Objecten API. It should have the following JSON schema:
+```json
+{
+  "$id": "actieverzoek-samenwerkfunctionaliteit-[your-project-name].schema",
+  "type": "object",
+  "title": "Actieverzoek Samenwerkfunctionaliteit [Your Project Name]",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "properties": {
+    "kvk": {
+      "type": "string"
+    },
+    "data": {
+      "type": "object",
+      "properties": {
+        "samenwerkingProperties": {
+          "type": "object",
+          "properties": {
+            "actieverzoekId": {
+              "type": "string"
+            },
+            "samenwerkingId": {
+              "type": "string"
+            },
+            "actieverzoekDetails": {
+              "type": "object",
+              "properties": {
+                "deelnemer": {
+                  "type": "string"
+                },
+                "eventDatumTijd": {
+                  "type": "string"
+                },
+                "eventInitiator": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "isAutomatischGegenereerd": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "type": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}
+``` 
+
+2. Add the following configuration to your application.yaml to automatically generate an actieverzoek object:
+
+```yaml
+samenwerkfunctionaliteit:
+    actieverzoek-notificaties:
+        enabled: true
+        # The UUID of the object type registered in the preceding step
+        object-type-uuid: ${THE_UUID_OF_YOUR_ACTIEVERZOEK_SAMENWERKFUNCTIONALITEIT_OBJECT}
+        # The OIN of the organisation which is envolved in the actieverzoek (requesting or receiving party)
+        organisatie-oin: ${SAMENWERKFUNCTIONALITEIT_ACTIEVERZOEK_NOTIFICATIES_ORGANISATIE_OIN}
+        # The base URL the Samenwerkfunctionaliteit API
+        swf-api-base-url: ${SAMENWERKFUNCTIONALITEIT_API_BASE_URL}
+        # The earliest creation datetime of actieverzoeken that should be transformed into a case
+        initial-event-date-time: ${SAMENWERKFUNCTIONALITEIT_ACTIEVERZOEK_NOTIFICATIES_INITIAL_EVENT_DATUM_TIJD}
+```
+
+3. Add an object management configuration referring to this object type in config/objectmanagement/:
+```json
+{
+    "id": "ee4f6d46-ca31-45cf-b601-990c0e5e3cab",
+    "title": "Actieverzoek Samenwerkfunctionaliteit",
+    "objecttypenApiPluginConfigurationId": "bc109d5e-0388-4637-bcfa-b454f402bef8",
+    "objecttypeId": "${THE_UUID_OF_YOUR_ACTIEVERZOEK_SAMENWERKFUNCTIONALITEIT_OBJECT}",
+    "objecttypeVersion": "${THE_VERSION_NUMBER_OF_YOUR_ACTIEVERZOEK_SAMENWERKFUNCTIONALITEIT_OBJECT}",
+    "objectenApiPluginConfigurationId": "a1a5e464-92db-41fc-9ab9-da663dd18471",
+    "showInDataMenu": false,
+    "formDefinitionView": "",
+    "formDefinitionEdit": ""
+}
+```
+
+4. To listen for new objects being created (whenever a new actieverzoek is added to the Samenwerkfunctionaliteit API), add the following Verzoeken plugin configuration:
+
+```json
+[
+    {
+        "id": "[a freshly-generated UUID]",
+        "title": "Verzoek [Your Process' Name] SWF (Autodeployed)",
+        "pluginDefinitionKey": "verzoek",
+        "properties": {
+            "notificatiesApiPluginConfiguration": "[the uuid of of your Notificaties API configuration]",
+            // starts the generic create-zaakdossier process
+            "processToStart": "create-zaakdossier",
+            "rsin": "${RSIN_OF_YOUR_ORGANISATION}",
+            "verzoekProperties": [
+                {
+                    "type": "Verzoek GGD SWF",
+                    "initiatorRolDescription": "${INITIATOR_ROLE_DESCRIPTION_URL_OF_YOUR_CASE}",
+                    "caseDefinitionKey": "ggd-haaglanden-advisering-leefomgeving",
+                    // This is the UUID of the object management, created above
+                    "objectManagementId": "ee4f6d46-ca31-45cf-b601-990c0e5e3cab", 
+                    "initiatorRoltypeUrl": "${INITIATOR_ROLE_TYPE_URL_OF_YOUR_CASE}",
+                    "processDefinitionKey": "[the-process-definition-key-for-your-case]",
+                    "copyStrategy": "specified",
+                    "mapping": [
+                        {
+                            "source": "/samenwerkingProperties/actieverzoekDetails/deelnemer",
+                            "target": "doc:/samenwerkingProperties/actieverzoekDetails/deelnemer"
+                        },
+                        {
+                            "source": "/samenwerkingProperties/actieverzoekDetails/eventDatumTijd",
+                            "target": "doc:/samenwerkingProperties/actieverzoekDetails/eventDatumTijd"
+                        },
+                        {
+                            "source": "/samenwerkingProperties/actieverzoekDetails/eventInitiator",
+                            "target": "doc:/samenwerkingProperties/actieverzoekDetails/eventInitiator"
+                        },
+                        {
+                            "source": "/samenwerkingProperties/actieverzoekDetails/actieverzoekId",
+                            "target": "doc:/samenwerkingProperties/actieverzoekDetails/actieverzoekId"
+                        },
+                        {
+                            "source": "/isAutomatischGegenereerd",
+                            "target": "doc:/isAutomaticallyGenerated"
+                        },
+                        {
+                            "source": "/samenwerkingProperties/samenwerkingId",
+                            "target": "doc:/samenwerkingProperties/samenwerkingId"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+]
+```
+
+That's it. This configuration should generate a new case whenever the service detects that a new actieverzoek intended for your organisation has been created in the Samenwerkfunctionaliteit API.
 
 ## Plugin actions
 
