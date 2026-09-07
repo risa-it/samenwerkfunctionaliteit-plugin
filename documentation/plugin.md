@@ -128,11 +128,7 @@ valtimo:
 
 ## Configuration
 
-List the plugin configuration properties and how to set them.
 
-| Property | Type | Required | Description |
-|----------|------|----------|-------------|
-|          |      |          |             |
 
 ## Plugin actions
 
