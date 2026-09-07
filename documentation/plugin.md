@@ -107,9 +107,9 @@ The following example grants a user role permission to perform all available act
 }
 ```
 
-### Frontend configuration
+## Frontend configuration
 
-#### Uploading files within the Samenwerkingsfunctionaliteit API
+### Uploading files within the Samenwerkingsfunctionaliteit API
 The SWF API supports uploading, retrieving, and deleting files within a collaboration (_Samenwerking_).
 
 To support more fine-grained storage policies, the plugin also supports uploading a backup copy to the Documenten API, which is part of the Zaakgericht Werken domain. When this option is enabled, the file is first uploaded to Open Zaak. The UUID of the uploaded document is then passed as the `kenmerkSysteem`  query parameter when uploading the file to the SWF API. This makes it easier to track the uploaded document across both systems.
@@ -134,7 +134,7 @@ List the plugin configuration properties and how to set them.
 |----------|------|----------|-------------|
 |          |      |          |             |
 
-## Actions
+## Plugin actions
 
 ### Time API test action
 
@@ -144,7 +144,7 @@ Sends a GET request to the configured API URL and returns the timezone response.
 |-----------|------|----------|-------------|
 |           |      |          |             |
 
-### GET getActieverzoek
+### GET `getActieverzoek`
 
 Sends a GET request to retrieve a single **actieverzoek** (action request).
 **Usage:** Add this plugin action to an **operaton service task** in your process. The result of this request must be
@@ -175,7 +175,7 @@ Voorbeeld `*.processlink.json`:
 
 ---
 
-### GET getAlleActieverzoeken
+### GET `getAlleActieverzoeken`
 
 Sends a GET request to retrieve all **actieverzoeken** (action requests) of a **samenwerking**.
 **Usage:** Add this plugin action to an **operaton service task** in your process. The result of this request must be
@@ -207,7 +207,7 @@ Voorbeeld `*.processlink.json`:
 ![get-alle-actieverzoeken.png](img/get-alle-actieverzoeken.png)
 ---
 
-### GET getSamenwerkingenNotificaties
+### GET `getSamenwerkingenNotificaties`
 
 Sends a GET request to retrieve all **actieverzoeken** (action requests) of a **samenwerking**.
 **Usage:** Add this plugin action to an **operaton service task** in your process. The result of this request must be
@@ -324,4 +324,3 @@ en [toevoegen van case tabs](https://docs.valtimo.nl/features/case/for-developer
    - Add an **operaton service task** and select the **GET getActieverzoek** or **GET getAlleActieverzoeken** action.
    - Map the result to the respective operaton process variable (**actieverzoek** or **actieverzoeken**).
    - Proceed with the rest of the process logic using the stored data.
-
