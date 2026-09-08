@@ -72,18 +72,16 @@ export class DocumentUploadMetadataModal {
 
   protected confidentialityOptions = [
     {
-      content: this.translateService.instant(
+      value: ConfidentialityTypes.Confidential,
+      label: this.translateService.instant(
         'samenwerkfunctionaliteit.types.confidentiality.confidential',
       ),
-      id: ConfidentialityTypes.Confidential,
-      selected: false,
     },
     {
-      content: this.translateService.instant(
+      value: ConfidentialityTypes.StrictlyConfidential,
+      label: this.translateService.instant(
         'samenwerkfunctionaliteit.types.confidentiality.strictlyConfidential',
       ),
-      id: ConfidentialityTypes.StrictlyConfidential,
-      selected: false,
     },
   ];
 
