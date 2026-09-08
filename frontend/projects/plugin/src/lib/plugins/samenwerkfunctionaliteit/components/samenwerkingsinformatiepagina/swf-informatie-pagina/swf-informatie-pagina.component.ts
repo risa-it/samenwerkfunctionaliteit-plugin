@@ -100,7 +100,7 @@ export class SwfInformatiePaginaComponent implements OnInit {
     this.fetchAndLoadSamenwerking(businessKey);
   }
 
-  protected onUpdateSentRefreshActieverzoek(): void {
+  protected onStatusChangedRefreshActieverzoek(): void {
     const businessKey = toBusinessKey(this.documentId);
     this.swfDocumentService
       .getSamenwerkingProperties(businessKey)

@@ -52,7 +52,7 @@ export class UpdateStatusModalComponent {
     input.required<ActieverzoekStatusTypeOption[]>();
   hasError: WritableSignal<boolean> = signal<boolean>(false);
   isSending: WritableSignal<boolean> = signal<boolean>(false);
-  onUpdateSent = output<void>();
+  onStatusChanged = output<void>();
 
   updateStatus: ActieverzoekStatusType | undefined = undefined;
   explanation: string = '';
@@ -97,7 +97,7 @@ export class UpdateStatusModalComponent {
       .subscribe({
         next: () => {
           this.showSuccessNotification();
-          this.onUpdateSent.emit();
+          this.onStatusChanged.emit();
         },
         error: (error: Error) => {
           this.hasError.set(true);
