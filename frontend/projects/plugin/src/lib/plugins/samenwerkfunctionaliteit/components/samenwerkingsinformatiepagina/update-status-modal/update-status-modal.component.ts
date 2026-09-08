@@ -16,19 +16,16 @@ import {
   DropdownModule,
   IconModule,
   InputModule,
-  ListItem,
 } from 'carbon-components-angular';
 import { ActieverzoekService } from '../../../service/actieverzoek.service';
 import {
   ActieverzoekStatusType,
   ActieverzoekStatusTypeOption,
-  ActieverzoekStatusTypes,
-  ActieverzoekStatusValueToKey,
 } from '../../../types/actieverzoek-status.type';
-import { finalize, take } from 'rxjs';
 import { UserNotificationService } from '../../../service/user-notification.service';
 import { UserNotification } from '../../../interface/user-notification.interface';
 import { TranslatePipe } from '@ngx-translate/core';
+import { finalize, take } from 'rxjs';
 
 @Component({
   selector: 'update-status-modal',
@@ -55,7 +52,7 @@ export class UpdateStatusModalComponent {
   hasError: WritableSignal<boolean> = signal<boolean>(false);
   isSending: WritableSignal<boolean> = signal<boolean>(false);
 
-  updateStatus: string = '';
+  updateStatus: ActieverzoekStatusType | undefined = undefined;
   explanation: string = '';
 
   protected onSubmit() {
@@ -74,7 +71,7 @@ export class UpdateStatusModalComponent {
       notice: this.explanation,
       description: actieverzoek.description,
       productId: actieverzoek.productId,
-      status: this.mapUpdateStatusToActieverzoekStatusType(this.updateStatus),
+      status: this.updateStatus,
       title: actieverzoek.title,
     };
   }
@@ -104,16 +101,6 @@ export class UpdateStatusModalComponent {
           this.showFailedNotification();
         },
       });
-  }
-
-  private mapUpdateStatusToActieverzoekStatusType(
-    status: string,
-  ): ActieverzoekStatusType {
-    return ActieverzoekStatusTypes[
-      ActieverzoekStatusValueToKey[
-        status
-      ] as keyof typeof ActieverzoekStatusTypes
-    ];
   }
 
   private showSuccessNotification(): void {
