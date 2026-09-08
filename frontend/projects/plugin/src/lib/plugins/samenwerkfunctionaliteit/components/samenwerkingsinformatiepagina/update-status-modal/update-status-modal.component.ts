@@ -3,6 +3,7 @@ import {
   inject,
   input,
   InputSignal,
+  output,
   signal,
   WritableSignal,
 } from '@angular/core';
@@ -51,6 +52,7 @@ export class UpdateStatusModalComponent {
     input.required<ActieverzoekStatusTypeOption[]>();
   hasError: WritableSignal<boolean> = signal<boolean>(false);
   isSending: WritableSignal<boolean> = signal<boolean>(false);
+  onStatusChanged = output<void>();
 
   updateStatus: ActieverzoekStatusType | undefined = undefined;
   explanation: string = '';
@@ -95,6 +97,7 @@ export class UpdateStatusModalComponent {
       .subscribe({
         next: () => {
           this.showSuccessNotification();
+          this.onStatusChanged.emit();
         },
         error: (error: Error) => {
           this.hasError.set(true);

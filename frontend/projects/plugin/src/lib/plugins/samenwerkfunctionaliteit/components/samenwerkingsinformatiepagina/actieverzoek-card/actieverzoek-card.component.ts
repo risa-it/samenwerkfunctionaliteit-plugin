@@ -1,4 +1,11 @@
-import { Component, input, InputSignal } from '@angular/core';
+import {
+  Component,
+  input,
+  InputSignal,
+  OnChanges,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { Actieverzoek } from '../../../models/actieverzoek.model';
 import { DatePipe } from '@angular/common';
 import { InputModule } from 'carbon-components-angular';
@@ -12,12 +19,13 @@ import { getActieverzoekTypeText } from '../../../types/actieverzoek-status.type
   templateUrl: './actieverzoek-card.component.html',
   styleUrl: './actieverzoek-card.component.scss',
 })
-export class ActieverzoekCardComponent {
-  actieverzoek: InputSignal<Actieverzoek> = input.required<Actieverzoek>();
+export class ActieverzoekCardComponent implements OnChanges {
+  protected actieverzoek: InputSignal<Actieverzoek> =
+    input.required<Actieverzoek>();
   protected capitalize = capitalize;
-  protected statusText: string = '';
+  protected statusText: WritableSignal<string> = signal('');
 
-  ngOnInit() {
-    this.statusText = getActieverzoekTypeText(this.actieverzoek().status);
+  ngOnChanges(): void {
+    this.statusText.set(getActieverzoekTypeText(this.actieverzoek().status));
   }
 }

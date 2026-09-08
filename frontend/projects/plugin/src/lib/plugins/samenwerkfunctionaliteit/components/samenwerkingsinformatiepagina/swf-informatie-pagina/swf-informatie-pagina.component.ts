@@ -86,14 +86,31 @@ export class SwfInformatiePaginaComponent implements OnInit {
     },
   );
 
-  ngOnInit() {
-    const documentId = this.swfDocumentService.getParam(
-      this.route,
-      'documentId',
-    );
-    const businessKey = toBusinessKey(documentId);
+  private documentId = this.swfDocumentService.getParam(
+    this.route,
+    'documentId',
+  );
+  private businessKey = toBusinessKey(this.documentId);
 
-    this.fetchAndLoadSamenwerking(businessKey);
+  ngOnInit() {
+    this.fetchAndLoadSamenwerking(this.businessKey);
+  }
+
+  protected onStatusChangedRefreshActieverzoek(): void {
+    this.swfDocumentService
+      .getSamenwerkingProperties(this.businessKey)
+      .pipe(
+        take(1),
+        switchMap((samenwerkingProps: SwfCaseProperties) => {
+          return this.fetchActieverzoek(samenwerkingProps.actieverzoekId);
+        }),
+        tap((actieverzoek) => {
+          this.updateActieverzoekStatusTypes(actieverzoek);
+        }),
+      )
+      .subscribe({
+        next: (actieverzoek) => this.actieverzoek.set(actieverzoek),
+      });
   }
 
   private fetchAndLoadSamenwerking(businessKey: BusinessKey): void {

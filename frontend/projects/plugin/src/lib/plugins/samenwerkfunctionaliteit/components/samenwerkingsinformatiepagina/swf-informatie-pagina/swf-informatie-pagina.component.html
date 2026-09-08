@@ -30,6 +30,7 @@
         <update-status-modal
           [actieverzoek]="actieverzoek()"
           [allowedStatusTypes]="statusTypeDropdownOptions()"
+          (onStatusChanged)="onStatusChangedRefreshActieverzoek()"
         ></update-status-modal>
       }
     </div>
