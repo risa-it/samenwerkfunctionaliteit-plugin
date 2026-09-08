@@ -21,6 +21,7 @@ import {
 import { ActieverzoekService } from '../../../service/actieverzoek.service';
 import {
   ActieverzoekStatusType,
+  ActieverzoekStatusTypeOption,
   ActieverzoekStatusTypes,
   ActieverzoekStatusValueToKey,
 } from '../../../types/actieverzoek-status.type';
@@ -49,21 +50,16 @@ export class UpdateStatusModalComponent {
     UserNotificationService,
   );
   actieverzoek: InputSignal<Actieverzoek> = input.required<Actieverzoek>();
-  statusTypeDropdownListItems: InputSignal<ListItem[]> =
-    input.required<ListItem[]>();
-  allowedStatusTypes: InputSignal<ActieverzoekStatusType[]> =
-    input.required<ActieverzoekStatusType[]>();
+  allowedStatusTypes: InputSignal<ActieverzoekStatusTypeOption[]> =
+    input.required<ActieverzoekStatusTypeOption[]>();
   hasError: WritableSignal<boolean> = signal<boolean>(false);
   isSending: WritableSignal<boolean> = signal<boolean>(false);
 
-  updateStatus: ListItem = {
-    content: '',
-    selected: false,
-  };
+  updateStatus: string = '';
   explanation: string = '';
 
   protected onSubmit() {
-    if (!this.updateStatus.content && !this.explanation) {
+    if (!this.updateStatus && !this.explanation) {
       return;
     }
     const actieverzoekUpdateData: ActieverzoekUpdateData =
@@ -78,9 +74,7 @@ export class UpdateStatusModalComponent {
       notice: this.explanation,
       description: actieverzoek.description,
       productId: actieverzoek.productId,
-      status: this.mapUpdateStatusToActieverzoekStatusType(
-        this.updateStatus.value,
-      ),
+      status: this.mapUpdateStatusToActieverzoekStatusType(this.updateStatus),
       title: actieverzoek.title,
     };
   }
@@ -130,7 +124,7 @@ export class UpdateStatusModalComponent {
         'samenwerkfunctionaliteit.actieverzoekStatusUpdate.successMessage',
       messageParam: {
         name: this.actieverzoek().title,
-        status: this.updateStatus.content,
+        status: this.updateStatus,
       },
     };
 
