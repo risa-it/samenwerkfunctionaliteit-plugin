@@ -7,7 +7,11 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Collaborate32 } from '@carbon/icons';
-import { IconModule, IconService } from 'carbon-components-angular';
+import {
+  IconModule,
+  IconService,
+  NotificationModule,
+} from 'carbon-components-angular';
 import { forkJoin, Observable, switchMap, tap } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { BerichtenListComponent } from '../../components/berichten/berichten-list/berichten-list.component';
@@ -22,10 +26,17 @@ import { UserNotificationService } from '../../service/user-notification.service
 import { ActieverzoekId } from '../../types/actieverzoek-id.type';
 import { BusinessKey, toBusinessKey } from '../../types/business-key.type';
 import { capitalize } from '../../utils/capitalize';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'berichten-custom-tab',
-  imports: [StuurBerichtComponent, BerichtenListComponent, IconModule],
+  imports: [
+    StuurBerichtComponent,
+    BerichtenListComponent,
+    IconModule,
+    NotificationModule,
+    TranslatePipe,
+  ],
   templateUrl: './berichten-custom-tab.component.html',
   styleUrl: './berichten-custom-tab.component.css',
 })
@@ -48,6 +59,7 @@ export class BerichtenCustomTabComponent implements OnInit {
   oinNumber: WritableSignal<string> = signal<string>('');
   isLoading: WritableSignal<boolean> = signal<boolean>(true);
   otherParticipant: WritableSignal<string> = signal<string>('');
+  isSamenwerkingDossier: WritableSignal<boolean> = signal<boolean>(false);
 
   swfCaseProperties: SwfCaseProperties;
 
@@ -82,9 +94,7 @@ export class BerichtenCustomTabComponent implements OnInit {
       .getSamenwerkingProperties(this.getBusinessKey())
       .pipe(
         tap((samenwerkingProperties: SwfCaseProperties) => {
-          if (!samenwerkingProperties.actieverzoekId) {
-            throw Error("Case doesn't have an actieverzoekId");
-          }
+          this.isSamenwerkingDossier.set(samenwerkingProperties.isSwfCase);
           this.swfCaseProperties = samenwerkingProperties;
         }),
       );
