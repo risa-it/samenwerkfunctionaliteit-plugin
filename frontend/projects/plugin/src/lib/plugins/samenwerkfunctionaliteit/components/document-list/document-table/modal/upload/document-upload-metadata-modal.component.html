@@ -17,7 +17,7 @@
               | translate
           }}
 
-          <input cdsText formControlName="documentDescription" />
+          <input cdsText formControlName="documentDescription"/>
         </cds-label>
       </div>
 
@@ -28,41 +28,40 @@
               | translate
           }}
 
-          <input cdsText formControlName="numberWithinSystem" />
+          <input cdsText formControlName="numberWithinSystem"/>
         </cds-label>
       </div>
 
       <div class="form-field">
         <cds-label
-          >{{
+        >{{
             'samenwerkfunctionaliteit.types.document.confidentialityType'
               | translate
           }}
           <cds-tooltip
             [autoAlign]="true"
             [description]="confidentialityTypeTooltipText"
-            ><svg
+          >
+            <svg
               class="tooltip-icon"
               cdsIcon="information"
               size="32"
-            ></svg></cds-tooltip
-        ></cds-label>
-        <cds-dropdown
-          formControlName="confidentialityType"
-          [appendInline]="true"
-          [itemValueKey]="'id'"
-        >
-          <cds-dropdown-list
-            [items]="confidentialityOptions"
-          ></cds-dropdown-list>
-        </cds-dropdown>
+            ></svg>
+          </cds-tooltip
+          >
+        </cds-label>
+        <select class="cds--dropdown">
+          @for (option of confidentialityOptions; track $index) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
       </div>
 
       <div class="form-field">
         <cds-label>
           {{ 'samenwerkfunctionaliteit.types.document.systemId' | translate }}
 
-          <input cdsText formControlName="systemId" />
+          <input cdsText formControlName="systemId"/>
         </cds-label>
       </div>
     </form>

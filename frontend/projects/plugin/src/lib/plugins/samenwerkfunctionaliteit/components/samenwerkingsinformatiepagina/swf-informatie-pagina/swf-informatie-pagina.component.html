@@ -26,11 +26,10 @@
     </div>
     <div class="column">
       <actieverzoek-card [actieverzoek]="actieverzoek()"></actieverzoek-card>
-      @if (statusTypeDropdownListItems().length > 0) {
+      @if (statusTypeDropdownOptions().length > 0) {
         <update-status-modal
           [actieverzoek]="actieverzoek()"
-          [statusTypeDropdownListItems]="statusTypeDropdownListItems()"
-          [allowedStatusTypes]="actieverzoekStatusTypes()"
+          [allowedStatusTypes]="statusTypeDropdownOptions()"
           (onUpdateSent)="this.onUpdateSentRefreshActieverzoek()"
         ></update-status-modal>
       }

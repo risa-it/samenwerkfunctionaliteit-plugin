@@ -11,11 +11,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { PluginTranslatePipeModule } from '@valtimo/plugin';
-import {
-  ListItem,
-  LoadingModule,
-  NotificationModule,
-} from 'carbon-components-angular';
+import { LoadingModule, NotificationModule } from 'carbon-components-angular';
 import {
   finalize,
   forkJoin,
@@ -42,6 +38,7 @@ import {
 import {
   ActieverzoekStatusList,
   ActieverzoekStatusType,
+  ActieverzoekStatusTypeOption,
   getActieverzoekTypeText,
 } from '../../../types/actieverzoek-status.type';
 import { BusinessKey, toBusinessKey } from '../../../types/business-key.type';
@@ -83,12 +80,14 @@ export class SwfInformatiePaginaComponent implements OnInit {
     ActieverzoekStatusList,
   );
   isLoading: WritableSignal<boolean> = signal(true);
-  statusTypeDropdownListItems: Signal<ListItem[]> = computed(() => {
-    const actieverzoekStatusTypesList = this.actieverzoekStatusTypes();
-    return this.mapActieverzoekStatusTypesToListItems(
-      actieverzoekStatusTypesList,
-    );
-  });
+  statusTypeDropdownOptions: Signal<ActieverzoekStatusTypeOption[]> = computed(
+    () => {
+      const actieverzoekStatusTypesList = this.actieverzoekStatusTypes();
+      return this.actieverzoekStatusTypeOptionsFrom(
+        actieverzoekStatusTypesList,
+      );
+    },
+  );
 
   private documentId = this.swfDocumentService.getParam(
     this.route,
@@ -188,18 +187,19 @@ export class SwfInformatiePaginaComponent implements OnInit {
       .pipe(take(1));
   }
 
-  private mapActieverzoekStatusTypesToListItems(
+  private actieverzoekStatusTypeOptionsFrom(
     actieverzoekStatusTypes: ActieverzoekStatusType[],
-  ): ListItem[] {
+  ): ActieverzoekStatusTypeOption[] {
     return actieverzoekStatusTypes.map(
-      (actieverzoekStatusType: ActieverzoekStatusType): ListItem => {
+      (
+        actieverzoekStatusType: ActieverzoekStatusType,
+      ): ActieverzoekStatusTypeOption => {
         const translatedType = this.translateService.instant(
           getActieverzoekTypeText(actieverzoekStatusType),
         );
         return {
-          content: translatedType,
           value: actieverzoekStatusType,
-          selected: false,
+          label: translatedType,
         };
       },
     );

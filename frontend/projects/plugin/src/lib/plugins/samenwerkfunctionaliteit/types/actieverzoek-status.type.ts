@@ -10,6 +10,11 @@ export const ActieverzoekStatusTypes = {
 export type ActieverzoekStatusType =
   (typeof ActieverzoekStatusTypes)[keyof typeof ActieverzoekStatusTypes];
 
+export type ActieverzoekStatusTypeOption = {
+  value: ActieverzoekStatusType;
+  label: string;
+};
+
 export const ActieverzoekStatusValueToKey = Object.fromEntries(
   Object.entries(ActieverzoekStatusTypes).map(([key, value]) => [value, key]),
 ) as {
