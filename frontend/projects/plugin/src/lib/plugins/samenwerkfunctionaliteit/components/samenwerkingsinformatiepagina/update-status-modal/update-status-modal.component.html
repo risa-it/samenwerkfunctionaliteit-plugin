@@ -2,14 +2,11 @@
   <div class="cds-form">
     <div class="cds-field">
       <cds-label>{{ 'samenwerkfunctionaliteit.actieverzoekUpdateStatusModal.updateStatusTo' | translate }}</cds-label>
-      <cds-dropdown
-        [(ngModel)]="updateStatus"
-      >
-        <cds-dropdown-list
-          [items]="statusTypeDropdownListItems()"
-        ></cds-dropdown-list>
-      </cds-dropdown>
-
+      <select class="cds--dropdown" [(ngModel)]="updateStatus">
+        @for (type of allowedStatusTypes(); track $index) {
+          <option [value]="type.value">{{ type.label }}</option>
+        }
+      </select>
     </div>
 
     <div class="cds-field">
