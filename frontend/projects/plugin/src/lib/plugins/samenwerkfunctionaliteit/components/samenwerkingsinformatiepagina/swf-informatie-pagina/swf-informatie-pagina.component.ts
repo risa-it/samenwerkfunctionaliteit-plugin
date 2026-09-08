@@ -31,10 +31,7 @@ import { Samenwerking } from '../../../models/samenwerking.model';
 import { ActieverzoekService } from '../../../service/actieverzoek.service';
 import { SamenwerkingService } from '../../../service/samenwerking.service';
 import { SwfDocumentService } from '../../../service/swf-document.service';
-import {
-  ActieverzoekId,
-  toActieverzoekId,
-} from '../../../types/actieverzoek-id.type';
+import { ActieverzoekId } from '../../../types/actieverzoek-id.type';
 import {
   ActieverzoekStatusList,
   ActieverzoekStatusType,
@@ -216,6 +213,4 @@ export class SwfInformatiePaginaComponent implements OnInit {
       mapLinkActionToActieverzoekStatus(linkAction),
     );
   }
-
-  protected readonly toActieverzoekId = toActieverzoekId;
 }
