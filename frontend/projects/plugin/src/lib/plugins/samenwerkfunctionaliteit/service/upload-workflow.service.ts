@@ -109,7 +109,7 @@ export class UploadWorkFlowService {
                   titleKey:
                     'samenwerkfunctionaliteit.feedback.userNotification.uploadDocumentToDocumentenApi.failure.title',
                   messageKey:
-                    'samenwerkfunctionaliteit.feedback.userNotification.uploadDocumentToSWF.NoLinkedUploadProcessFailure.message',
+                    'samenwerkfunctionaliteit.feedback.userNotification.uploadDocumentToDocumentenApi.NoLinkedUploadProcessFailure.message',
                 });
               } else {
                 this.notificationService.showError({
