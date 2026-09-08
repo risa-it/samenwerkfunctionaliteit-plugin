@@ -90,17 +90,15 @@ export class SwfInformatiePaginaComponent implements OnInit {
     this.route,
     'documentId',
   );
+  private businessKey = toBusinessKey(this.documentId);
 
   ngOnInit() {
-    const businessKey = toBusinessKey(this.documentId);
-
-    this.fetchAndLoadSamenwerking(businessKey);
+    this.fetchAndLoadSamenwerking(this.businessKey);
   }
 
   protected onStatusChangedRefreshActieverzoek(): void {
-    const businessKey = toBusinessKey(this.documentId);
     this.swfDocumentService
-      .getSamenwerkingProperties(businessKey)
+      .getSamenwerkingProperties(this.businessKey)
       .pipe(
         take(1),
         switchMap((samenwerkingProps: SwfCaseProperties) => {
