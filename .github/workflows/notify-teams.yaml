@@ -1,20 +1,37 @@
 name: Notify Teams via Power Automate
 
 on:
-    pull_request:
-        types: [opened, closed]
+  pull_request:
+    types: [ opened, closed ]
 
 jobs:
-    notify:
-        if: github.event.pull_request.merged == true || github.event.action == 'opened'
-        runs-on: ubuntu-latest
-        steps:
-            - name: Notify Power Automate
-              run: |
-                  curl -X POST -H "Content-Type: application/json" -d '{
-                    "title": "${{ github.event.pull_request.title }}",
-                    "author": "${{ github.event.pull_request.user.login }}",
-                    "actor": "${{ github.actor }}",
-                    "url": "${{ github.event.pull_request.html_url }}",
-                    "action": "${{ github.event.action }}"
-                  }' "${{ secrets.TEAMS_WEBHOOK_URL }}"
+  notify:
+    if: github.event.pull_request.merged == true || github.event.action == 'opened'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify Power Automate
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          ACTOR: ${{ github.actor }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          ACTION: ${{ github.event.action }}
+          WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+        run: |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -d "$(jq -n \
+              --arg title "$PR_TITLE" \
+              --arg author "$PR_AUTHOR" \
+              --arg actor "$ACTOR" \
+              --arg url "$PR_URL" \
+              --arg action "$ACTION" \
+              '{
+                title: $title,
+                author: $author,
+                actor: $actor,
+                url: $url,
+                action: $action
+              }')" \
+            "$WEBHOOK_URL"
+
