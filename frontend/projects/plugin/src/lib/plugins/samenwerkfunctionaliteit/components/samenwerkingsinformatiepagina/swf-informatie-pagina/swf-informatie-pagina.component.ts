@@ -35,7 +35,10 @@ import { Samenwerking } from '../../../models/samenwerking.model';
 import { ActieverzoekService } from '../../../service/actieverzoek.service';
 import { SamenwerkingService } from '../../../service/samenwerking.service';
 import { SwfDocumentService } from '../../../service/swf-document.service';
-import { ActieverzoekId } from '../../../types/actieverzoek-id.type';
+import {
+  ActieverzoekId,
+  toActieverzoekId,
+} from '../../../types/actieverzoek-id.type';
 import {
   ActieverzoekStatusList,
   ActieverzoekStatusType,
@@ -87,14 +90,33 @@ export class SwfInformatiePaginaComponent implements OnInit {
     );
   });
 
+  private documentId = this.swfDocumentService.getParam(
+    this.route,
+    'documentId',
+  );
+
   ngOnInit() {
-    const documentId = this.swfDocumentService.getParam(
-      this.route,
-      'documentId',
-    );
-    const businessKey = toBusinessKey(documentId);
+    const businessKey = toBusinessKey(this.documentId);
 
     this.fetchAndLoadSamenwerking(businessKey);
+  }
+
+  protected onUpdateSentRefreshActieverzoek(): void {
+    const businessKey = toBusinessKey(this.documentId);
+    this.swfDocumentService
+      .getSamenwerkingProperties(businessKey)
+      .pipe(
+        take(1),
+        switchMap((samenwerkingProps: SwfCaseProperties) => {
+          return this.fetchActieverzoek(samenwerkingProps.actieverzoekId);
+        }),
+        tap((actieverzoek) => {
+          this.updateActieverzoekStatusTypes(actieverzoek);
+        }),
+      )
+      .subscribe({
+        next: (actieverzoek) => this.actieverzoek.set(actieverzoek),
+      });
   }
 
   private fetchAndLoadSamenwerking(businessKey: BusinessKey): void {
@@ -194,4 +216,6 @@ export class SwfInformatiePaginaComponent implements OnInit {
       mapLinkActionToActieverzoekStatus(linkAction),
     );
   }
+
+  protected readonly toActieverzoekId = toActieverzoekId;
 }
