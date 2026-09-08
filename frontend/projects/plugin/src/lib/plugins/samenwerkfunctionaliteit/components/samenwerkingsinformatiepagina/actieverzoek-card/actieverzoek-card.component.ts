@@ -20,7 +20,8 @@ import { getActieverzoekTypeText } from '../../../types/actieverzoek-status.type
   styleUrl: './actieverzoek-card.component.scss',
 })
 export class ActieverzoekCardComponent implements OnChanges {
-  actieverzoek: InputSignal<Actieverzoek> = input.required<Actieverzoek>();
+  protected actieverzoek: InputSignal<Actieverzoek> =
+    input.required<Actieverzoek>();
   protected capitalize = capitalize;
   protected statusText: WritableSignal<string> = signal('');
 
