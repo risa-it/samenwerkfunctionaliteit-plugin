@@ -97,6 +97,8 @@ export class UpdateStatusModalComponent {
       .subscribe({
         next: () => {
           this.showSuccessNotification();
+          this.updateStatus = undefined;
+          this.explanation = '';
           this.onStatusChanged.emit();
         },
         error: (error: Error) => {
