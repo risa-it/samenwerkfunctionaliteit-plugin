@@ -121,12 +121,9 @@ export class DocumentService {
       .pipe(
         tap((processLink) => {
           if (!processLink) {
-            return throwError(
-              () =>
-                new NoLinkedUploadProcessError(
-                  context.caseDefinitionKey,
-                  context.caseDefinitionVersionTag,
-                ),
+            throw new NoLinkedUploadProcessError(
+              context.caseDefinitionKey,
+              context.caseDefinitionVersionTag,
             );
           }
 
