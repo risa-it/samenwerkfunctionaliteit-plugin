@@ -39,6 +39,7 @@ import { UserNotificationService } from '../../../service/user-notification.serv
 import { getPaginationTranslations } from '../../../shared/carbon/pagination-translations';
 import { BusinessKey, toBusinessKey } from '../../../types/business-key.type';
 import { confidentialityTypeToTranslationKey } from '../../../types/confidentiality.type';
+import { UploadOptions } from '../../../types/upload-options.type';
 import { documentTableDeleteModalConfig } from '../config/document-table-modal-config';
 import { DocumentDeleteModal } from './modal/delete/document-delete-modal.component';
 import { DocumentUploadMetadataModal } from './modal/upload/document-upload-metadata-modal.component';
@@ -84,6 +85,7 @@ export class DocumentTableComponent implements OnInit {
 
   documents: InputSignal<Document[]> = input<Document[]>([]);
   isSkeleton: InputSignal<boolean> = input<boolean>(true);
+  uploadOptions: InputSignal<UploadOptions> = input<UploadOptions>({ uploadToDocumentenApi: false });
 
   deleted = output<string>();
   uploaded = output<void>();

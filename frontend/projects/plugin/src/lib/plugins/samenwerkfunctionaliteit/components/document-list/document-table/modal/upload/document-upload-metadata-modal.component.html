@@ -51,7 +51,7 @@
           }
         </select>
       </div>
-      @if (showUploadToDocumentenApiOptions()) {
+      @if (uploadOptions().uploadToDocumentenApi) {
         <div class="form-field">
           <cds-label
             >{{
@@ -65,7 +65,7 @@
             </cds-tooltip>
           </cds-label>
           <select class="cds--dropdown" formControlName="documentType">
-            @for (type of documentTypes(); track $index) {
+            @for (type of uploadOptions().documentTypes; track $index) {
               <option [ngValue]="type">{{ type.name }}</option>
             }
           </select>

@@ -1,5 +1,4 @@
-import { Component, inject, input, output, viewChild } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Component, inject, input, InputSignal, output, viewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
@@ -20,19 +19,14 @@ import {
   VModalModule,
 } from '@valtimo/components';
 import { DocumentType } from '@valtimo/document';
-import { Observable } from 'rxjs/internal/Observable';
-import { filter } from 'rxjs/internal/operators/filter';
-import { map } from 'rxjs/internal/operators/map';
-import { switchMap } from 'rxjs/internal/operators/switchMap';
 import { UploadDocumentMetadata, UploadDocumentToDocumentenApiMetadata } from '../../../../../interface/upload-document-metadata.interface';
 import { DocumentService } from '../../../../../service/document.service';
 import { SwfDocumentService } from '../../../../../service/swf-document.service';
-import { SwfPluginService } from '../../../../../service/swf-plugin.service';
-import { BusinessKey, toBusinessKey } from '../../../../../types/business-key.type';
 import {
   ConfidentialityType,
   ConfidentialityTypes,
 } from '../../../../../types/confidentiality.type';
+import { UploadOptions } from '../../../../../types/upload-options.type';
 
 @Component({
   selector: 'document-upload-metadata-modal',
@@ -56,7 +50,6 @@ export class DocumentUploadMetadataModal {
   private readonly formBuilder = inject(FormBuilder);
   private readonly translateService = inject(TranslateService);
   private readonly iconService = inject(IconService);
-  private readonly swfPluginService = inject(SwfPluginService);
   private readonly documentService = inject(DocumentService);
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
   private readonly swfDocumentService: SwfDocumentService =
@@ -70,22 +63,7 @@ export class DocumentUploadMetadataModal {
   >();
   readonly cancelled = output<void>();
 
-  readonly swfPluginProperties = this.swfPluginService.getSwfPluginProperties();
-
-  readonly showUploadToDocumentenApiOptions = toSignal(
-    this.swfPluginProperties.pipe(
-      map((properties) => properties.backupUploadsToDocumentenApi)
-    ),
-    { initialValue: false }
-  )
-
-  readonly documentTypes = toSignal(
-    this.swfPluginProperties.pipe(
-      filter(properties => properties.backupUploadsToDocumentenApi),
-      switchMap(() => this.getUploadOptions()),
-    ),
-    { initialValue: [] },
-  );
+  uploadOptions: InputSignal<UploadOptions> = input<UploadOptions>({ uploadToDocumentenApi: false });
 
   protected readonly metadataForm = this.formBuilder.group({
     documentDescription: [''],
@@ -97,7 +75,7 @@ export class DocumentUploadMetadataModal {
     systemId: [''],
     documentType: [
       null as DocumentType | null,
-      this.showUploadToDocumentenApiOptions() ?
+      this.uploadOptions().uploadToDocumentenApi ?
         Validators.required :
         null],
   });
@@ -155,7 +133,7 @@ export class DocumentUploadMetadataModal {
       uploadToDocumentenApi: false,
     };
 
-    if (this.showUploadToDocumentenApiOptions()) {
+    if (this.uploadOptions().uploadToDocumentenApi) {
       const documentType =
         this.metadataForm.controls.documentType.value;
 
@@ -182,35 +160,5 @@ export class DocumentUploadMetadataModal {
     this.modalService.closeModal(() => {
       this.cancelled.emit();
     });
-  }
-
-  private getUploadOptions(): Observable<DocumentType[]> {
-    return this.documentService.getVersionTag(this.businessKey).pipe(
-      switchMap((versionTag) =>
-        this.documentService.getDocumentTypesForCase(this.caseDefinitionKey, versionTag)
-      )
-    )
-  }
-
-  private get businessKey(): BusinessKey {
-    const businessKey = toBusinessKey(
-      this.swfDocumentService.getParam(this.route, 'documentId') ?? '',
-    );
-
-    if (!businessKey) {
-      throw new Error('businessKey is required to fetch document types');
-    }
-
-    return businessKey;
-  }
-
-  private get caseDefinitionKey(): string {
-    const caseDefinitionKey = this.swfDocumentService.getParam(this.route, 'caseDefinitionKey')
-
-    if (!caseDefinitionKey) {
-      throw new Error('caseDefinitionKey is required to fetch document types');
-    }
-
-    return caseDefinitionKey;
   }
 }
