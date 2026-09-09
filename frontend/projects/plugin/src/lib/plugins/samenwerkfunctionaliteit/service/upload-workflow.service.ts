@@ -181,12 +181,4 @@ export class UploadWorkFlowService {
       }),
     );
   }
-
-  mockModalData = {
-    documentDescription: 'Test document',
-    numberWithinSystem: '12345',
-    systemId: 'ACME_EU_WEST',
-    confidentialityType: ConfidentialityTypes.StrictlyConfidential,
-    language: 'Nederlands',
-  };
 }
