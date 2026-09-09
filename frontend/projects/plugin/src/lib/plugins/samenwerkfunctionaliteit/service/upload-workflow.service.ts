@@ -158,17 +158,10 @@ export class UploadWorkFlowService {
       );
     }
 
-    return this.getCaseDefinitionVersionTag(businessKey);
-  }
-
-  private getCaseDefinitionVersionTag(
-    businessKey: BusinessKey,
-  ): Observable<string> {
     return this.valtimoDocumentService.getDocument(businessKey.toString()).pipe(
       take(1),
       map((document) => {
-        const versionTag =
-          document.definitionId?.blueprintId.blueprintVersionTag;
+        const versionTag = document.definitionId?.blueprintId.blueprintVersionTag;
 
         if (!versionTag) {
           throw new Error(
