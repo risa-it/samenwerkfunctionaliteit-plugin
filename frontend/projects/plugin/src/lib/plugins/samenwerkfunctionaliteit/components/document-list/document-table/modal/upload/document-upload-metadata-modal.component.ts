@@ -63,7 +63,7 @@ export class DocumentUploadMetadataModal {
   >();
   readonly cancelled = output<void>();
 
-  uploadOptions: InputSignal<UploadOptions> = input<UploadOptions>({ uploadToDocumentenApi: false });
+  protected readonly uploadOptions: InputSignal<UploadOptions> = input<UploadOptions>({ uploadToDocumentenApi: false });
 
   protected readonly metadataForm = this.formBuilder.group({
     documentDescription: [''],
