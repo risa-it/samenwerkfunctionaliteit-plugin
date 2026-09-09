@@ -61,6 +61,7 @@ describe('DocumentClient', () => {
     const mockQueryParams: UploadDocumentMetadata = {
       documentDescription: 'Partial set of params here!',
       confidentialityType: ConfidentialityTypes.Confidential,
+      uploadToDocumentenApi: false,
     };
 
     service
