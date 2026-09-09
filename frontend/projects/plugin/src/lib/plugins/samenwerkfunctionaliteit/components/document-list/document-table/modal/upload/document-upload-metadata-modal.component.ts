@@ -58,7 +58,7 @@ export class DocumentUploadMetadataModal {
   private readonly iconService = inject(IconService);
   private readonly swfPluginService = inject(SwfPluginService);
   private readonly documentService = inject(DocumentService);
-  readonly route: ActivatedRoute = inject(ActivatedRoute);
+  private readonly route: ActivatedRoute = inject(ActivatedRoute);
   private readonly swfDocumentService: SwfDocumentService =
     inject(SwfDocumentService);
 
