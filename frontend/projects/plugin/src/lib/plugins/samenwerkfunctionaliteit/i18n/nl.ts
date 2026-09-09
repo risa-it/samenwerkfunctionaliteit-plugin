@@ -40,6 +40,7 @@ export const pluginNlTranslations = {
         numberWithinSystem: 'Nummer binnen systeem',
         systemId: 'Kenmerk van het systeem',
         documentDescription: 'Documentomschrijving',
+        documentType: 'Documenttype',
       },
     },
     documentTable: {
@@ -54,6 +55,8 @@ export const pluginNlTranslations = {
         title: 'Document uploaden',
         confidentialityTypeTooltip:
           'Alle documenten binnen een samenwerking dienen als vertrouwelijk te worden behandeld. Documenten die persoonsgegevens en/of bedrijfsgevoelige informatie bevatten hebben een hoger vertrouwelijkheidsniveau, nl. “strikt vertrouwelijk”. Deze documenten mogen alleen worden ingezien en/of aangepast door instanties die bevoegd zijn om dergelijke informatie te verwerken.',
+        documentTypeTooltip:
+          'Hiermee wordt bepaald hoe de archiveringskopie van het document in Open Zaak wordt opgeslagen. Documenttypen kunnen per zaaktype worden ingesteld in Open Zaak.',
       },
       documentDeleteModal: {
         title: 'Document verwijderen',

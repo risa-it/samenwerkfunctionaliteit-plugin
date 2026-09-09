@@ -1,4 +1,5 @@
 import { Component, inject, input, output, viewChild } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
@@ -11,13 +12,23 @@ import {
   TooltipModule,
 } from 'carbon-components-angular';
 
+import { ActivatedRoute } from '@angular/router';
 import { Information32, Upload32 } from '@carbon/icons';
 import {
   ModalService,
   VModalComponent,
   VModalModule,
 } from '@valtimo/components';
-import { UploadDocumentMetadata } from '../../../../../interface/upload-document-metadata.interface';
+import { DocumentType } from '@valtimo/document';
+import { Observable } from 'rxjs/internal/Observable';
+import { filter } from 'rxjs/internal/operators/filter';
+import { map } from 'rxjs/internal/operators/map';
+import { switchMap } from 'rxjs/internal/operators/switchMap';
+import { UploadDocumentMetadata, UploadDocumentToDocumentenApiMetadata } from '../../../../../interface/upload-document-metadata.interface';
+import { DocumentService } from '../../../../../service/document.service';
+import { SwfDocumentService } from '../../../../../service/swf-document.service';
+import { SwfPluginService } from '../../../../../service/swf-plugin.service';
+import { BusinessKey, toBusinessKey } from '../../../../../types/business-key.type';
 import {
   ConfidentialityType,
   ConfidentialityTypes,
@@ -45,12 +56,36 @@ export class DocumentUploadMetadataModal {
   private readonly formBuilder = inject(FormBuilder);
   private readonly translateService = inject(TranslateService);
   private readonly iconService = inject(IconService);
+  private readonly swfPluginService = inject(SwfPluginService);
+  private readonly documentService = inject(DocumentService);
+  readonly route: ActivatedRoute = inject(ActivatedRoute);
+  private readonly swfDocumentService: SwfDocumentService =
+    inject(SwfDocumentService);
 
   readonly modal = viewChild.required<VModalComponent>('uploadModal');
 
   readonly isUploading = input(false);
-  readonly submitted = output<UploadDocumentMetadata>();
+  readonly submitted = output<
+    UploadDocumentMetadata | UploadDocumentToDocumentenApiMetadata
+  >();
   readonly cancelled = output<void>();
+
+  readonly swfPluginProperties = this.swfPluginService.getSwfPluginProperties();
+
+  readonly showUploadToDocumentenApiOptions = toSignal(
+    this.swfPluginProperties.pipe(
+      map((properties) => properties.backupUploadsToDocumentenApi)
+    ),
+    { initialValue: false }
+  )
+
+  readonly documentTypes = toSignal(
+    this.swfPluginProperties.pipe(
+      filter(properties => properties.backupUploadsToDocumentenApi),
+      switchMap(() => this.getUploadOptions()),
+    ),
+    { initialValue: [] },
+  );
 
   protected readonly metadataForm = this.formBuilder.group({
     documentDescription: [''],
@@ -60,14 +95,19 @@ export class DocumentUploadMetadataModal {
       Validators.required,
     ],
     systemId: [''],
+    documentType: [
+      null as DocumentType | null,
+      this.showUploadToDocumentenApiOptions() ?
+        Validators.required :
+        null],
   });
-
-  protected confidentialityOptionsLabel = this.translateService.instant(
-    'samenwerkfunctionaliteit.types.document.confidentialityType',
-  );
 
   protected confidentialityTypeTooltipText = this.translateService.instant(
     'samenwerkfunctionaliteit.documentTable.documentUploadModal.confidentialityTypeTooltip',
+  );
+
+  protected documentTypeTooltipText = this.translateService.instant(
+    'samenwerkfunctionaliteit.documentTable.documentUploadModal.documentTypeTooltip',
   );
 
   protected confidentialityOptions = [
@@ -102,15 +142,39 @@ export class DocumentUploadMetadataModal {
   }
 
   protected submit(): void {
-    this.submitted.emit({
+
+    const metadata: UploadDocumentMetadata = {
       documentDescription:
         this.metadataForm.controls.documentDescription.value || undefined,
       numberWithinSystem:
         this.metadataForm.controls.numberWithinSystem.value || undefined,
       confidentialityType:
         this.metadataForm.controls.confidentialityType.value || undefined,
-      systemId: this.metadataForm.controls.systemId.value || undefined,
-    });
+      systemId:
+        this.metadataForm.controls.systemId.value || undefined,
+
+      uploadToDocumentenApi: false,
+    };
+
+    if (this.showUploadToDocumentenApiOptions()) {
+      const documentType =
+        this.metadataForm.controls.documentType.value;
+
+      if (!documentType) {
+        return;
+      }
+
+      this.submitted.emit({
+        ...metadata,
+        documentType,
+
+        uploadToDocumentenApi: true,
+      });
+
+      return;
+    }
+
+    this.submitted.emit(metadata);
   }
 
   protected cancel(): void {
@@ -119,5 +183,35 @@ export class DocumentUploadMetadataModal {
     this.modalService.closeModal(() => {
       this.cancelled.emit();
     });
+  }
+
+  private getUploadOptions(): Observable<DocumentType[]> {
+    return this.documentService.getVersionTag(this.businessKey).pipe(
+      switchMap((versionTag) =>
+        this.documentService.getDocumentTypesForCase(this.caseDefinitionKey, versionTag)
+      )
+    )
+  }
+
+  private get businessKey(): BusinessKey {
+    const businessKey = toBusinessKey(
+      this.swfDocumentService.getParam(this.route, 'documentId') ?? '',
+    );
+
+    if (!businessKey) {
+      throw new Error('businessKey is required to fetch document types');
+    }
+
+    return businessKey;
+  }
+
+  private get caseDefinitionKey(): string {
+    const caseDefinitionKey = this.swfDocumentService.getParam(this.route, 'caseDefinitionKey')
+
+    if (!caseDefinitionKey) {
+      throw new Error('caseDefinitionKey is required to fetch document types');
+    }
+
+    return caseDefinitionKey;
   }
 }

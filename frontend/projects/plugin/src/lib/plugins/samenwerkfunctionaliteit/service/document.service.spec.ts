@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { DocumentService as ValtimoDocumentService } from '@valtimo/document';
 import { UploadProviderService } from '@valtimo/resource';
 import { DocumentenApiLinkProcessService } from '@valtimo/zgw';
 import { NGXLogger } from 'ngx-logger';
@@ -14,6 +15,7 @@ describe('DocumentService', () => {
       providers: [
         DocumentService,
         { provide: DocumentClient, useValue: {} },
+        { provide: ValtimoDocumentService, useValue: {} },
         { provide: FileDownloadService, useValue: {} },
         { provide: DocumentenApiLinkProcessService, useValue: {} },
         { provide: UploadProviderService, useValue: {} },

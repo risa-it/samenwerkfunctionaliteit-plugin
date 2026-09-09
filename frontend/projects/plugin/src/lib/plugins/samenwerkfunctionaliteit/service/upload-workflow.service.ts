@@ -1,5 +1,4 @@
 import { inject, Injectable } from '@angular/core';
-import { DocumentService as ValtimoDocumentService } from '@valtimo/document';
 import { NGXLogger } from 'ngx-logger';
 import {
   catchError,
@@ -8,13 +7,12 @@ import {
   Observable,
   of,
   switchMap,
-  take,
   tap,
-  throwError,
+  throwError
 } from 'rxjs';
 import { NoLinkedUploadProcessError } from '../errors/no-link-upload-process.error';
 import { UploadContext } from '../interface/upload-context.interface';
-import { UploadDocumentMetadata } from '../interface/upload-document-metadata.interface';
+import { UploadDocumentMetadata, UploadMetadata } from '../interface/upload-document-metadata.interface';
 import { UserNotification } from '../interface/user-notification.interface';
 import { BusinessKey } from '../types/business-key.type';
 import { DocumentService } from './document.service';
@@ -34,12 +32,8 @@ export class UploadWorkFlowService {
   );
   private readonly swfDocumentService: SwfDocumentService =
     inject(SwfDocumentService);
-  private readonly valtimoDocumentService: ValtimoDocumentService = inject(
-    ValtimoDocumentService,
-  );
   private readonly logger: NGXLogger = inject(NGXLogger);
 
-  private caseDefinitionVersionTag?: string;
 
   upload(
     file: File,
@@ -48,13 +42,12 @@ export class UploadWorkFlowService {
     metadata: UploadDocumentMetadata,
   ): Observable<void> {
     return forkJoin({
-      versionTag: this.getVersionTag(businessKey),
+      versionTag: this.documentService.getVersionTag(businessKey),
       samenwerkingProps:
         this.swfDocumentService.getSamenwerkingProperties(businessKey),
-      metadata: of<UploadDocumentMetadata>(metadata),
-      config: this.swfPluginService.getSwfPluginProperties(),
+      metadata: of<UploadMetadata>(metadata),
     }).pipe(
-      map(({ versionTag, samenwerkingProps, metadata, config }) => {
+      map(({ versionTag, samenwerkingProps, metadata }) => {
         const context: UploadContext = {
           file,
           samenwerkingId: samenwerkingProps.samenwerkingId,
@@ -66,18 +59,18 @@ export class UploadWorkFlowService {
         return {
           context,
           metadata,
-          config,
         };
       }),
 
-      switchMap(({ context, metadata, config }) => {
-        if (!config.backupUploadsToDocumentenApi) {
+      switchMap(({ context, metadata }) => {
+        if (!metadata.uploadToDocumentenApi) {
           this.logger.debug(
             'Skipping backup upload to Documenten API as per configuration',
           );
           return of({ context, metadata });
         }
-        this.logger.debug('Uploading with mock metadata:', metadata);
+        this.logger.debug('Uploading with metadata:', metadata);
+
 
         return this.documentService
           .uploadDocumentToDocumentenAPI(context, metadata)
@@ -147,30 +140,5 @@ export class UploadWorkFlowService {
     );
   }
 
-  private getVersionTag(businessKey: BusinessKey): Observable<string> {
-    if (this.caseDefinitionVersionTag) {
-      return of(this.caseDefinitionVersionTag);
-    }
 
-    if (!businessKey) {
-      throw new Error(
-        'Cannot get case definition version tag because the business key is not available.',
-      );
-    }
-
-    return this.valtimoDocumentService.getDocument(businessKey.toString()).pipe(
-      take(1),
-      map((document) => {
-        const versionTag = document.definitionId?.blueprintId.blueprintVersionTag;
-
-        if (!versionTag) {
-          throw new Error(
-            `No version tag was found for ${document.definitionName}`,
-          );
-        }
-
-        return versionTag;
-      }),
-    );
-  }
 }
