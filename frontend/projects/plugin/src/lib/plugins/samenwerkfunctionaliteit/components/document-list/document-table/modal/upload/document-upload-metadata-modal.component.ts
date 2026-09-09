@@ -57,7 +57,7 @@ export class DocumentUploadMetadataModal {
 
   readonly modal = viewChild.required<VModalComponent>('uploadModal');
 
-  readonly isUploading = input(false);
+  protected readonly isUploading = input(false);
   readonly submitted = output<
     UploadDocumentMetadata | UploadDocumentToDocumentenApiMetadata
   >();
