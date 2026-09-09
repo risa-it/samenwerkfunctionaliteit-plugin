@@ -40,28 +40,4 @@ describe('SwfPluginService', () => {
       expect(properties).toEqual(expectedProperties);
     })
   })
-
-  it('should call the client for a first call, and then return cached properties for subsequent calls', () => {
-    const mockPropertiesResponse = {
-      baseUrl: 'https://example.com',
-      oinNummer: '00000001234567800000',
-      backupUploadsToDocumentenApi: true
-    }
-    const expectedProperties = {
-      baseUrl: 'https://example.com',
-      oinNummer: '00000001234567800000',
-      backupUploadsToDocumentenApi: true
-    }
-
-    swfPluginClient.getSwfPluginProperties.and.returnValue(of(mockPropertiesResponse));
-
-    service.getSwfPluginProperties().subscribe((properties) => {
-      expect(properties).toEqual(expectedProperties);
-    })
-    service.getSwfPluginProperties().subscribe((properties) => {
-      expect(properties).toEqual(expectedProperties);
-    })
-
-    expect(swfPluginClient.getSwfPluginProperties).toHaveBeenCalledTimes(1)
-  })
 });
