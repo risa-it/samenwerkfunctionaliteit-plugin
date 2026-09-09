@@ -12,7 +12,8 @@ import {
   NotificationModule,
 } from 'carbon-components-angular';
 import { NGXLogger } from 'ngx-logger';
-import { finalize, take, tap } from 'rxjs';
+import { finalize, map, Observable, take } from 'rxjs';
+import { NoActieverzoekIdError } from '../../../errors/no-actieverzoek-id.error';
 import { BerichtNotification } from '../../../interface/bericht-notification.interface';
 import { SwfCaseProperties } from '../../../interface/swf-case-properties.interface';
 import { BerichtenService } from '../../../service/berichten.service';
@@ -63,17 +64,17 @@ export class StuurBerichtComponent {
   ngOnInit() {
     this.iconService.registerAll([Send32]);
     const documentId = this.swfService.getParam(this.route, 'documentId');
+
+    if (!documentId) {
+      throw new Error('DocumentId is required to send a message');
+    }
+
     this.retrieveActieverzoekId(documentId);
   }
 
   onSend() {
     if (!this.actieverzoekId) {
-      this.logger.warn('Unable to post message: No actieverzoekId available.');
-      this.notificationService.showError({
-        titleKey:
-          'samenwerkfunctionaliteit.feedback.userNotification.messenger.fetchMessages.failure.title',
-      });
-      return;
+      throw new NoActieverzoekIdError();
     }
     this.isSubmitting.set(true);
     this.berichtenService
@@ -111,12 +112,21 @@ export class StuurBerichtComponent {
         this.actieverzoekId = actieverzoekId;
       },
       error: error => {
-        this.notificationService.showError({
-          titleKey:
-            'samenwerkfunctionaliteit.feedback.userNotification.messenger.failureMissingActieverzoekId.title',
-          messageKey:
-            'samenwerkfunctionaliteit.feedback.userNotification.messenger.failureMissingActieverzoekId.message',
-        });
+
+        if (error instanceof NoActieverzoekIdError) {
+          this.notificationService.showError({
+            titleKey:
+              'samenwerkfunctionaliteit.feedback.userNotification.messenger.failureMissingActieverzoekId.title',
+            messageKey:
+              'samenwerkfunctionaliteit.feedback.userNotification.messenger.failureMissingActieverzoekId.message',
+          });
+        } else {
+          this.notificationService.showError({
+            titleKey:
+              'samenwerkfunctionaliteit.feedback.userNotification.messenger.failure.title',
+          });
+        }
+
         this.logger.error(error);
       },
     });
