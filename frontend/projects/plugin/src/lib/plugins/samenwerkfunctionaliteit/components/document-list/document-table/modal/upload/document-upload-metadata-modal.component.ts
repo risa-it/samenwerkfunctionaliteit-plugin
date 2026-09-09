@@ -48,16 +48,6 @@ export class DocumentUploadMetadataModal {
   private readonly translateService = inject(TranslateService);
   private readonly iconService = inject(IconService);
 
-  readonly modal = viewChild.required<VModalComponent>('uploadModal');
-
-  protected readonly isUploading = input(false);
-  readonly submitted = output<
-    UploadDocumentMetadata | UploadDocumentToDocumentenApiMetadata
-  >();
-  readonly cancelled = output<void>();
-
-  protected readonly uploadOptions: InputSignal<UploadOptions> = input<UploadOptions>({ uploadToDocumentenApi: false });
-
   private readonly updateDocumentTypeValidator = effect(() => {
     const control = this.metadataForm.controls.documentType;
 
@@ -69,6 +59,9 @@ export class DocumentUploadMetadataModal {
 
     control.updateValueAndValidity();
   });
+
+  protected readonly uploadOptions: InputSignal<UploadOptions> = input<UploadOptions>({ uploadToDocumentenApi: false });
+  protected readonly isUploading = input(false);
 
   protected readonly metadataForm = this.formBuilder.group({
     documentDescription: [''],
@@ -106,6 +99,12 @@ export class DocumentUploadMetadataModal {
       ),
     },
   ];
+
+  readonly modal = viewChild.required<VModalComponent>('uploadModal');
+  readonly submitted = output<
+    UploadDocumentMetadata | UploadDocumentToDocumentenApiMetadata
+  >();
+  readonly cancelled = output<void>();
 
   ngOnInit() {
     this.iconService.registerAll([Information32, Upload32]);
