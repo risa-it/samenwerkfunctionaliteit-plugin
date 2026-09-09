@@ -28,7 +28,7 @@ import {
   TableModule,
 } from 'carbon-components-angular';
 import { catchError, EMPTY, finalize, of, switchMap, tap } from 'rxjs';
-import { UploadDocumentMetadata } from '../../../interface/upload-document-metadata.interface';
+import { UploadMetadata } from '../../../interface/upload-document-metadata.interface';
 import { UserNotification } from '../../../interface/user-notification.interface';
 import { Document } from '../../../models/document.model';
 import { DocumentModalService } from '../../../service/document-modal.service';
@@ -206,7 +206,7 @@ export class DocumentTableComponent implements OnInit {
     this.documentModalService
       .openUploadMetadata(this.uploadMetadataModal())
       .pipe(
-        switchMap((metadata: UploadDocumentMetadata) => {
+        switchMap((metadata: UploadMetadata) => {
           this.isUploading.set(true);
 
           return this.uploadWorkFlowService

@@ -12,7 +12,7 @@ import {
 } from 'rxjs';
 import { NoLinkedUploadProcessError } from '../errors/no-link-upload-process.error';
 import { UploadContext } from '../interface/upload-context.interface';
-import { UploadDocumentMetadata, UploadMetadata } from '../interface/upload-document-metadata.interface';
+import { UploadMetadata } from '../interface/upload-document-metadata.interface';
 import { UserNotification } from '../interface/user-notification.interface';
 import { BusinessKey } from '../types/business-key.type';
 import { DocumentService } from './document.service';
@@ -39,7 +39,7 @@ export class UploadWorkFlowService {
     file: File,
     businessKey: BusinessKey,
     caseDefinitionKey: string,
-    metadata: UploadDocumentMetadata,
+    metadata: UploadMetadata,
   ): Observable<void> {
     return forkJoin({
       versionTag: this.documentService.getVersionTag(businessKey),
