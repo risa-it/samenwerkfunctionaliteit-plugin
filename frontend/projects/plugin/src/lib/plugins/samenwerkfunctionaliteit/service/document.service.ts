@@ -57,9 +57,6 @@ export class DocumentService {
   ): Observable<DocumentenApiFileReference> {
     this.logger.debug('Uploading to Documenten API...');
 
-    // Can be removed after validation in test
-    this.logger.debug('context:', context, 'metadata', metadata);
-
     return this.verifyLinkedUploadProcess(context).pipe(
       switchMap(() => {
 
