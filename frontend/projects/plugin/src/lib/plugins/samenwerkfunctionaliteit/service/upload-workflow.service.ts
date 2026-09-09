@@ -17,7 +17,6 @@ import { UploadContext } from '../interface/upload-context.interface';
 import { UploadDocumentMetadata } from '../interface/upload-document-metadata.interface';
 import { UserNotification } from '../interface/user-notification.interface';
 import { BusinessKey } from '../types/business-key.type';
-import { ConfidentialityTypes } from '../types/confidentiality.type';
 import { DocumentService } from './document.service';
 import { SwfDocumentService } from './swf-document.service';
 import { SwfPluginService } from './swf-plugin.service';
