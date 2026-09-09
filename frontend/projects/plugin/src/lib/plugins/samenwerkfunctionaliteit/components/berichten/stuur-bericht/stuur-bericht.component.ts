@@ -105,34 +105,35 @@ export class StuurBerichtComponent {
       });
   }
 
-  private retrieveActieverzoekId(documentId: string) {
-    const businessKey = toBusinessKey(documentId);
-    this.swfService
-      .getSamenwerkingProperties(businessKey)
-      .pipe(
-        take(1),
-        tap((props: SwfCaseProperties) => {
-          if (props.actieverzoekId) {
-            this.actieverzoekId = props.actieverzoekId;
-          } else {
-            throw new Error('Case is missing actieverzoekId.');
-          }
-        }),
-      )
-      .subscribe({
-        error: (error) => {
-          this.logger.error(
-            'Unable to retrieve samenwerking properties',
-            error,
-          );
+  private retrieveActieverzoekId(documentId: string): void {
+    this.getActieverzoekId(documentId).subscribe({
+      next: actieverzoekId => {
+        this.actieverzoekId = actieverzoekId;
+      },
+      error: error => {
+        this.notificationService.showError({
+          titleKey:
+            'samenwerkfunctionaliteit.feedback.userNotification.messenger.failureMissingActieverzoekId.title',
+          messageKey:
+            'samenwerkfunctionaliteit.feedback.userNotification.messenger.failureMissingActieverzoekId.message',
+        });
+        this.logger.error(error);
+      },
+    });
+  }
 
-          this.notificationService.showError({
-            titleKey:
-              'samenwerkfunctionaliteit.feedback.userNotification.messenger.sendMessage.failure.title',
-            messageKey:
-              'samenwerkfunctionaliteit.feedback.userNotification.messenger.sendMessage.failure.failureMissingActieverzoekId',
-          });
-        },
-      });
+  private getActieverzoekId(documentId: string): Observable<string> {
+    const businessKey = toBusinessKey(documentId);
+
+    return this.swfService.getSamenwerkingProperties(businessKey).pipe(
+      take(1),
+      map((props: SwfCaseProperties) => {
+        if (!props.actieverzoekId) {
+          throw new NoActieverzoekIdError();
+        }
+
+        return props.actieverzoekId;
+      }),
+    );
   }
 }
