@@ -1,4 +1,4 @@
-import { Component, inject, input, output, viewChild } from '@angular/core';
+import { Component, effect, inject, input, InputSignal, output, viewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
@@ -17,11 +17,13 @@ import {
   VModalComponent,
   VModalModule,
 } from '@valtimo/components';
-import { UploadDocumentMetadata } from '../../../../../interface/upload-document-metadata.interface';
+import { DocumentType } from '@valtimo/document';
+import { UploadDocumentMetadata, UploadDocumentToDocumentenApiMetadata } from '../../../../../interface/upload-document-metadata.interface';
 import {
   ConfidentialityType,
   ConfidentialityTypes,
 } from '../../../../../types/confidentiality.type';
+import { UploadOptions } from '../../../../../types/upload-options.type';
 
 @Component({
   selector: 'document-upload-metadata-modal',
@@ -46,11 +48,20 @@ export class DocumentUploadMetadataModal {
   private readonly translateService = inject(TranslateService);
   private readonly iconService = inject(IconService);
 
-  readonly modal = viewChild.required<VModalComponent>('uploadModal');
+  private readonly updateDocumentTypeValidator = effect(() => {
+    const control = this.metadataForm.controls.documentType;
 
-  readonly isUploading = input(false);
-  readonly submitted = output<UploadDocumentMetadata>();
-  readonly cancelled = output<void>();
+    if (this.uploadOptions().uploadToDocumentenApi) {
+      control.setValidators(Validators.required);
+    } else {
+      control.clearValidators();
+    }
+
+    control.updateValueAndValidity();
+  });
+
+  protected readonly uploadOptions: InputSignal<UploadOptions> = input<UploadOptions>({ uploadToDocumentenApi: false });
+  protected readonly isUploading = input(false);
 
   protected readonly metadataForm = this.formBuilder.group({
     documentDescription: [''],
@@ -60,14 +71,18 @@ export class DocumentUploadMetadataModal {
       Validators.required,
     ],
     systemId: [''],
+    documentType: [
+      null as DocumentType | null,
+      Validators.required
+    ]
   });
-
-  protected confidentialityOptionsLabel = this.translateService.instant(
-    'samenwerkfunctionaliteit.types.document.confidentialityType',
-  );
 
   protected confidentialityTypeTooltipText = this.translateService.instant(
     'samenwerkfunctionaliteit.documentTable.documentUploadModal.confidentialityTypeTooltip',
+  );
+
+  protected documentTypeTooltipText = this.translateService.instant(
+    'samenwerkfunctionaliteit.documentTable.documentUploadModal.documentTypeTooltip',
   );
 
   protected confidentialityOptions = [
@@ -85,6 +100,12 @@ export class DocumentUploadMetadataModal {
     },
   ];
 
+  readonly modal = viewChild.required<VModalComponent>('uploadModal');
+  readonly submitted = output<
+    UploadDocumentMetadata | UploadDocumentToDocumentenApiMetadata
+  >();
+  readonly cancelled = output<void>();
+
   ngOnInit() {
     this.iconService.registerAll([Information32, Upload32]);
   }
@@ -95,6 +116,7 @@ export class DocumentUploadMetadataModal {
       numberWithinSystem: '',
       confidentialityType: ConfidentialityTypes.Confidential,
       systemId: '',
+      documentType: null,
     });
 
     this.metadataForm.markAsPristine();
@@ -102,15 +124,43 @@ export class DocumentUploadMetadataModal {
   }
 
   protected submit(): void {
-    this.submitted.emit({
+    if (this.metadataForm.invalid) {
+      this.metadataForm.markAllAsTouched();
+      return;
+    }
+
+    const metadata: UploadDocumentMetadata = {
       documentDescription:
         this.metadataForm.controls.documentDescription.value || undefined,
       numberWithinSystem:
         this.metadataForm.controls.numberWithinSystem.value || undefined,
       confidentialityType:
         this.metadataForm.controls.confidentialityType.value || undefined,
-      systemId: this.metadataForm.controls.systemId.value || undefined,
-    });
+      systemId:
+        this.metadataForm.controls.systemId.value || undefined,
+
+      uploadToDocumentenApi: false,
+    };
+
+    if (this.uploadOptions().uploadToDocumentenApi) {
+      const documentType =
+        this.metadataForm.controls.documentType.value;
+
+      if (!documentType) {
+        return;
+      }
+
+      this.submitted.emit({
+        ...metadata,
+        documentType,
+
+        uploadToDocumentenApi: true,
+      });
+
+      return;
+    }
+
+    this.submitted.emit(metadata);
   }
 
   protected cancel(): void {
@@ -119,5 +169,20 @@ export class DocumentUploadMetadataModal {
     this.modalService.closeModal(() => {
       this.cancelled.emit();
     });
+  }
+
+  protected getIsRequiredText(formControlName: string): string {
+    const formControl = this.metadataForm.get(formControlName);
+
+    if (!formControl) {
+      throw new Error(`Form control ${formControlName} does not exist`);
+    }
+
+    if (!formControl.hasValidator(Validators.required)) {
+      return '';
+    }
+    return this.translateService.instant(
+      'samenwerkfunctionaliteit.common.validation.required',
+    );
   }
 }

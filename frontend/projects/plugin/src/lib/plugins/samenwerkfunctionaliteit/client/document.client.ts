@@ -10,7 +10,7 @@ import {
   mapConfidentialityTypeToVertrouwelijkheidsaanduiding,
 } from '../dto/document.dto';
 import { FileDownload } from '../interface/file-download.interface';
-import { UploadDocumentMetadata } from '../interface/upload-document-metadata.interface';
+import { UploadMetadata } from '../interface/upload-document-metadata.interface';
 import { UUID } from '../types/uuid.type';
 import { FileResponseUtil } from '../utils/file-response.util';
 
@@ -44,14 +44,14 @@ export class DocumentClient {
   uploadDocument(
     file: File,
     samenwerkingId: string,
-    metadata?: UploadDocumentMetadata,
+    metadata: UploadMetadata,
   ): Observable<void> {
     const formData: FormData = new FormData();
 
     formData.append('file', file);
 
     const params = this.convertUploadDocumentMetadataToHttpParams(
-      metadata ?? {},
+      metadata,
     );
 
     return this.http.post<void>(
@@ -66,7 +66,7 @@ export class DocumentClient {
   }
 
   private convertUploadDocumentMetadataToHttpParams(
-    metadata: UploadDocumentMetadata,
+    metadata: UploadMetadata,
   ): HttpParams {
     let params = new HttpParams();
 

@@ -28,7 +28,7 @@ import {
   TableModule,
 } from 'carbon-components-angular';
 import { catchError, EMPTY, finalize, of, switchMap, tap } from 'rxjs';
-import { UploadDocumentMetadata } from '../../../interface/upload-document-metadata.interface';
+import { UploadMetadata } from '../../../interface/upload-document-metadata.interface';
 import { UserNotification } from '../../../interface/user-notification.interface';
 import { Document } from '../../../models/document.model';
 import { DocumentModalService } from '../../../service/document-modal.service';
@@ -39,6 +39,7 @@ import { UserNotificationService } from '../../../service/user-notification.serv
 import { getPaginationTranslations } from '../../../shared/carbon/pagination-translations';
 import { BusinessKey, toBusinessKey } from '../../../types/business-key.type';
 import { confidentialityTypeToTranslationKey } from '../../../types/confidentiality.type';
+import { UploadOptions } from '../../../types/upload-options.type';
 import { documentTableDeleteModalConfig } from '../config/document-table-modal-config';
 import { DocumentDeleteModal } from './modal/delete/document-delete-modal.component';
 import { DocumentUploadMetadataModal } from './modal/upload/document-upload-metadata-modal.component';
@@ -84,6 +85,7 @@ export class DocumentTableComponent implements OnInit {
 
   documents: InputSignal<Document[]> = input<Document[]>([]);
   isSkeleton: InputSignal<boolean> = input<boolean>(true);
+  uploadOptions: InputSignal<UploadOptions> = input<UploadOptions>({ uploadToDocumentenApi: false });
 
   deleted = output<string>();
   uploaded = output<void>();
@@ -206,7 +208,7 @@ export class DocumentTableComponent implements OnInit {
     this.documentModalService
       .openUploadMetadata(this.uploadMetadataModal())
       .pipe(
-        switchMap((metadata: UploadDocumentMetadata) => {
+        switchMap((metadata: UploadMetadata) => {
           this.isUploading.set(true);
 
           return this.uploadWorkFlowService

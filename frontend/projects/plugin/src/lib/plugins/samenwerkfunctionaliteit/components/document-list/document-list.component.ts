@@ -6,20 +6,25 @@ import {
   input,
   InputSignal,
   OnInit,
+  Signal,
   signal,
   WritableSignal,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NotificationModule } from 'carbon-components-angular';
-import { finalize, Observable, switchMap, take, tap } from 'rxjs';
+import { finalize, map, Observable, of, switchMap, take, tap } from 'rxjs';
 import { DocumentInterface } from '../../interface/document.interface';
 import { Document } from '../../models/document.model';
 import { DocumentService } from '../../service/document.service';
 import { SwfDocumentService } from '../../service/swf-document.service';
 import { UserNotificationService } from '../../service/user-notification.service';
 
+import { toSignal } from '@angular/core/rxjs-interop';
+import { DocumentType } from '@valtimo/document';
 import { SwfCaseProperties } from '../../interface/swf-case-properties.interface';
+import { SwfPluginService } from '../../service/swf-plugin.service';
 import { BusinessKey, toBusinessKey } from '../../types/business-key.type';
+import { UploadOptions } from '../../types/upload-options.type';
 import { DocumentTableComponent } from './document-table/document-table.component';
 import { DocumentTableLightComponent } from './document-table/light/document-table-light.component';
 
@@ -35,26 +40,51 @@ import { DocumentTableLightComponent } from './document-table/light/document-tab
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocumentListComponent implements OnInit {
+
   private readonly documentService: DocumentService = inject(DocumentService);
   private readonly swfDocumentService: SwfDocumentService =
     inject(SwfDocumentService);
   readonly route: ActivatedRoute = inject(ActivatedRoute);
+  private readonly swfPluginService = inject(SwfPluginService);
   private readonly notificationService: UserNotificationService = inject(
     UserNotificationService,
   );
 
-  private businessKey?: BusinessKey;
+  readonly swfPluginProperties = this.swfPluginService.getSwfPluginProperties();
 
   isLightMode: InputSignal<boolean> = input<boolean>(false);
 
   documents: WritableSignal<Document[]> = signal<Document[]>([]);
   isLoading: WritableSignal<boolean> = signal<boolean>(true);
 
-  ngOnInit(): void {
-    this.businessKey = toBusinessKey(
-      this.swfDocumentService.getParam(this.route, 'documentId') ?? '',
-    );
+  protected readonly uploadOptions: Signal<UploadOptions> = toSignal(
+    this.swfPluginProperties.pipe(
+      switchMap((properties) => {
+        if (!properties.backupUploadsToDocumentenApi) {
+          return of<UploadOptions>({
+            uploadToDocumentenApi: false,
+          })
+        }
 
+        return this.getDocumentUploadTypes().pipe(
+          map((documentTypes): UploadOptions => {
+            console.log('Document types for case in Document List Component:', documentTypes);
+            return {
+              uploadToDocumentenApi: true,
+              documentTypes,
+            };
+          }),
+        );
+      }),
+    ),
+    {
+      initialValue: {
+        uploadToDocumentenApi: false,
+      }
+    },
+  );
+
+  ngOnInit(): void {
     this.fetchDocumenten();
   }
 
@@ -68,6 +98,36 @@ export class DocumentListComponent implements OnInit {
 
   protected onDocumentUploaded(): void {
     this.fetchDocumenten();
+  }
+
+  private getDocumentUploadTypes(): Observable<DocumentType[]> {
+    return this.documentService.getVersionTag(this.businessKey).pipe(
+      switchMap((versionTag) =>
+        this.documentService.getDocumentTypesForCase(this.caseDefinitionKey, versionTag)
+      )
+    )
+  }
+
+  private get businessKey(): BusinessKey {
+    const businessKey = toBusinessKey(
+      this.swfDocumentService.getParam(this.route, 'documentId') ?? '',
+    );
+
+    if (!businessKey) {
+      throw new Error('businessKey is required to fetch document types');
+    }
+
+    return businessKey;
+  }
+
+  private get caseDefinitionKey(): string {
+    const caseDefinitionKey = this.swfDocumentService.getParam(this.route, 'caseDefinitionKey')
+
+    if (!caseDefinitionKey) {
+      throw new Error('caseDefinitionKey is required to fetch document types');
+    }
+
+    return caseDefinitionKey;
   }
 
   private fetchDocumenten(): void {

@@ -36,6 +36,7 @@ describe('DocumentClient', () => {
       systemId: '456def',
       confidentialityType: ConfidentialityTypes.StrictlyConfidential,
       language: 'English',
+      uploadToDocumentenApi: false,
     };
 
     service
@@ -60,6 +61,7 @@ describe('DocumentClient', () => {
     const mockQueryParams: UploadDocumentMetadata = {
       documentDescription: 'Partial set of params here!',
       confidentialityType: ConfidentialityTypes.Confidential,
+      uploadToDocumentenApi: false,
     };
 
     service

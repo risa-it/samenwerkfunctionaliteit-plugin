@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { DocumentenApiLinkProcessService } from '@valtimo/zgw';
-import { catchError, map, Observable, switchMap, tap, throwError } from 'rxjs';
+import { catchError, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
 
+import { DocumentType, DocumentService as ValtimoDocumentService } from '@valtimo/document';
 import {
   DocumentenApiFileReference,
   UploadProviderService,
@@ -12,12 +13,13 @@ import {
   DocumentenOverzichtResponse,
   mapDocumentenResponseToModels,
 } from '../dto/document.dto';
+import { NoDocumentTypesFoundError } from '../errors/no-document-types.error';
 import { NoLinkedUploadProcessError } from '../errors/no-link-upload-process.error';
 import { DocumentInterface } from '../interface/document.interface';
 import { FileDownload } from '../interface/file-download.interface';
 import { UploadContext } from '../interface/upload-context.interface';
-import { UploadDocumentMetadata } from '../interface/upload-document-metadata.interface';
-import { ConfidentialityTypes } from '../types/confidentiality.type';
+import { UploadDocumentToDocumentenApiMetadata, UploadMetadata } from '../interface/upload-document-metadata.interface';
+import { BusinessKey } from '../types/business-key.type';
 import { UUID } from '../types/uuid.type';
 import { FileDownloadService } from './file-download.service';
 
@@ -33,8 +35,10 @@ export class DocumentService {
   private readonly uploadProviderService: UploadProviderService = inject(
     UploadProviderService,
   );
-
+  private readonly valtimoDocumentService = inject(ValtimoDocumentService);
   private readonly logger: NGXLogger = inject(NGXLogger);
+
+  private caseDefinitionVersionTag?: string;
 
   getDocumenten(samenwerkingId: string): Observable<DocumentInterface[]> {
     return this.documentClient.getDocumenten(samenwerkingId).pipe(
@@ -49,15 +53,13 @@ export class DocumentService {
 
   uploadDocumentToDocumentenAPI(
     context: UploadContext,
-    metadata: UploadDocumentMetadata,
+    metadata: UploadDocumentToDocumentenApiMetadata,
   ): Observable<DocumentenApiFileReference> {
     this.logger.debug('Uploading to Documenten API...');
 
-    // Can be removed after validation in test
-    this.logger.debug('context:', context, 'metadata', metadata);
-
     return this.verifyLinkedUploadProcess(context).pipe(
       switchMap(() => {
+
         return this.uploadProviderService
           .uploadTempFileWithMetadata(context.file, {
             documentId: context.businessKey,
@@ -65,12 +67,8 @@ export class DocumentService {
             titel: context.file.name,
             auteur: 'Samenwerkfunctionaliteit-plugin',
             taal: 'nld',
-            vertrouwelijkheidaanduiding:
-              // Note: mapping confidentiality types between Dutch and English is not straightforward, so we use a simple mapping here.
-              metadata.confidentialityType === ConfidentialityTypes.Confidential
-                ? 'vertrouwelijk'
-                : 'confidentieel',
             creatieDatum: new Date().toISOString().split('T')[0],
+            informatieobjecttype: metadata.documentType.url,
           })
 
           .pipe(
@@ -86,7 +84,7 @@ export class DocumentService {
 
   uploadDocumentToSWF(
     context: UploadContext,
-    metadata?: UploadDocumentMetadata,
+    metadata: UploadMetadata,
   ): Observable<void> {
     this.logger.debug('Uploading to Samenwerkfunctionaliteit-API...');
     return this.documentClient
@@ -111,6 +109,48 @@ export class DocumentService {
       .pipe(tap((file) => this.downloader.download(file)));
   }
 
+  getDocumentTypesForCase(
+    caseDefinitionKey: string,
+    versionTag: string
+  ): Observable<DocumentType[]> {
+    return this.valtimoDocumentService.getDocumentTypesForCase(caseDefinitionKey, versionTag).pipe(
+      map(documentTypes => {
+        if (documentTypes.length === 0) {
+          throw new NoDocumentTypesFoundError(caseDefinitionKey, versionTag);
+        }
+        return documentTypes;
+      })
+    );
+  }
+
+  getVersionTag(businessKey: BusinessKey): Observable<string> {
+    if (this.caseDefinitionVersionTag) {
+      return of(this.caseDefinitionVersionTag);
+    }
+
+    if (!businessKey) {
+      throw new Error(
+        'Cannot get case definition version tag because the business key is not available.',
+      );
+    }
+
+    return this.valtimoDocumentService.getDocument(businessKey.toString()).pipe(
+      take(1),
+      map((document) => {
+        const versionTag = document.definitionId?.blueprintId.blueprintVersionTag;
+
+        if (!versionTag) {
+          throw new Error(
+            `No version tag was found for ${document.definitionName}`,
+          );
+        }
+
+        return versionTag;
+      }),
+    );
+  }
+
+
   private verifyLinkedUploadProcess(context: UploadContext): Observable<void> {
     return this.documentenApiLinkProcessService
       .getLinkedUploadProcess(
@@ -121,12 +161,9 @@ export class DocumentService {
       .pipe(
         tap((processLink) => {
           if (!processLink) {
-            return throwError(
-              () =>
-                new NoLinkedUploadProcessError(
-                  context.caseDefinitionKey,
-                  context.caseDefinitionVersionTag,
-                ),
+            throw new NoLinkedUploadProcessError(
+              context.caseDefinitionKey,
+              context.caseDefinitionVersionTag,
             );
           }
 

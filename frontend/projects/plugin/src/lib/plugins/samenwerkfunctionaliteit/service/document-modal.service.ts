@@ -5,17 +5,17 @@ import { ModalService } from '@valtimo/components';
 
 import { DocumentDeleteModal } from '../components/document-list/document-table/modal/delete/document-delete-modal.component';
 import { DocumentUploadMetadataModal } from '../components/document-list/document-table/modal/upload/document-upload-metadata-modal.component';
-import { UploadDocumentMetadata } from '../interface/upload-document-metadata.interface';
+import { UploadMetadata } from '../interface/upload-document-metadata.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DocumentModalService {
-  constructor(private readonly modalService: ModalService) {}
+  constructor(private readonly modalService: ModalService) { }
 
   openUploadMetadata(
     modal: DocumentUploadMetadataModal,
-  ): Observable<UploadDocumentMetadata> {
+  ): Observable<UploadMetadata> {
     return new Observable((subscriber) => {
       const submittedSubscription = modal.submitted.subscribe((metadata) => {
         subscriber.next(metadata);

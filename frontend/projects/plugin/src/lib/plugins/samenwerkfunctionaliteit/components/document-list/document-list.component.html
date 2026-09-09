@@ -12,6 +12,7 @@
     <document-table
       [documents]="documents()"
       [isSkeleton]="isLoading()"
+      [uploadOptions]="uploadOptions()"
       (deleted)="onDocumentDeleted($event)"
       (uploaded)="onDocumentUploaded()"
     ></document-table>
