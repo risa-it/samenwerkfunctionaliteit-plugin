@@ -1,4 +1,4 @@
-import { Component, inject, input, InputSignal, output, viewChild } from '@angular/core';
+import { Component, effect, inject, input, InputSignal, output, viewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
@@ -65,6 +65,18 @@ export class DocumentUploadMetadataModal {
 
   protected readonly uploadOptions: InputSignal<UploadOptions> = input<UploadOptions>({ uploadToDocumentenApi: false });
 
+  private readonly updateDocumentTypeValidator = effect(() => {
+    const control = this.metadataForm.controls.documentType;
+
+    if (this.uploadOptions().uploadToDocumentenApi) {
+      control.setValidators(Validators.required);
+    } else {
+      control.clearValidators();
+    }
+
+    control.updateValueAndValidity();
+  });
+
   protected readonly metadataForm = this.formBuilder.group({
     documentDescription: [''],
     numberWithinSystem: [''],
@@ -75,9 +87,8 @@ export class DocumentUploadMetadataModal {
     systemId: [''],
     documentType: [
       null as DocumentType | null,
-      this.uploadOptions().uploadToDocumentenApi ?
-        Validators.required :
-        null],
+      Validators.required
+    ]
   });
 
   protected confidentialityTypeTooltipText = this.translateService.instant(
@@ -120,6 +131,11 @@ export class DocumentUploadMetadataModal {
   }
 
   protected submit(): void {
+    if (this.metadataForm.invalid) {
+      this.metadataForm.markAllAsTouched();
+      return;
+    }
+
     const metadata: UploadDocumentMetadata = {
       documentDescription:
         this.metadataForm.controls.documentDescription.value || undefined,
