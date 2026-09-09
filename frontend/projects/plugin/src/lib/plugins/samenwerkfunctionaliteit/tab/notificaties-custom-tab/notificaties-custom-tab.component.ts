@@ -12,7 +12,7 @@ import {
   PaginationModule,
   SkeletonModule,
 } from 'carbon-components-angular';
-import { Observable, switchMap, take, tap } from 'rxjs';
+import { finalize, Observable, switchMap, take, tap } from 'rxjs';
 import { CardInput } from '../../components/notificatie-card-list/interface/card-input.interface';
 import { NotificatieCardInput } from '../../components/notificatie-card-list/model/notificatie-card-input.model';
 import { NotificatieCardComponent } from '../../components/notificatie-card-list/notificatie-card/notificatie-card.component';
@@ -123,6 +123,9 @@ export class NotificatiesCustomTabComponent implements OnInit {
             size,
           );
         }),
+        finalize(() => {
+          this.isLoading.set(false);
+        }),
       )
       .subscribe((notificatie) => {
         this.notifications.set(notificatie.page.item);
@@ -147,7 +150,6 @@ export class NotificatiesCustomTabComponent implements OnInit {
         return this.mapNotificatieToNotificatieCardInput(notificatie);
       }),
     );
-    this.isLoading.set(false);
   }
 
   private mapNotificatieToNotificatieCardInput(
