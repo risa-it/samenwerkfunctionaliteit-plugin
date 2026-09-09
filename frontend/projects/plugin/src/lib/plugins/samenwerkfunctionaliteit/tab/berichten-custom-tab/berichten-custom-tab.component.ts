@@ -7,12 +7,13 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Collaborate32 } from '@carbon/icons';
+import { TranslatePipe } from '@ngx-translate/core';
 import {
   IconModule,
   IconService,
   NotificationModule,
 } from 'carbon-components-angular';
-import { forkJoin, Observable, switchMap, tap } from 'rxjs';
+import { EMPTY, forkJoin, Observable, of, switchMap, tap } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { BerichtenListComponent } from '../../components/berichten/berichten-list/berichten-list.component';
 import { StuurBerichtComponent } from '../../components/berichten/stuur-bericht/stuur-bericht.component';
@@ -26,7 +27,6 @@ import { UserNotificationService } from '../../service/user-notification.service
 import { ActieverzoekId } from '../../types/actieverzoek-id.type';
 import { BusinessKey, toBusinessKey } from '../../types/business-key.type';
 import { capitalize } from '../../utils/capitalize';
-import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'berichten-custom-tab',
@@ -65,15 +65,12 @@ export class BerichtenCustomTabComponent implements OnInit {
 
   ngOnInit(): void {
     this.iconService.registerAll([Collaborate32]);
-    this.fetchChat();
 
-    this.isLoading.set(false);
+    this.fetchChat();
   }
 
   protected refreshMessages(): void {
-    this.isLoading.set(true);
     this.fetchChat();
-    this.isLoading.set(false);
   }
 
   private getBusinessKey(): BusinessKey {
@@ -93,36 +90,57 @@ export class BerichtenCustomTabComponent implements OnInit {
     return this.swfDocumentService
       .getSamenwerkingProperties(this.getBusinessKey())
       .pipe(
-        tap((samenwerkingProperties: SwfCaseProperties) => {
-          this.isSamenwerkingDossier.set(samenwerkingProperties.isSwfCase);
-          this.swfCaseProperties = samenwerkingProperties;
+        tap((swfCaseProperties: SwfCaseProperties) => {
+          this.isSamenwerkingDossier.set(swfCaseProperties.isSwfCase);
+          this.swfCaseProperties = swfCaseProperties;
         }),
       );
   }
 
   private fetchChat(): void {
-    this.fetchSamenwerkingProperties()
+    this.isLoading.set(true);
+
+    this.swfDocumentService
+      .getIsSamenwerkingCase(this.getBusinessKey())
       .pipe(
-        switchMap((swfCaseProperties: SwfCaseProperties) =>
-          forkJoin({
+        switchMap((isSamenwerkingCase) => {
+          if (!isSamenwerkingCase) {
+            return of(null);
+          }
+
+          return this.fetchSamenwerkingProperties();
+        }),
+        switchMap((swfCaseProperties) => {
+          if (!swfCaseProperties) {
+            return of(null);
+          }
+
+          return forkJoin({
             messages: this.berichtenService.getBerichten(
               swfCaseProperties.actieverzoekId,
             ),
             otherParticipant: this.fetchOtherParticipant(
               swfCaseProperties.actieverzoekId,
             ),
-          }),
-        ),
-        tap(({ messages }) => {
-          this.messages.set(messages);
+          });
+        }),
+        tap((result) => {
+          if (result) {
+            this.messages.set(result.messages);
+          }
+
           this.isLoading.set(false);
         }),
         catchError((error) => {
+          console.error('Error fetching chat messages:', error);
+
           this.notificationService.showError({
             titleKey:
               'samenwerkfunctionaliteit.feedback.userNotification.messenger.fetchMessages.failure.title',
           });
-          return error;
+
+          this.isLoading.set(false);
+          return EMPTY;
         }),
       )
       .subscribe();
