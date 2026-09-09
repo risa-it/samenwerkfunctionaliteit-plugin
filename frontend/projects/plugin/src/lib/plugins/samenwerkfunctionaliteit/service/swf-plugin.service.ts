@@ -13,7 +13,6 @@ export class SwfPluginService {
   private properties: SwfPluginProperties | undefined;
 
   getSwfPluginProperties(): Observable<SwfPluginProperties> {
-
     if (this.properties) {
       return of(this.properties);
     }
