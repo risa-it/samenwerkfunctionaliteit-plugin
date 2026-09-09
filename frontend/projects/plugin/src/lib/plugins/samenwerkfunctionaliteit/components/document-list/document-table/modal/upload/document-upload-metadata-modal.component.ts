@@ -142,7 +142,6 @@ export class DocumentUploadMetadataModal {
   }
 
   protected submit(): void {
-
     const metadata: UploadDocumentMetadata = {
       documentDescription:
         this.metadataForm.controls.documentDescription.value || undefined,
