@@ -219,6 +219,7 @@ services:
     image: maykinmedia/objects-api:2.4.4
     environment: *objects-env
     command: /celery_worker.sh
+    container_name: swf-objecten-api-celery
     healthcheck:
       test: ["CMD", "python", "/app/bin/check_celery_worker_liveness.py"]
       interval: 30s
