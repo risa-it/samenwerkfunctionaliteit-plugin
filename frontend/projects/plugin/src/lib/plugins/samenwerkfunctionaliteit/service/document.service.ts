@@ -70,11 +70,6 @@ export class DocumentService {
             titel: context.file.name,
             auteur: 'Samenwerkfunctionaliteit-plugin',
             taal: 'nld',
-            vertrouwelijkheidaanduiding:
-              // Note: mapping confidentiality types between Dutch and English is not straightforward, so we use a simple mapping here.
-              metadata.confidentialityType === ConfidentialityTypes.Confidential
-                ? 'vertrouwelijk'
-                : 'confidentieel',
             creatieDatum: new Date().toISOString().split('T')[0],
             informatieobjecttype: metadata.documentType.url,
           })
