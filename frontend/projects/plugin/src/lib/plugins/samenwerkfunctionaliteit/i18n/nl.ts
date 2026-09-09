@@ -8,6 +8,10 @@ export const pluginNlTranslations = {
         download: 'Downloaden',
         search: 'Zoeken',
         upload: 'Uploaden',
+
+      },
+      validation: {
+        required: '(verplicht)',
       },
       pagination: {
         defaults: {

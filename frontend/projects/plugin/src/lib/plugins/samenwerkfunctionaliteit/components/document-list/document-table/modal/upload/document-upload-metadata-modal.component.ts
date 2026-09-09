@@ -178,4 +178,19 @@ export class DocumentUploadMetadataModal {
       this.cancelled.emit();
     });
   }
+
+  protected getIsRequiredText(formControlName: string): string {
+    const formControl = this.metadataForm.get(formControlName);
+
+    if (!formControl) {
+      throw new Error(`Form control ${formControlName} does not exist`);
+    }
+
+    if (!formControl.hasValidator(Validators.required)) {
+      return '';
+    }
+    return this.translateService.instant(
+      'samenwerkfunctionaliteit.common.validation.required',
+    );
+  }
 }

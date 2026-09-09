@@ -15,7 +15,7 @@
           {{
             'samenwerkfunctionaliteit.types.document.documentDescription'
               | translate
-          }}
+          }}{{ getIsRequiredText('documentDescription') }}
 
           <input cdsText formControlName="documentDescription" />
         </cds-label>
@@ -27,6 +27,7 @@
             'samenwerkfunctionaliteit.types.document.numberWithinSystem'
               | translate
           }}
+          {{ getIsRequiredText('numberWithinSystem') }}
 
           <input cdsText formControlName="numberWithinSystem" />
         </cds-label>
@@ -38,6 +39,7 @@
             'samenwerkfunctionaliteit.types.document.confidentialityType'
               | translate
           }}
+          {{ getIsRequiredText('confidentialityType') }}
           <cds-tooltip
             [autoAlign]="true"
             [description]="confidentialityTypeTooltipText"
@@ -57,6 +59,7 @@
             >{{
               'samenwerkfunctionaliteit.types.document.documentType' | translate
             }}
+            {{ getIsRequiredText('documentType') }}
             <cds-tooltip
               [autoAlign]="true"
               [description]="documentTypeTooltipText"
@@ -75,6 +78,7 @@
       <div class="form-field">
         <cds-label>
           {{ 'samenwerkfunctionaliteit.types.document.systemId' | translate }}
+          {{ getIsRequiredText('systemId') }}
 
           <input cdsText formControlName="systemId" />
         </cds-label>
