@@ -33,7 +33,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { SwfCaseProperties } from '../../interface/swf-case-properties.interface';
 
 @Component({
-  templateUrl: `./notificaties-custom-tab.component.html`,
+  templateUrl: './notificaties-custom-tab.component.html',
   styleUrl: './notificaties-custom-tab.component.scss',
   imports: [
     NotificatieCardComponent,
