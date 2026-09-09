@@ -112,21 +112,12 @@ export class StuurBerichtComponent {
         this.actieverzoekId = actieverzoekId;
       },
       error: error => {
-
-        if (error instanceof NoActieverzoekIdError) {
-          this.notificationService.showError({
-            titleKey:
-              'samenwerkfunctionaliteit.feedback.userNotification.messenger.failureMissingActieverzoekId.title',
-            messageKey:
-              'samenwerkfunctionaliteit.feedback.userNotification.messenger.failureMissingActieverzoekId.message',
-          });
-        } else {
-          this.notificationService.showError({
-            titleKey:
-              'samenwerkfunctionaliteit.feedback.userNotification.messenger.failure.title',
-          });
-        }
-
+        this.notificationService.showError({
+          titleKey:
+            'samenwerkfunctionaliteit.feedback.userNotification.messenger.failureMissingActieverzoekId.title',
+          messageKey:
+            'samenwerkfunctionaliteit.feedback.userNotification.messenger.failureMissingActieverzoekId.message',
+        });
         this.logger.error(error);
       },
     });
