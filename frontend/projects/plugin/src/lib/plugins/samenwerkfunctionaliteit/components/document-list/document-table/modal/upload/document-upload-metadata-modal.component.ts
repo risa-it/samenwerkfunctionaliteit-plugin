@@ -124,6 +124,7 @@ export class DocumentUploadMetadataModal {
       numberWithinSystem: '',
       confidentialityType: ConfidentialityTypes.Confidential,
       systemId: '',
+      documentType: null,
     });
 
     this.metadataForm.markAsPristine();
