@@ -71,7 +71,6 @@ export class UploadWorkFlowService {
         }
         this.logger.debug('Uploading with metadata:', metadata);
 
-
         return this.documentService
           .uploadDocumentToDocumentenAPI(context, metadata)
           .pipe(
