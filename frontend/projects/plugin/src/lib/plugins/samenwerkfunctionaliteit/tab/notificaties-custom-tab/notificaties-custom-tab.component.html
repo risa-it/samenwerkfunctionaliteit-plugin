@@ -1,25 +1,42 @@
-<div class="notificatie-card-list">
-  @if (isLoading()) {
-    @for (item of itemsPerPageArray; track $index) {
-      <swf-notificatie-card [inputs]="skeletonInput"></swf-notificatie-card>
+@if(isSamenwerkingDossier()){
+  <div class="notificatie-card-list">
+    @if (isLoading()) {
+      @for (item of itemsPerPageArray; track $index) {
+        <swf-notificatie-card [inputs]="skeletonInput"></swf-notificatie-card>
+      }
     }
-  }
-  @if (!this.isLoading()) {
-    @for (input of this.inputs(); track input.notificatieId) {
-      <swf-notificatie-card [inputs]="input"></swf-notificatie-card>
+    @if (!this.isLoading()) {
+      @for (input of this.inputs(); track input.notificatieId) {
+        <swf-notificatie-card [inputs]="input"></swf-notificatie-card>
+      }
     }
-  }
-</div>
-<swf-pagination
-  [page]="page()"
-  [pageSize]="pageSize()"
-  [totalItems]="totalNotifications()"
-  (pageChange)="onPageChange($event)"
-  (pageSizeChange)="onPageSizeChange($event)"
-  [itemSingleTranslateKey]="
+  </div>
+  <swf-pagination
+    [page]="page()"
+    [pageSize]="pageSize()"
+    [totalItems]="totalNotifications()"
+    (pageChange)="onPageChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
+    [itemSingleTranslateKey]="
     'samenwerkfunctionaliteit.notifications.pagination.item.single'
   "
-  [itemPluralTranslateKey]="
+    [itemPluralTranslateKey]="
     'samenwerkfunctionaliteit.notifications.pagination.item.plural'
   "
-></swf-pagination>
+  ></swf-pagination>
+}
+
+@if (!isSamenwerkingDossier() && !isLoading()) {
+  <cds-notification
+    [notificationObj]="{
+      type: 'info',
+      title:
+        'samenwerkfunctionaliteit.feedback.notAnSwfCaseMessage.genericTitle'
+        | translate,
+      message:
+        'samenwerkfunctionaliteit.feedback.notAnSwfCaseMessage.genericMessage'
+        | translate,
+      showClose: false,
+    }"
+  ></cds-notification>
+}

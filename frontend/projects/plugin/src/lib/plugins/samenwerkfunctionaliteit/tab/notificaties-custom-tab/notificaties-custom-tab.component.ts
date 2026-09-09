@@ -8,10 +8,11 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import {
   LoadingModule,
+  NotificationModule,
   PaginationModule,
   SkeletonModule,
 } from 'carbon-components-angular';
-import { Observable, switchMap, take } from 'rxjs';
+import { finalize, Observable, switchMap, take, tap } from 'rxjs';
 import { CardInput } from '../../components/notificatie-card-list/interface/card-input.interface';
 import { NotificatieCardInput } from '../../components/notificatie-card-list/model/notificatie-card-input.model';
 import { NotificatieCardComponent } from '../../components/notificatie-card-list/notificatie-card/notificatie-card.component';
@@ -28,9 +29,11 @@ import { Notificatie, NotificatiePage } from '../../models/notificatie.model';
 import { NotificatieService } from '../../service/notificatie.service';
 import { SwfDocumentService } from '../../service/swf-document.service';
 import { toBusinessKey } from '../../types/business-key.type';
+import { TranslatePipe } from '@ngx-translate/core';
+import { SwfCaseProperties } from '../../interface/swf-case-properties.interface';
 
 @Component({
-  templateUrl: `notificaties-custom-tab.component.html`,
+  templateUrl: './notificaties-custom-tab.component.html',
   styleUrl: './notificaties-custom-tab.component.scss',
   imports: [
     NotificatieCardComponent,
@@ -38,6 +41,8 @@ import { toBusinessKey } from '../../types/business-key.type';
     SkeletonModule,
     PaginationModule,
     PaginationComponent,
+    NotificationModule,
+    TranslatePipe,
   ],
   selector: 'swf-notificatie-card-list',
 })
@@ -54,6 +59,7 @@ export class NotificatiesCustomTabComponent implements OnInit {
   isLoading: WritableSignal<boolean> = signal(true);
   itemsPerPage = 10;
   itemsPerPageArray: number[] = Array.from({ length: this.itemsPerPage });
+  isSamenwerkingDossier: WritableSignal<boolean> = signal<boolean>(false);
 
   documentId: string = '';
   FIRST_PAGE: number = 1;
@@ -107,12 +113,18 @@ export class NotificatiesCustomTabComponent implements OnInit {
       .getSamenwerkingProperties(businessKey)
       .pipe(
         take(1),
+        tap((samenwerkingProperties: SwfCaseProperties) => {
+          this.isSamenwerkingDossier.set(samenwerkingProperties.isSwfCase);
+        }),
         switchMap((samenwerkingProperties) => {
           return this.fetchNotifications(
             samenwerkingProperties.samenwerkingId,
             page,
             size,
           );
+        }),
+        finalize(() => {
+          this.isLoading.set(false);
         }),
       )
       .subscribe((notificatie) => {
@@ -138,7 +150,6 @@ export class NotificatiesCustomTabComponent implements OnInit {
         return this.mapNotificatieToNotificatieCardInput(notificatie);
       }),
     );
-    this.isLoading.set(false);
   }
 
   private mapNotificatieToNotificatieCardInput(
