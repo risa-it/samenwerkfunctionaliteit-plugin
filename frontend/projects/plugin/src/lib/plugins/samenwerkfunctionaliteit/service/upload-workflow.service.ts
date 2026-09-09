@@ -17,7 +17,6 @@ import { UserNotification } from '../interface/user-notification.interface';
 import { BusinessKey } from '../types/business-key.type';
 import { DocumentService } from './document.service';
 import { SwfDocumentService } from './swf-document.service';
-import { SwfPluginService } from './swf-plugin.service';
 import { UserNotificationService } from './user-notification.service';
 
 @Injectable({
@@ -25,8 +24,6 @@ import { UserNotificationService } from './user-notification.service';
 })
 export class UploadWorkFlowService {
   private readonly documentService = inject(DocumentService);
-  private readonly swfPluginService: SwfPluginService =
-    inject(SwfPluginService);
   private readonly notificationService: UserNotificationService = inject(
     UserNotificationService,
   );

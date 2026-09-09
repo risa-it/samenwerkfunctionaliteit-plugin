@@ -11,7 +11,6 @@ import {
   TooltipModule,
 } from 'carbon-components-angular';
 
-import { ActivatedRoute } from '@angular/router';
 import { Information32, Upload32 } from '@carbon/icons';
 import {
   ModalService,
@@ -20,8 +19,6 @@ import {
 } from '@valtimo/components';
 import { DocumentType } from '@valtimo/document';
 import { UploadDocumentMetadata, UploadDocumentToDocumentenApiMetadata } from '../../../../../interface/upload-document-metadata.interface';
-import { DocumentService } from '../../../../../service/document.service';
-import { SwfDocumentService } from '../../../../../service/swf-document.service';
 import {
   ConfidentialityType,
   ConfidentialityTypes,
@@ -50,10 +47,6 @@ export class DocumentUploadMetadataModal {
   private readonly formBuilder = inject(FormBuilder);
   private readonly translateService = inject(TranslateService);
   private readonly iconService = inject(IconService);
-  private readonly documentService = inject(DocumentService);
-  private readonly route: ActivatedRoute = inject(ActivatedRoute);
-  private readonly swfDocumentService: SwfDocumentService =
-    inject(SwfDocumentService);
 
   readonly modal = viewChild.required<VModalComponent>('uploadModal');
 
