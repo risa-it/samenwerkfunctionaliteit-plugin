@@ -36,6 +36,7 @@ describe('DocumentClient', () => {
       systemId: '456def',
       confidentialityType: ConfidentialityTypes.StrictlyConfidential,
       language: 'English',
+      uploadToDocumentenApi: false,
     };
 
     service
