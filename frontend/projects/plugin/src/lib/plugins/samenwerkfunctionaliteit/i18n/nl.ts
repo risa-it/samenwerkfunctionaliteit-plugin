@@ -156,7 +156,8 @@ export const pluginNlTranslations = {
             },
           },
           failureMissingActieverzoekId: {
-            message: 'Het actieverzoek kon niet gevonden worden.',
+            title: 'Actieverzoek ID kon niet worden opgehaald',
+            message: 'Controleer of dit een Samenwerkfunctionaliteit-dossier is.',
           },
         },
       },

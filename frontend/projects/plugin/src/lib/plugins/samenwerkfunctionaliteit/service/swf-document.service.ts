@@ -23,6 +23,11 @@ export class SwfDocumentService implements OnDestroy {
     BusinessKey,
     SwfCaseProperties
   >();
+  private isSamenwerkingCaseCache: Map<BusinessKey, boolean> = new Map<
+    BusinessKey,
+    boolean
+  >();
+
   destroy$: Subject<void> = new Subject<void>();
 
   ngOnDestroy(): void {
@@ -64,6 +69,32 @@ export class SwfDocumentService implements OnDestroy {
     );
   }
 
+  getIsSamenwerkingCase(businessKey: BusinessKey): Observable<boolean> {
+    const cachedIsSwfCase: boolean | undefined =
+      this.isSamenwerkingCaseCache.get(businessKey);
+
+    if (cachedIsSwfCase !== undefined) {
+      return of(cachedIsSwfCase);
+    }
+
+    return this.valtimoDocumentService.getDocument(businessKey.toString()).pipe(
+      takeUntil(this.destroy$),
+      tap((document) => {
+        const props = this.mapValtimoDocumentToSwfCaseProperties(document);
+        this.loadPropsIntoCache(businessKey, props);
+      }),
+      map((document) => {
+        const swfDocument =
+          document.content as SamenwerkfunctionaliteitDocument;
+
+        return swfDocument.isAutomaticallyGenerated;
+      }),
+      tap((isSwfCase) => {
+        this.loadIsSwfCaseIntoCache(businessKey, isSwfCase);
+      }),
+    );
+  }
+
   private mapValtimoDocumentToSwfCaseProperties(
     document: ValtimoDocument,
   ): SwfCaseProperties {
@@ -86,5 +117,12 @@ export class SwfDocumentService implements OnDestroy {
     samenwerkingProperties: SwfCaseProperties,
   ): void {
     this.samenwerkingPropsCache.set(businessKey, samenwerkingProperties);
+  }
+
+  private loadIsSwfCaseIntoCache(
+    businessKey: BusinessKey,
+    isSwfCase: boolean,
+  ): void {
+    this.isSamenwerkingCaseCache.set(businessKey, isSwfCase);
   }
 }
