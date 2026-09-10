@@ -79,6 +79,10 @@ export class SwfDocumentService implements OnDestroy {
 
     return this.valtimoDocumentService.getDocument(businessKey.toString()).pipe(
       takeUntil(this.destroy$),
+      tap((document) => {
+        const props = this.mapValtimoDocumentToSwfCaseProperties(document);
+        this.loadPropsIntoCache(businessKey, props);
+      }),
       map((document) => {
         const swfDocument =
           document.content as SamenwerkfunctionaliteitDocument;
