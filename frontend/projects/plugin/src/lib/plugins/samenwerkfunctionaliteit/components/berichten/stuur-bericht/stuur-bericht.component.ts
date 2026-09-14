@@ -63,13 +63,9 @@ export class StuurBerichtComponent {
 
   ngOnInit() {
     this.iconService.registerAll([Send32]);
-    const documentId = this.swfService.getParam(this.route, 'documentId');
 
-    if (!documentId) {
-      throw new Error('DocumentId is required to send a message');
-    }
 
-    this.retrieveActieverzoekId(documentId);
+    this.retrieveActieverzoekId();
   }
 
   onSend() {
@@ -106,7 +102,14 @@ export class StuurBerichtComponent {
       });
   }
 
-  private retrieveActieverzoekId(documentId: string): void {
+  private retrieveActieverzoekId(): void {
+    // const documentId = this.swfService.getParam(this.route, 'documentId');
+    const documentId = null;
+
+    if (!documentId) {
+      throw new Error('DocumentId is required to send a message');
+    }
+
     this.getActieverzoekId(documentId).subscribe({
       next: actieverzoekId => {
         this.actieverzoekId = actieverzoekId;
