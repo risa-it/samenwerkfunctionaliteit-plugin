@@ -125,10 +125,18 @@ export class UploadWorkFlowService {
           }),
 
           catchError((error) => {
-            this.notificationService.showError({
-              titleKey:
-                'samenwerkfunctionaliteit.feedback.userNotification.uploadDocumentToSWF.failure.title',
-            });
+            if (error.status === 403) {
+              this.notificationService.showError({
+                titleKey:
+                  'samenwerkfunctionaliteit.feedback.userNotification.uploadDocumentToSWF.forbidden.title',
+                messageKey: 'samenwerkfunctionaliteit.feedback.userNotification.uploadDocumentToSWF.forbidden.message'
+              });
+            } else {
+              this.notificationService.showError({
+                titleKey:
+                  'samenwerkfunctionaliteit.feedback.userNotification.uploadDocumentToSWF.failure.title',
+              });
+            }
             return throwError(() => error);
           }),
         ),

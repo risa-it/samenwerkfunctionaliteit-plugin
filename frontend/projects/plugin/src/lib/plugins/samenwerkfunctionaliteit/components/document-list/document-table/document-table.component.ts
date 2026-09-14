@@ -250,11 +250,19 @@ export class DocumentTableComponent implements OnInit {
 
               this.deleted.emit(document.documentId);
             }),
-            catchError(() => {
-              this.notificationService.showError({
-                titleKey:
-                  'samenwerkfunctionaliteit.feedback.userNotification.deleteDocument.failure.title',
-              });
+            catchError((error) => {
+              if (error.status === 403) {
+                this.notificationService.showError({
+                  titleKey:
+                    'samenwerkfunctionaliteit.feedback.userNotification.deleteDocument.forbidden.title',
+                  messageKey: 'samenwerkfunctionaliteit.feedback.userNotification.deleteDocument.forbidden.message'
+                });
+              } else {
+                this.notificationService.showError({
+                  titleKey:
+                    'samenwerkfunctionaliteit.feedback.userNotification.deleteDocument.failure.title',
+                });
+              }
               return of(undefined);
             }),
           );
