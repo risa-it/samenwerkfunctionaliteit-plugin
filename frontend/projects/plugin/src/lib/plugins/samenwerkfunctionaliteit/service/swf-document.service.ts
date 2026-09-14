@@ -4,7 +4,7 @@ import {
   Document as ValtimoDocument,
   DocumentService as ValtimoDocumentService,
 } from '@valtimo/document';
-import { map, Observable, of, Subject, takeUntil, tap } from 'rxjs';
+import { map, Observable, of, Subject, tap } from 'rxjs';
 import { SamenwerkfunctionaliteitDocument } from '../dto/document-content.dto';
 import { SwfCaseProperties } from '../interface/swf-case-properties.interface';
 import { toActieverzoekId } from '../types/actieverzoek-id.type';
@@ -61,7 +61,6 @@ export class SwfDocumentService implements OnDestroy {
     }
 
     return this.valtimoDocumentService.getDocument(businessKey.toString()).pipe(
-      takeUntil(this.destroy$),
       map((document) => this.mapValtimoDocumentToSwfCaseProperties(document)),
       tap((swfCaseProperties: SwfCaseProperties) => {
         this.loadPropsIntoCache(businessKey, swfCaseProperties);
@@ -78,7 +77,6 @@ export class SwfDocumentService implements OnDestroy {
     }
 
     return this.valtimoDocumentService.getDocument(businessKey.toString()).pipe(
-      takeUntil(this.destroy$),
       tap((document) => {
         const props = this.mapValtimoDocumentToSwfCaseProperties(document);
         this.loadPropsIntoCache(businessKey, props);
