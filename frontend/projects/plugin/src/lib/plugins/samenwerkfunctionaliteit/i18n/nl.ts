@@ -84,11 +84,17 @@ export const pluginNlTranslations = {
         documentListTabTitle: 'Geen documentenlijst opgehaald',
       },
       userNotification: {
-        contactYourAdmin:
-          'Neem contact op met uw beheerder als dit probleem zich vaker voordoet.',
-        failedGeneric: 'Er ging iets mis',
-        genericSuccessTitle: 'Gelukt',
-        genericSuccessMessage: 'De actie is succesvol uitgevoerd',
+        generic: {
+          success: {
+            title: 'Gelukt',
+            message: 'De actie is succesvol uitgevoerd',
+          },
+          failure: {
+            title: 'Er ging iets mis',
+            message:
+              'Neem contact op met uw beheerder als dit probleem zich vaker voordoet.',
+          }
+        },
 
         downloadDocument: {
           failure: {

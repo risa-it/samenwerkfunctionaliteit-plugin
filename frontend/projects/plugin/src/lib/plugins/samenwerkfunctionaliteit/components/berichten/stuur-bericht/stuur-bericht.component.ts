@@ -103,8 +103,7 @@ export class StuurBerichtComponent {
   }
 
   private retrieveActieverzoekId(): void {
-    // const documentId = this.swfService.getParam(this.route, 'documentId');
-    const documentId = null;
+    const documentId = this.swfService.getParam(this.route, 'documentId');
 
     if (!documentId) {
       throw new Error('DocumentId is required to send a message');
@@ -115,12 +114,20 @@ export class StuurBerichtComponent {
         this.actieverzoekId = actieverzoekId;
       },
       error: error => {
-        this.notificationService.showError({
-          titleKey:
-            'samenwerkfunctionaliteit.feedback.userNotification.messenger.failureMissingActieverzoekId.title',
-          messageKey:
-            'samenwerkfunctionaliteit.feedback.userNotification.messenger.failureMissingActieverzoekId.message',
-        });
+        if (error instanceof NoActieverzoekIdError) {
+          this.notificationService.showError({
+            titleKey:
+              'samenwerkfunctionaliteit.feedback.userNotification.messenger.failureMissingActieverzoekId.title',
+            messageKey:
+              'samenwerkfunctionaliteit.feedback.userNotification.messenger.failureMissingActieverzoekId.message',
+          });
+        } else {
+          this.notificationService.showError({
+            titleKey: 'samenwerkfunctionaliteit.feedback.userNotification.generic.failure.title',
+            messageKey: 'samenwerkfunctionaliteit.feedback.userNotification.generic.failure.message'
+          })
+        }
+
         this.logger.error(error);
       },
     });
