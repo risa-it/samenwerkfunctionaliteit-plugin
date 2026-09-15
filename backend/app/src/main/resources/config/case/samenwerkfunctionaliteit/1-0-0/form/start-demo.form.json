@@ -20,6 +20,15 @@
             "defaultValue": "a10c7e62-3b2d-4889-b54d-0b6321a8b725"
         },
         {
+            "label": "isAutomaticallyGenerated",
+            "applyMaskOn": "change",
+            "tableView": true,
+            "key": "isAutomaticallyGenerated",
+            "type": "checkbox",
+            "input": true,
+            "defaultValue": true
+        },
+        {
             "label": "selectedDemo",
             "key": "selectedDemo",
             "type": "hidden",

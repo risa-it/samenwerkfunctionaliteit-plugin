@@ -67,13 +67,11 @@ export class DocumentListComponent implements OnInit {
         }
 
         return this.getDocumentUploadTypes().pipe(
-          map((documentTypes): UploadOptions => {
-            console.log('Document types for case in Document List Component:', documentTypes);
-            return {
-              uploadToDocumentenApi: true,
-              documentTypes,
-            };
-          }),
+          map((documentTypes): UploadOptions => ({
+            uploadToDocumentenApi: true,
+            documentTypes,
+          })
+          ),
         );
       }),
     ),

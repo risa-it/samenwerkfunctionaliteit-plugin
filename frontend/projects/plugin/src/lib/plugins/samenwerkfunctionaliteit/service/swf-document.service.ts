@@ -4,7 +4,7 @@ import {
   Document as ValtimoDocument,
   DocumentService as ValtimoDocumentService,
 } from '@valtimo/document';
-import { map, Observable, of, Subject, takeUntil, tap } from 'rxjs';
+import { map, Observable, of, Subject, tap } from 'rxjs';
 import { SamenwerkfunctionaliteitDocument } from '../dto/document-content.dto';
 import { SwfCaseProperties } from '../interface/swf-case-properties.interface';
 import { toActieverzoekId } from '../types/actieverzoek-id.type';
@@ -23,6 +23,11 @@ export class SwfDocumentService implements OnDestroy {
     BusinessKey,
     SwfCaseProperties
   >();
+  private isSamenwerkingCaseCache: Map<BusinessKey, boolean> = new Map<
+    BusinessKey,
+    boolean
+  >();
+
   destroy$: Subject<void> = new Subject<void>();
 
   ngOnDestroy(): void {
@@ -56,10 +61,34 @@ export class SwfDocumentService implements OnDestroy {
     }
 
     return this.valtimoDocumentService.getDocument(businessKey.toString()).pipe(
-      takeUntil(this.destroy$),
       map((document) => this.mapValtimoDocumentToSwfCaseProperties(document)),
       tap((swfCaseProperties: SwfCaseProperties) => {
         this.loadPropsIntoCache(businessKey, swfCaseProperties);
+      }),
+    );
+  }
+
+  getIsSamenwerkingCase(businessKey: BusinessKey): Observable<boolean> {
+    const cachedIsSwfCase: boolean | undefined =
+      this.isSamenwerkingCaseCache.get(businessKey);
+
+    if (cachedIsSwfCase !== undefined) {
+      return of(cachedIsSwfCase);
+    }
+
+    return this.valtimoDocumentService.getDocument(businessKey.toString()).pipe(
+      tap((document) => {
+        const props = this.mapValtimoDocumentToSwfCaseProperties(document);
+        this.loadPropsIntoCache(businessKey, props);
+      }),
+      map((document) => {
+        const swfDocument =
+          document.content as SamenwerkfunctionaliteitDocument;
+
+        return swfDocument.isAutomaticallyGenerated;
+      }),
+      tap((isSwfCase) => {
+        this.loadIsSwfCaseIntoCache(businessKey, isSwfCase);
       }),
     );
   }
@@ -86,5 +115,12 @@ export class SwfDocumentService implements OnDestroy {
     samenwerkingProperties: SwfCaseProperties,
   ): void {
     this.samenwerkingPropsCache.set(businessKey, samenwerkingProperties);
+  }
+
+  private loadIsSwfCaseIntoCache(
+    businessKey: BusinessKey,
+    isSwfCase: boolean,
+  ): void {
+    this.isSamenwerkingCaseCache.set(businessKey, isSwfCase);
   }
 }

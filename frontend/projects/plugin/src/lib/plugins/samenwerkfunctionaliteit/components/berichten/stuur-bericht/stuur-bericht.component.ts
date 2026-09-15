@@ -12,7 +12,8 @@ import {
   NotificationModule,
 } from 'carbon-components-angular';
 import { NGXLogger } from 'ngx-logger';
-import { finalize, take, tap } from 'rxjs';
+import { finalize, map, Observable, take } from 'rxjs';
+import { NoActieverzoekIdError } from '../../../errors/no-actieverzoek-id.error';
 import { BerichtNotification } from '../../../interface/bericht-notification.interface';
 import { SwfCaseProperties } from '../../../interface/swf-case-properties.interface';
 import { BerichtenService } from '../../../service/berichten.service';
@@ -62,18 +63,14 @@ export class StuurBerichtComponent {
 
   ngOnInit() {
     this.iconService.registerAll([Send32]);
-    const documentId = this.swfService.getParam(this.route, 'documentId');
-    this.retrieveActieverzoekId(documentId);
+
+
+    this.retrieveActieverzoekId();
   }
 
   onSend() {
     if (!this.actieverzoekId) {
-      this.logger.warn('Unable to post message: No actieverzoekId available.');
-      this.notificationService.showError({
-        titleKey:
-          'samenwerkfunctionaliteit.feedback.userNotification.messenger.fetchMessages.failure.title',
-      });
-      return;
+      throw new NoActieverzoekIdError();
     }
     this.isSubmitting.set(true);
     this.berichtenService
@@ -105,34 +102,49 @@ export class StuurBerichtComponent {
       });
   }
 
-  private retrieveActieverzoekId(documentId: string) {
-    const businessKey = toBusinessKey(documentId);
-    this.swfService
-      .getSamenwerkingProperties(businessKey)
-      .pipe(
-        take(1),
-        tap((props: SwfCaseProperties) => {
-          if (props.actieverzoekId) {
-            this.actieverzoekId = props.actieverzoekId;
-          } else {
-            throw new Error('Case is missing actieverzoekId.');
-          }
-        }),
-      )
-      .subscribe({
-        error: (error) => {
-          this.logger.error(
-            'Unable to retrieve samenwerking properties',
-            error,
-          );
+  private retrieveActieverzoekId(): void {
+    const documentId = this.swfService.getParam(this.route, 'documentId');
 
+    if (!documentId) {
+      throw new Error('DocumentId is required to send a message');
+    }
+
+    this.getActieverzoekId(documentId).subscribe({
+      next: actieverzoekId => {
+        this.actieverzoekId = actieverzoekId;
+      },
+      error: error => {
+        if (error instanceof NoActieverzoekIdError) {
           this.notificationService.showError({
             titleKey:
-              'samenwerkfunctionaliteit.feedback.userNotification.messenger.sendMessage.failure.title',
+              'samenwerkfunctionaliteit.feedback.userNotification.messenger.failureMissingActieverzoekId.title',
             messageKey:
-              'samenwerkfunctionaliteit.feedback.userNotification.messenger.sendMessage.failure.failureMissingActieverzoekId',
+              'samenwerkfunctionaliteit.feedback.userNotification.messenger.failureMissingActieverzoekId.message',
           });
-        },
-      });
+        } else {
+          this.notificationService.showError({
+            titleKey: 'samenwerkfunctionaliteit.feedback.userNotification.generic.failure.title',
+            messageKey: 'samenwerkfunctionaliteit.feedback.userNotification.generic.failure.message'
+          })
+        }
+
+        this.logger.error(error);
+      },
+    });
+  }
+
+  private getActieverzoekId(documentId: string): Observable<string> {
+    const businessKey = toBusinessKey(documentId);
+
+    return this.swfService.getSamenwerkingProperties(businessKey).pipe(
+      take(1),
+      map((props: SwfCaseProperties) => {
+        if (!props.actieverzoekId) {
+          throw new NoActieverzoekIdError();
+        }
+
+        return props.actieverzoekId;
+      }),
+    );
   }
 }

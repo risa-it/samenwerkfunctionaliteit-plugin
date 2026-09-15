@@ -17,13 +17,13 @@ export class UserNotificationService {
   showError(notification: UserNotification): void {
     const title = this.translateService.instant(
       notification.titleKey ??
-        'samenwerkfunctionaliteit.feedback.userNotification.failedGeneric',
+      'samenwerkfunctionaliteit.feedback.userNotification.generic.failure.title',
       notification.titleParam,
     );
 
     const message = this.translateService.instant(
       notification.messageKey ??
-        'samenwerkfunctionaliteit.feedback.userNotification.contactYourAdmin',
+      'samenwerkfunctionaliteit.feedback.userNotification.generic.failure.message',
       notification.messageParam,
     );
 
@@ -39,13 +39,13 @@ export class UserNotificationService {
   showSuccess(notification: UserNotification): void {
     const title = this.translateService.instant(
       notification.titleKey ??
-        'samenwerkfunctionaliteit.feedback.userNotification.genericSuccessTitle',
+      'samenwerkfunctionaliteit.feedback.userNotification.generic.success.title',
       notification.titleParam,
     );
 
     const message = this.translateService.instant(
       notification.messageKey ??
-        'samenwerkfunctionaliteit.feedback.userNotification.genericSuccessMessage',
+      'samenwerkfunctionaliteit.feedback.userNotification.generic.success.message',
       notification.messageParam,
     );
 
