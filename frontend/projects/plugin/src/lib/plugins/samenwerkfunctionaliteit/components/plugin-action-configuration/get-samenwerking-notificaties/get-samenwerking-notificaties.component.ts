@@ -1,27 +1,28 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
+import { AsyncPipe, NgIf } from "@angular/common";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormModule, FormOutput, InputModule } from "@valtimo/components";
 import { FunctionConfigurationComponent, FunctionConfigurationData, PluginTranslatePipeModule } from "@valtimo/plugin";
 import { BehaviorSubject, combineLatest, Observable, Subscription, take } from "rxjs";
-import { ActieverzoekConfig } from "../../models/actieverzoek-config";
-import { AsyncPipe, NgIf } from "@angular/common";
+import { NotificatiesConfig } from "../../../models/notificaties-config";
 
 @Component({
-  selector: "get-actieverzoek",
-  imports: [FormModule, InputModule, AsyncPipe, PluginTranslatePipeModule, NgIf],
-  templateUrl: "./get-actieverzoek.component.html",
-  styleUrl: "./get-actieverzoek.component.scss",
+  selector: "get-samenwerking-notificaties",
+  templateUrl: "./get-samenwerking-notificaties.component.html",
+  standalone: true,
+  styleUrl: "./get-samenwerking-notificaties.component.scss",
+  imports: [InputModule, FormModule, PluginTranslatePipeModule, AsyncPipe, NgIf],
 })
-export class GetActieverzoekComponent implements FunctionConfigurationComponent, OnInit, OnDestroy {
+export class GetSamenwerkingNotificatiesComponent implements FunctionConfigurationComponent {
   @Input() disabled$: Observable<boolean>;
   @Input() pluginId: string;
   @Input() save$: Observable<void>;
-  @Input() prefillConfiguration$?: Observable<ActieverzoekConfig>;
+  @Input() prefillConfiguration$?: Observable<NotificatiesConfig>;
   @Output() valid: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() configuration: EventEmitter<FunctionConfigurationData> = new EventEmitter<FunctionConfigurationData>();
 
   private saveSubscription!: Subscription;
 
-  private readonly config$ = new BehaviorSubject<ActieverzoekConfig | null>(null);
+  private readonly config$ = new BehaviorSubject<NotificatiesConfig | null>(null);
   private readonly valid$ = new BehaviorSubject<boolean>(false);
 
   ngOnInit(): void {
@@ -33,15 +34,15 @@ export class GetActieverzoekComponent implements FunctionConfigurationComponent,
   }
 
   formValueChange(formOutput: FormOutput): void {
-    this.config$.next(formOutput as ActieverzoekConfig);
-    this.handleValid(formOutput as ActieverzoekConfig);
+    this.config$.next(formOutput as NotificatiesConfig);
+    this.handleValid(formOutput as NotificatiesConfig);
   }
 
-  private handleValid(formOutput: ActieverzoekConfig): void {
+  private handleValid(formOutput: NotificatiesConfig): void {
     const resultPvName = formOutput.resultPvName ?? "";
-    const actieverzoekId = formOutput.actieverzoekId ?? "";
+    const samenwerkingId = formOutput.samenwerkingId ?? "";
 
-    const valid = resultPvName.trim().length > 0 && actieverzoekId.trim().length > 0;
+    const valid = resultPvName.trim().length > 0 && samenwerkingId.trim().length > 0;
 
     this.valid$.next(valid);
     this.valid.emit(valid);

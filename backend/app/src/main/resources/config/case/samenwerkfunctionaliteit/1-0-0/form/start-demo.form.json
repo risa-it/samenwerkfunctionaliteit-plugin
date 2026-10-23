@@ -83,8 +83,13 @@
                     "shortcut": ""
                 },
                 {
-                    "label": "Get samenwerking notificaties",
+                    "label": "Get samenwerkingnotificaties",
                     "value": "getSamenwerkingNotificaties",
+                    "shortcut": ""
+                },
+                {
+                    "label": "Get samenwerking",
+                    "value": "getSamenwerking",
                     "shortcut": ""
                 }
             ],
@@ -214,13 +219,28 @@
             "components": []
         },
         {
-            "title": "Get samenwerking notificaties",
+            "title": "Get samenwerkingnotificaties",
             "collapsible": false,
             "key": "getSamenwerkingNotificaties",
             "conditional": {
                 "show": true,
                 "when": "selectedDemo",
                 "eq": "getSamenwerkingNotificaties"
+            },
+            "type": "panel",
+            "label": "Panel",
+            "input": false,
+            "tableView": false,
+            "components": []
+        },
+        {
+            "title": "Get samenwerking",
+            "collapsible": false,
+            "key": "getSamenwerking",
+            "conditional": {
+                "show": true,
+                "when": "selectedDemo",
+                "eq": "getSamenwerking"
             },
             "type": "panel",
             "label": "Panel",

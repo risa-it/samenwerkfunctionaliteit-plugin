@@ -207,7 +207,7 @@ class SamenwerkfunctionaliteitPlugin(
             )
 
         val notificaties =
-            this.samenwerkfunctionaliteitService.getSamenwerkingNotificaties(
+            samenwerkfunctionaliteitService.getSamenwerkingNotificaties(
                 properties = properties,
                 samenwerkingId = samenwerkingId,
             )
@@ -217,6 +217,29 @@ class SamenwerkfunctionaliteitPlugin(
             resultPvName = resultPvName,
             result = notificaties,
         )
+    }
+
+    @PluginAction(
+        key = "get-samenwerking",
+        title = "Get samenwerking",
+        description = "Haal een samenwerking op op basis van het betreffende Samenwerkings-ID",
+        activityTypes = [ActivityTypeWithEventName.SERVICE_TASK_START],
+    )
+    fun getSamenwerking(
+        execution: DelegateExecution,
+        @PluginActionProperty resultPvName: String,
+        @PluginActionProperty samenwerkingId: String,
+    ) {
+        val properties =
+            SamenwerkfunctionaliteitProperties(
+                baseUrl = baseUrl,
+                certificate = certificate,
+                oinNummer = oinNummer,
+            )
+
+        val samenwerking = samenwerkfunctionaliteitService.getSamenwerking(samenwerkingId, properties)
+
+        operatonService.saveToOperaton(execution, resultPvName, samenwerking)
     }
 
     companion object {

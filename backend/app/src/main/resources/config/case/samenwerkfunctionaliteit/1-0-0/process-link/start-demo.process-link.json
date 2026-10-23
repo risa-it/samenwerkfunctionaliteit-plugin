@@ -62,5 +62,16 @@
             "samenwerkingId": "pv:samenwerkingId"
         },
         "processLinkType": "plugin"
+    },
+    {
+        "activityId": "Activity_GetSamenwerking",
+        "activityType": "bpmn:ServiceTask:start",
+        "pluginConfigurationId": "12023724-a4bd-431d-93c0-5ba52049e9cd",
+        "pluginActionDefinitionKey": "get-samenwerking",
+        "actionProperties": {
+            "resultPvName": "samenwerking",
+            "samenwerkingId": "pv:samenwerkingId"
+        },
+        "processLinkType": "plugin"
     }
 ]

@@ -1,9 +1,9 @@
+import { AsyncPipe, NgIf } from "@angular/common";
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
+import { FormModule, FormOutput, InputModule } from "@valtimo/components";
 import { FunctionConfigurationComponent, FunctionConfigurationData, PluginTranslatePipeModule } from "@valtimo/plugin";
 import { BehaviorSubject, combineLatest, Observable, Subscription, take } from "rxjs";
-import { AlleActieverzoekenConfig } from "../../models/actieverzoek-config";
-import { FormModule, FormOutput, InputModule } from "@valtimo/components";
-import { AsyncPipe, NgIf } from "@angular/common";
+import { AlleActieverzoekenConfig } from "../../../models/actieverzoek-config";
 
 @Component({
   selector: "get-all-actieverzoeken",

@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { AsyncPipe, NgIf } from "@angular/common";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { FormModule, FormOutput, InputModule } from "@valtimo/components";
 import {
   FunctionConfigurationComponent,
   FunctionConfigurationData,
   PluginTranslatePipeModule
 } from "@valtimo/plugin";
-import { FormOutput, FormModule, InputModule } from "@valtimo/components";
 import {
   BehaviorSubject,
   combineLatest,
@@ -13,24 +13,23 @@ import {
   Subscription,
   take,
 } from "rxjs";
-import { GetDocumentenOverzichtConfig } from "../../models/GetDocumentenOverzichtConfig";
+import { GetDocumentenOverzichtConfig } from "../../../models/GetDocumentenOverzichtConfig";
 
 @Component({
   selector: "get-documentenoverzicht",
   templateUrl: "./get-documenten-overzicht.component.html",
   standalone: true,
   imports: [
-     FormModule,
-     InputModule,
+    FormModule,
+    InputModule,
     PluginTranslatePipeModule,
     NgIf,
     AsyncPipe,
-   ],
+  ],
   styleUrl: "./get-documenten-overzicht.component.scss",
 })
 export class GetDocumentenOverzichtComponent
-  implements FunctionConfigurationComponent
-{
+  implements FunctionConfigurationComponent {
   @Input() save$!: Observable<void>;
   @Input() disabled$!: Observable<boolean>;
   @Input() pluginId!: string;

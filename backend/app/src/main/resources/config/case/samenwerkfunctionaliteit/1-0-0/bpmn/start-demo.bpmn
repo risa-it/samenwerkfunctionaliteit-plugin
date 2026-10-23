@@ -8,7 +8,7 @@
       <bpmn:lane id="Lane_01ittfy" name="Upload document">
         <bpmn:flowNodeRef>Activity_1ihebrj</bpmn:flowNodeRef>
       </bpmn:lane>
-      <bpmn:lane id="Lane_01gv4n7" name="Get samenwerking functionaliteit">
+      <bpmn:lane id="Lane_01gv4n7" name="Get samenwerkingnotificaties">
         <bpmn:flowNodeRef>Activity_GetSamenwerkingNotificaties</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_0ibbxn9</bpmn:flowNodeRef>
       </bpmn:lane>
@@ -44,6 +44,10 @@
         <bpmn:flowNodeRef>Gateway_1xwncml</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Event_0re9ycq</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_19tsusx</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_029hi6c" name="Get samenwerking">
+        <bpmn:flowNodeRef>Activity_GetSamenwerking</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_16o0z23</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:startEvent id="startDemo">
@@ -88,9 +92,7 @@
             </bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_0bayp2m" sourceRef="Gateway_1ahkxkb" targetRef="Activity_GetSamenwerkingNotificaties">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">
-                ${selectedDemo == "getSamenwerkingNotificaties"}
-            </bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${selectedDemo == "getSamenwerkingNotificaties"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_015xtvi" sourceRef="Activity_0o2g21t" targetRef="Gateway_1xwncml" />
     <bpmn:sequenceFlow id="Flow_17k2su7" sourceRef="Activity_07qr06s" targetRef="Gateway_1xwncml" />
@@ -114,6 +116,7 @@
       <bpmn:outgoing>Flow_0h6lg3r</bpmn:outgoing>
       <bpmn:outgoing>Flow_1nm9h7z</bpmn:outgoing>
       <bpmn:outgoing>Flow_1c1alas</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1myivxa</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:exclusiveGateway id="Gateway_1xwncml">
       <bpmn:incoming>Flow_0z9n7h3</bpmn:incoming>
@@ -124,6 +127,7 @@
       <bpmn:incoming>Flow_1t4qje5</bpmn:incoming>
       <bpmn:incoming>Flow_1w5y4v5</bpmn:incoming>
       <bpmn:incoming>Flow_05dkfho</bpmn:incoming>
+      <bpmn:incoming>Flow_1qhena4</bpmn:incoming>
     </bpmn:exclusiveGateway>
     <bpmn:serviceTask id="Activity_00fynp6" name="Get actieverzoek" implementation="##WebService" camunda:expression="${true}">
       <bpmn:extensionElements>
@@ -172,7 +176,7 @@
       </bpmn:extensionElements>
       <bpmn:outgoing>Flow_1w1u9jb</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="Activity_GetSamenwerkingNotificaties" name="Get samenwerking notificaties" implementation="##WebService" camunda:expression="${true}">
+    <bpmn:serviceTask id="Activity_GetSamenwerkingNotificaties" name="Get samenwerking-notificaties" implementation="##WebService" camunda:expression="${true}">
       <bpmn:extensionElements>
         <camunda:inputOutput>
           <camunda:inputParameter name="samenwerkingId">SAM-66497</camunda:inputParameter>
@@ -226,11 +230,36 @@
       <bpmn:incoming>Flow_157gkn4</bpmn:incoming>
       <bpmn:outgoing>Flow_0ievrpa</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_GetSamenwerking" name="Get samenwerking" implementation="##WebService" camunda:expression="${true}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="samenwerkingId">SAM-66497</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1myivxa</bpmn:incoming>
+      <bpmn:outgoing>Flow_01vb9st</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1myivxa" sourceRef="Gateway_1ahkxkb" targetRef="Activity_GetSamenwerking">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${selectedDemo == "getSamenwerking"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="Activity_16o0z23" name="Log API Response" camunda:expression="${valueResolverDelegateService.handleValue(execution, &#34;doc:/apiResponse&#34;, samenwerking)}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_01vb9st</bpmn:incoming>
+      <bpmn:outgoing>Flow_1qhena4</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_01vb9st" sourceRef="Activity_GetSamenwerking" targetRef="Activity_16o0z23" />
+    <bpmn:sequenceFlow id="Flow_1qhena4" sourceRef="Activity_16o0z23" targetRef="Gateway_1xwncml" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="start-samenwerkfunctionaliteit-demo">
       <bpmndi:BPMNShape id="Participant_17rw4jq_di" bpmnElement="Participant_17rw4jq" isHorizontal="true">
-        <dc:Bounds x="160" y="80" width="1630" height="2140" />
+        <dc:Bounds x="160" y="80" width="1630" height="2330" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_029hi6c_di" bpmnElement="Lane_029hi6c" isHorizontal="true">
+        <dc:Bounds x="190" y="2210" width="1600" height="200" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_01s2dul_di" bpmnElement="Lane_01s2dul" isHorizontal="true">
@@ -265,7 +294,7 @@
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_01gv4n7_di" bpmnElement="Lane_01gv4n7" isHorizontal="true">
-        <dc:Bounds x="190" y="2010" width="1600" height="210" />
+        <dc:Bounds x="190" y="2010" width="1600" height="200" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_01ittfy_di" bpmnElement="Lane_01ittfy" isHorizontal="true">
@@ -341,6 +370,13 @@
       <bpmndi:BPMNShape id="Activity_16ojpq9_di" bpmnElement="Activity_19tsusx">
         <dc:Bounds x="510" y="140" width="100" height="80" />
         <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_13254ez" bpmnElement="Activity_GetSamenwerking">
+        <dc:Bounds x="880" y="2268" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_15gx8uc" bpmnElement="Activity_16o0z23">
+        <dc:Bounds x="1060" y="2268" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0qj8m48_di" bpmnElement="Flow_0qj8m48">
         <di:waypoint x="248" y="180" />
@@ -471,6 +507,20 @@
       <bpmndi:BPMNEdge id="Flow_0ievrpa_di" bpmnElement="Flow_0ievrpa">
         <di:waypoint x="610" y="180" />
         <di:waypoint x="735" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1myivxa_di" bpmnElement="Flow_1myivxa">
+        <di:waypoint x="760" y="205" />
+        <di:waypoint x="760" y="2308" />
+        <di:waypoint x="880" y="2308" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_01vb9st_di" bpmnElement="Flow_01vb9st">
+        <di:waypoint x="980" y="2308" />
+        <di:waypoint x="1060" y="2308" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1qhena4_di" bpmnElement="Flow_1qhena4">
+        <di:waypoint x="1160" y="2308" />
+        <di:waypoint x="1620" y="2308" />
+        <di:waypoint x="1620" y="205" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
