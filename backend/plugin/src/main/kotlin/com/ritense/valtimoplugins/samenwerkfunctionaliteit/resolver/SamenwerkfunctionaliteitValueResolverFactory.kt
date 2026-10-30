@@ -9,8 +9,6 @@ import com.ritense.plugin.service.PluginService
 import com.ritense.processdocument.domain.impl.OperatonProcessInstanceId
 import com.ritense.processdocument.service.ProcessDocumentService
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.config.PLUGIN_KEY
-import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.ActieverzoekResponse
-import com.ritense.valtimoplugins.samenwerkfunctionaliteit.dto.SamenwerkingResponse
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.model.SamenwerkfunctionaliteitProperties
 import com.ritense.valtimoplugins.samenwerkfunctionaliteit.service.SamenwerkfunctionaliteitService
 import com.ritense.valueresolver.ValueResolverFactory
@@ -89,14 +87,6 @@ class SamenwerkfunctionaliteitValueResolverFactory(
         throw NotImplementedError()
     }
 
-    override fun handleValues(
-        processInstanceId: String,
-        variableScope: VariableScope?,
-        values: Map<String, Any?>,
-    ) {
-        TODO()
-    }
-
     private fun getActieverzoekOrNull(documentId: String): Map<String, Any?>? {
         val actieverzoekIdString = getValueFromJsonDocument(documentId, ACTIEVERZOEK_ID_JSON_PATH)
 
@@ -111,11 +101,10 @@ class SamenwerkfunctionaliteitValueResolverFactory(
                     UUID.fromString(actieverzoekIdString),
                 ).also { logger.debug { "Retrieved actieverzoek: $it" } }
 
-        return objectMapper
-            .convertValue(
-                actieverzoek,
-                object : com.fasterxml.jackson.core.type.TypeReference<Map<String, Any?>>() {},
-            )
+        return objectMapper.convertValue(
+            actieverzoek,
+            object : com.fasterxml.jackson.core.type.TypeReference<Map<String, Any?>>() {},
+        )
     }
 
     private fun getSamenwerkingOrNull(documentId: String): Map<String, Any?>? {
@@ -132,11 +121,10 @@ class SamenwerkfunctionaliteitValueResolverFactory(
                     getProperties(),
                 ).also { logger.debug { "Retrieved samenwerking: $it" } }
 
-        return objectMapper
-            .convertValue(
-                samenwerking,
-                object : com.fasterxml.jackson.core.type.TypeReference<Map<String, Any?>>() {},
-            )
+        return objectMapper.convertValue(
+            samenwerking,
+            object : com.fasterxml.jackson.core.type.TypeReference<Map<String, Any?>>() {},
+        )
     }
 
     private fun getValueFromJsonDocument(
