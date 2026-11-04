@@ -477,6 +477,31 @@ class SamenwerkfunctionaliteitValueResolverFactoryTest {
         }
     }
 
+    @Test
+    fun `handleValues(String, VariableScope, Map) should return Unit`() {
+        // Arrange
+        val mockProcessInstanceId = UUID.randomUUID().toString()
+        val mockVariableScope = mockk<VariableScope>()
+        val mockValues = mapOf<String, Any?>("six seven" to "skibidy toilet")
+
+        val expectedResult = Unit
+
+        // Act and assert
+        assertEquals(expectedResult, factory.handleValues(mockProcessInstanceId, mockVariableScope, mockValues))
+    }
+
+    @Test
+    fun `handleValues(String, Map) should return Unit`() {
+        // Arrange
+        val mockumentId = UUID.randomUUID()
+        val mockValues = mapOf<String, Any?>("six seven" to "skibidy toilet")
+
+        val expectedResult = Unit
+
+        // Act and assert
+        assertEquals(expectedResult, factory.handleValues(mockumentId, mockValues))
+    }
+
     companion object {
         val MOCK_SAMENWERKING_RESPONSE =
             SamenwerkingResponse(
